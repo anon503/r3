@@ -39,6 +39,6 @@ jobs:
                 name: BPI-R3 Images
                 tag: v5.15
                 replacesArtifacts: true
-                prerelease: true
+                prerelease: false
                 token: "${{ secrets.GITHUB_TOKEN }}"
                 artifacts: openwrt/bin/targets/mediatek/filogic/*
