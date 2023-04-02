@@ -1,0 +1,214 @@
+From 775502c3c62d8812822fc39562d9949569e0c3a8 Mon Sep 17 00:00:00 2001
+From: NN <nn@gmail.com>
+Date: Sun, 2 Apr 2023 00:11:01 -0400
+Subject: [PATCH] bpi-r3
+
+---
+ config/Config-images.in                       |  2 +-
+ include/target.mk                             |  2 +-
+ .../hack-5.15/400-fixup-ubi-warning.patch     | 13 ++++++++++++
+ .../filogic/base-files/etc/board.d/02_network | 12 +----------
+ .../etc/hotplug.d/firmware/11-mt76-caldata    | 21 -------------------
+ .../etc/hotplug.d/ieee80211/11_fix_wifi_mac   |  9 --------
+ .../base-files/lib/preinit/10_fix_eth_mac.sh  | 14 -------------
+ .../base-files/lib/upgrade/platform.sh        |  5 -----
+ target/linux/mediatek/image/filogic.mk        | 17 ---------------
+ 9 files changed, 16 insertions(+), 79 deletions(-)
+ create mode 100644 target/linux/generic/hack-5.15/400-fixup-ubi-warning.patch
+ delete mode 100644 target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
+ delete mode 100644 target/linux/mediatek/filogic/base-files/lib/preinit/10_fix_eth_mac.sh
+
+diff --git a/config/Config-images.in b/config/Config-images.in
+index 8c4616f37c..a2c9be7d22 100644
+--- a/config/Config-images.in
++++ b/config/Config-images.in
+@@ -296,7 +296,7 @@ menu "Target Images"
+ 	config TARGET_ROOTFS_PARTSIZE
+ 		int "Root filesystem partition size (in MiB)"
+ 		depends on USES_ROOTFS_PART || TARGET_ROOTFS_EXT4FS
+-		default 104
++		default 256
+ 		help
+ 		  Select the root filesystem partition size.
+ 
+diff --git a/include/target.mk b/include/target.mk
+index 992f955344..aedf348ab4 100644
+--- a/include/target.mk
++++ b/include/target.mk
+@@ -25,7 +25,7 @@ DEFAULT_PACKAGES:=\
+ 	uci \
+ 	uclient-fetch \
+ 	urandom-seed \
+-	urngd
++	urngd luci-app-openvpn openvpn-openssl openvpn-easy-rsa collectd-mod-conntrack collectd-mod-cpufreq collectd-mod-irq collectd-mod-thermal luci-app-ksmbd luci-proto-wireguard bash blkid block-mount blockd btrfs-progs ca-certificates cgi-io collectd collectd-mod-cpu collectd-mod-interface collectd-mod-iwinfo collectd-mod-load collectd-mod-memory collectd-mod-network collectd-mod-rrdtool containerd -dnsmasq dnsmasq-full docker docker-compose dockerd fdisk fstools fwtool getrandom iw iwinfo jansson jshn jsonfilter kernel kmod-asn1-decoder kmod-asn1-encoder kmod-br-netfilter kmod-crypto-acompress kmod-crypto-aead kmod-crypto-authenc kmod-crypto-cbc kmod-crypto-ccm kmod-crypto-cmac kmod-crypto-crc32c kmod-crypto-ctr kmod-crypto-deflate kmod-crypto-des kmod-crypto-echainiv kmod-crypto-gcm kmod-crypto-gf128 kmod-crypto-ghash kmod-crypto-hash kmod-crypto-hmac kmod-crypto-manager kmod-crypto-md5 kmod-crypto-michael-mic kmod-crypto-null kmod-crypto-rng kmod-crypto-seqiv kmod-crypto-sha1 kmod-crypto-sha256 kmod-dax kmod-dm kmod-dummy kmod-fs-autofs4 kmod-fs-btrfs kmod-fs-exfat kmod-fs-ext4 kmod-fs-ntfs3 kmod-fuse kmod-hwmon-core kmod-ikconfig kmod-ipsec kmod-ipt-conntrack kmod-ipt-core kmod-ipt-extra kmod-ipt-nat kmod-ipt-nat6 kmod-ipt-physdev kmod-iptunnel kmod-keys-encrypted kmod-keys-trusted kmod-lib-crc-ccitt kmod-lib-crc16 kmod-lib-crc32c kmod-lib-lzo kmod-lib-raid6 kmod-lib-textsearch kmod-lib-xor kmod-lib-zlib-deflate kmod-lib-zlib-inflate kmod-lib-zstd kmod-libphy kmod-macvlan kmod-nf-conntrack kmod-nf-conntrack-netlink kmod-nf-conntrack6 kmod-nf-flow kmod-nf-ipt kmod-nf-ipt6 kmod-nf-ipvs kmod-nf-log kmod-nf-log6 kmod-nf-nat kmod-nf-nat6 kmod-nf-nathelper kmod-nf-nathelper-extra kmod-nf-reject kmod-nf-reject6 kmod-nfnetlink kmod-nft-compat kmod-nft-core kmod-nft-fib kmod-nft-nat kmod-nft-offload kmod-nls-base kmod-oid-registry kmod-phy-aquantia kmod-ppp kmod-pppoe kmod-pppox kmod-random-core kmod-scsi-core kmod-slhc kmod-thermal kmod-tpm kmod-udptunnel4 kmod-udptunnel6 kmod-usb-core kmod-usb-dwc3 kmod-usb-dwc3-qcom kmod-usb-storage kmod-usb-storage-extras kmod-usb-storage-uas kmod-usb-xhci-hcd kmod-usb3 kmod-veth kmod-vxlan libattr libblkid libblobmsg-json libcap libcomerr libdevmapper libevdev libext2fs libfdisk libgmp libiptext libiptext-nft libiptext6 libiwinfo libiwinfo-data libjson-c libjson-script libltdl liblua liblucihttp liblucihttp-lua liblucihttp-ucode liblzo libmbedtls libmnl libmount libncurses libnetfilter-conntrack libnettle libnfnetlink libnftnl libnl-tiny libopenssl libparted libreadline librrd1 libseccomp libsmartcols libss libubox libubus libubus-lua libuci libuclient libucode libudev-zero libusb-1.0 libustream-mbedtls libuuid libuv libwebsockets-full libxtables logd lsblk lua luci luci-app-dockerman luci-app-firewall luci-app-opkg luci-app-statistics luci-app-ttyd luci-base luci-compat luci-lib-base luci-lib-docker luci-lib-ip luci-lib-jsonc luci-lib-nixio luci-light luci-lua-runtime luci-mod-admin-full luci-mod-network luci-mod-status luci-mod-system luci-proto-ipv6 luci-proto-ppp luci-theme-bootstrap mount-utils mtd nftables-json ntfs-3g odhcp6c odhcpd-ipv6only openwrt-keyring parted ppp procd procd-seccomp procd-ujail rpcd rpcd-mod-file rpcd-mod-iwinfo rpcd-mod-luci rpcd-mod-rrdns rpcd-mod-ucode rrdtool1 runc smartmontools terminfo tini ttyd ubi-utils ubox ubus ubusd ucode ucode-mod-fs ucode-mod-html ucode-mod-lua ucode-mod-math ucode-mod-ubus ucode-mod-uci uhttpd uhttpd-mod-ubus usbutils usign vsftpd wireless-regdb xtables-nft zlib btop htop ucert luci-app-commands luci-app-diskman luci-app-pbr luci-app-adblock adb collectd-mod-sensors pciutils smartmontools-drivedb kmod-ata-ahci kmod-ata-core kmod-nvme kmod-usb-net-rndis resolveip wget-ssl ip-full ethtool iperf3-ssl tcpdump-mini luci-app-sqm luci-app-nlbwmon kmod-mtd-rw
+ 
+ ifneq ($(CONFIG_SELINUX),)
+ DEFAULT_PACKAGES+=busybox-selinux procd-selinux
+diff --git a/target/linux/generic/hack-5.15/400-fixup-ubi-warning.patch b/target/linux/generic/hack-5.15/400-fixup-ubi-warning.patch
+new file mode 100644
+index 0000000000..2e6ff2dc22
+--- /dev/null
++++ b/target/linux/generic/hack-5.15/400-fixup-ubi-warning.patch
+@@ -0,0 +1,13 @@
++--- a/drivers/mtd/mtdblock.c
+++++ b/drivers/mtd/mtdblock.c
++@@ -257,10 +257,6 @@ static int mtdblock_open(struct mtd_blkt
++ 		return 0;
++ 	}
++ 
++-	if (mtd_type_is_nand(mbd->mtd))
++-		pr_warn("%s: MTD device '%s' is NAND, please consider using UBI block devices instead.\n",
++-			mbd->tr->name, mbd->mtd->name);
++-
++ 	/* OK, it's not open. Create cache info for it */
++ 	mtdblk->count = 1;
++ 	mutex_init(&mtdblk->cache_mutex);
+diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+index 3d76e4d502..2c45251c8c 100644
+--- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
++++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+@@ -8,16 +8,12 @@ mediatek_setup_interfaces()
+ 	local board="$1"
+ 
+ 	case $board in
+-	asus,tuf-ax4200)
+-		CI_UBIPART="UBI_DEV"
+-		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" "eth1"
+-		;;
+ 	mediatek,mt7986a-rfb|\
+ 	mediatek,mt7986b-rfb)
+ 		ucidef_set_interfaces_lan_wan "lan0 lan1 lan2 lan3" eth1
+ 		;;
+ 	bananapi,bpi-r3)
+-		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2" "eth1 wan"
++		ucidef_set_interfaces_lan_wan "eth1 lan1 lan2 lan3 lan4 sfp2" wan
+ 		ucidef_set_interface_macaddr "wan" "$(macaddr_add $(cat /sys/class/net/eth0/address) 1)"
+ 		;;
+ 	xiaomi,redmi-router-ax6000-stock|\
+@@ -38,12 +34,6 @@ mediatek_setup_macs()
+ 	local label_mac=""
+ 
+ 	case $board in
+-	asus,tuf-ax4200)
+-		CI_UBIPART="UBI_DEV"
+-		addr=$(mtd_get_mac_binary_ubi "Factory" 0x4)
+-		wan_mac="${addr}"
+-		lan_mac="${addr}"
+-		;;
+ 	xiaomi,redmi-router-ax6000-stock|\
+ 	xiaomi,redmi-router-ax6000-ubootmod)
+ 		wan_mac=$(mtd_get_mac_ascii Bdata ethaddr_wan)
+diff --git a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
+deleted file mode 100644
+index 0fe4c69988..0000000000
+--- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/firmware/11-mt76-caldata
++++ /dev/null
+@@ -1,21 +0,0 @@
+-#!/bin/sh
+-
+-[ -e /lib/firmware/$FIRMWARE ] && exit 0
+-
+-. /lib/functions/caldata.sh
+-
+-board=$(board_name)
+-
+-case "$FIRMWARE" in
+-"mediatek/mt7986_eeprom_mt7976_dbdc.bin")
+-	case "$board" in
+-	asus,tuf-ax4200)
+-		CI_UBIPART="UBI_DEV"
+-		caldata_extract_ubi "Factory" 0x0 0x1000
+-		;;
+-	esac
+-	;;
+-*)
+-	exit 1
+-	;;
+-esac
+diff --git a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
+index ecaf2eadcd..fd822e3d4c 100644
+--- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
++++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
+@@ -10,15 +10,6 @@ PHYNBR=${DEVPATH##*/phy}
+ board=$(board_name)
+ 
+ case "$board" in
+-	asus,tuf-ax4200)
+-		CI_UBIPART="UBI_DEV"
+-		addr=$(mtd_get_mac_binary_ubi "Factory" 0x4)
+-		# Originally, phy0 is phy1 mac with LA bit set. However, this would conflict
+-		# addresses on mutiple VIFs with the other radio. Set LA bit and increment
+-		# mac-address instead.
+-		[ "$PHYNBR" = "0" ] && macaddr_setbit_la $(macaddr_add $addr 1) > /sys${DEVPATH}/macaddress
+-		[ "$PHYNBR" = "1" ] && echo "$addr" > /sys${DEVPATH}/macaddress
+-		;;
+ 	bananapi,bpi-r3)
+ 		addr=$(macaddr_add $(cat /sys/class/net/eth0/address) 2)
+ 		[ "$PHYNBR" = "0" ] && macaddr_unsetbit $addr 6 > /sys${DEVPATH}/macaddress
+diff --git a/target/linux/mediatek/filogic/base-files/lib/preinit/10_fix_eth_mac.sh b/target/linux/mediatek/filogic/base-files/lib/preinit/10_fix_eth_mac.sh
+deleted file mode 100644
+index ec078741c9..0000000000
+--- a/target/linux/mediatek/filogic/base-files/lib/preinit/10_fix_eth_mac.sh
++++ /dev/null
+@@ -1,14 +0,0 @@
+-. /lib/functions/system.sh
+-
+-preinit_set_mac_address() {
+-	case $(board_name) in
+-	asus,tuf-ax4200)
+-		CI_UBIPART="UBI_DEV"
+-		addr=$(mtd_get_mac_binary_ubi "Factory" 0x4)
+-		ip link set dev eth0 address "$addr"
+-		ip link set dev eth1 address "$addr"
+-		;;
+-	esac
+-}
+-
+-boot_hook_add preinit_main preinit_set_mac_address
+diff --git a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+index ca09741030..9a389d59b1 100755
+--- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
++++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+@@ -42,11 +42,6 @@ platform_do_upgrade() {
+ 	local board=$(board_name)
+ 
+ 	case "$board" in
+-	asus,tuf-ax4200)
+-		CI_UBIPART="UBI_DEV"
+-		CI_KERNPART="linux"
+-		nand_do_upgrade "$1"
+-		;;
+ 	bananapi,bpi-r3)
+ 		local rootdev="$(cmdline_get_var root)"
+ 		rootdev="${rootdev##*/}"
+diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/image/filogic.mk
+index f1fa11b49a..7dd8d40a45 100644
+--- a/target/linux/mediatek/image/filogic.mk
++++ b/target/linux/mediatek/image/filogic.mk
+@@ -38,23 +38,6 @@ define Build/mt7986-gpt
+ 	rm $@.tmp
+ endef
+ 
+-define Device/asus_tuf-ax4200
+-  DEVICE_VENDOR := ASUS
+-  DEVICE_MODEL := TUF-AX4200
+-  DEVICE_DTS := mt7986a-asus-tuf-ax4200
+-  DEVICE_DTS_DIR := ../dts
+-  DEVICE_DTS_LOADADDR := 0x47000000
+-  DEVICE_PACKAGES := kmod-usb3 kmod-mt7986-firmware mt7986-wo-firmware
+-  IMAGES := sysupgrade.bin
+-  KERNEL_LOADADDR := 0x48000000
+-  KERNEL = kernel-bin | lzma | \
+-	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
+-  KERNEL_INITRAMFS := kernel-bin | lzma | \
+-	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+-  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+-endef
+-TARGET_DEVICES += asus_tuf-ax4200
+-
+ 
+ define Device/bananapi_bpi-r3
+   DEVICE_VENDOR := Bananapi
+-- 
+2.39.2
+
