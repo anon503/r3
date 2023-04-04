@@ -25,6 +25,7 @@ jobs:
                 git apply luci-app-diskman.patch
                 cd -
                 sed -i "13s/'1'/'0'/" feeds/packages/utils/dockerd/files/etc/config/dockerd
+                sed -i '49d' target/linux/mediatek/image/filogic.mk
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
                 mv r3 .config
