@@ -34,12 +34,13 @@ jobs:
                 make toolchain/install -j$(nproc)
                 make -j$(nproc) 'IGNORE_ERRORS=n m'
                 rm -rf bin/targets/mediatek/filogic/packages
+                echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
             - name: Create release
               uses: ncipollo/release-action@v1.12.0
               with:
                 allowUpdates: true
                 name: BPI-R3 Images
-                tag: v5.15
+                tag: r3-${{ env.D }}
                 replacesArtifacts: true
                 prerelease: false
                 token: "${{ secrets.GITHUB_TOKEN }}"
