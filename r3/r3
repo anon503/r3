@@ -26,6 +26,7 @@ CONFIG_OPENSSL_OPTIMIZE_SPEED=y
 # CONFIG_OPENVPN_openssl_ENABLE_SMALL is not set
 CONFIG_PACKAGE_dnsmasq=m
 CONFIG_PACKAGE_libxdp=m
+CONFIG_PACKAGE_mt7981-wo-firmware=m
 CONFIG_PACKAGE_qosify=m
 CONFIG_PACKAGE_xdp-filter=m
 CONFIG_PACKAGE_xdp-loader=m
@@ -38,7 +39,12 @@ CONFIG_TARGET_OPTIONS=y
 CONFIG_USE_LLVM_BUILD=y
 # CONFIG_SDK is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_asus_tuf-ax4200 is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_cudy_wr3000-v1 is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_glinet_gl-mt3000 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_mediatek_mt7986a-rfb-nand is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_mediatek_mt7986b-rfb is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tplink_tl-xdr4288 is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tplink_tl-xdr6086 is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tplink_tl-xdr6088 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_xiaomi_redmi-router-ax6000-stock is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_xiaomi_redmi-router-ax6000-ubootmod is not set
