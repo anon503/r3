@@ -53,3 +53,4 @@ CONFIG_USE_LLVM_BUILD=y
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_netgear_wax220 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_qihoo_360t7 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_zyxel_ex5601-t0-stock is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_h3c_magic-nx30-pro is not set
