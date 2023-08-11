@@ -1,7 +1,7 @@
 name: bpi-r3 images
 on:
   schedule:
-    - cron: '10 2 * * *'
+    - cron: '40 1 * * *'
     - cron: '30 12 * * *'
 
 jobs:
