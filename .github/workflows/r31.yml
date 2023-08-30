@@ -1,4 +1,4 @@
-name: bpi-r3 images
+name: bpi-r3 v6.1 images
 on:
   schedule:
     - cron: '40 14 * * *'
