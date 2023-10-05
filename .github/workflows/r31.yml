@@ -1,7 +1,7 @@
 name: bpi-r3 v6.1 images
 on:
   schedule:
-    - cron: '40 17 * * *'
+    - cron: '20 19 * * *'
 
 jobs:
     build:
@@ -24,6 +24,7 @@ jobs:
                 cd -
                 sed -i "13s/'1'/'0'/" feeds/packages/utils/dockerd/files/etc/config/dockerd
                 sed -i "s/KERNEL_PATCHVER:=5.15/KERNEL_PATCHVER:=6.1/g" target/linux/mediatek/Makefile
+                sed -i "15s/port->base/pcie->base/" target/linux/mediatek/patches-6.1/611-pcie-mediatek-gen3-PERST-for-100ms.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
                 mv r31 .config
