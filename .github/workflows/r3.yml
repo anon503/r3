@@ -23,6 +23,7 @@ jobs:
                 git apply luci-app-diskman.patch
                 cd -
                 sed -i "13s/'1'/'0'/" feeds/packages/utils/dockerd/files/etc/config/dockerd
+                sed -i "28s/<255 96 0>/<0 96 255>/" target/linux/mediatek/patches-6.1/018-v6.5-arm64-dts-mt7986-add-pwm-fan-and-cooling-maps-to-BPI.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
                 mv r3 .config
