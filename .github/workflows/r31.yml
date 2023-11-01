@@ -1,7 +1,7 @@
 name: bpi-r3 v6.1 images
 on:
   schedule:
-    - cron: '00 20 * * *'
+    - cron: '00 00 * * *'
 
 jobs:
     build:
@@ -41,8 +41,6 @@ jobs:
                 mv r31 .config
                 make defconfig
                 make download -j32
-                make tools/install -j$(nproc)
-                make toolchain/install -j$(nproc)
                 make -j$(nproc) 'IGNORE_ERRORS=n m'
                 rm -rf bin/targets/mediatek/filogic/packages
                 echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
