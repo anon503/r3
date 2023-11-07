@@ -6,17 +6,6 @@ jobs:
         name: Build BPI-R3 v6.1 Images
         runs-on: macos-latest
         steps:
-            - name: Maximize build space
-              uses: easimon/maximize-build-space@master
-              with:
-                root-reserve-mb: 512
-                swap-size-mb: 1024
-                remove-dotnet: 'true'
-                overprovision-lvm: 'true'
-                remove-android: 'true'
-                remove-haskell: 'true'
-                remove-codeql: 'true'
-                remove-docker-images: 'true'
             - name: checkout
               uses: actions/checkout@v3
             - name: Build
