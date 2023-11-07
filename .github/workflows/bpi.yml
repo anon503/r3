@@ -8,6 +8,7 @@ jobs:
             - name: Get number of CPU cores
               uses: SimenB/github-actions-cpu-cores@v1
               id: cpu-cores
+            - name: Maximize build space
               uses: easimon/maximize-build-space@master
               with:
                 root-reserve-mb: 512
