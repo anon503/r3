@@ -4,7 +4,7 @@ on: [push]
 jobs:
     build:
         name: Build BPI-R3 v6.1 Images
-        runs-on: macos-13-xlarge
+        runs-on: macos-latest-xlarge
         steps:
             - name: Maximize build space
               uses: easimon/maximize-build-space@master
