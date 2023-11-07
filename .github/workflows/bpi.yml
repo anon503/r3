@@ -5,9 +5,14 @@ jobs:
         name: Build BPI-R3 v6.1 Images
         runs-on: ubuntu-latest
         steps:
-            - name: Get number of CPU cores
-              uses: SimenB/github-actions-cpu-cores@v1
-              id: cpu-cores
+            - uses: actions/checkout@v2
+            - uses: kenchan0130/actions-system-info@master
+              id: system-info
+            - uses: actions/cache@v2
+              with:
+                 path: ~/.npm
+                 key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-node-${{ hashFiles('**/package-lock.json') }}
+                 restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-node-
             - name: Maximize build space
               uses: easimon/maximize-build-space@master
               with:
