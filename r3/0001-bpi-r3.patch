@@ -58,14 +58,14 @@ index 4013c149f1..6d8f66c388 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 @@ -19,7 +19,7 @@ mediatek_setup_interfaces()
- 		ucidef_set_interface_lan "eth0"
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 lan5" eth1
  		;;
  	bananapi,bpi-r3)
 -		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2" "eth1 wan"
 +		ucidef_set_interfaces_lan_wan "eth1 lan1 lan2 lan3 lan4 sfp2" wan
  		;;
- 	cudy,wr3000-v1)
- 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" "wan"
+ 	cetron,ct3003|\
+ 	cudy,wr3000-v1|\
 diff --git a/package/firmware/wireless-regdb/patches/600-custom.patch b/package/firmware/wireless-regdb/patches/600-custom.patch
 new file mode 100644
 index 0000000000..46590f4d28
