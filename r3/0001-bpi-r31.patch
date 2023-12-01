@@ -79,7 +79,7 @@ index 4013c149f1..6d8f66c388 100644
 +		ucidef_set_interfaces_lan_wan "eth1 lan1 lan2 lan3 lan4 sfp2" wan
  		;;
  	cetron,ct3003|\
- 	cudy,wr3000-v1|\
+ 	confiabits,mt7981|\
 diff --git a/package/firmware/wireless-regdb/patches/600-custom.patch b/package/firmware/wireless-regdb/patches/600-custom.patch
 new file mode 100644
 index 0000000000..46590f4d28
