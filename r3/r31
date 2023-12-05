@@ -65,3 +65,4 @@ CONFIG_USE_LLVM_BUILD=y
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_zyxel_ex5601-t0-ubootmod is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_glinet_gl-mt2500 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_confiabits_mt7981 is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_acelink_ew-7886cax is not set
