@@ -38,9 +38,14 @@ jobs:
                 sed -i "28s/<255 96 0>/<0 52 96 255>/" target/linux/mediatek/patches-6.1/018-v6.5-arm64-dts-mt7986-add-pwm-fan-and-cooling-maps-to-BPI.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
+                sed -i '129d' package/base-files/Makefile
+                sed -i '135d' package/base-files/Makefile
+                mkdir -p files/www/repo
                 mv r31 .config
                 make defconfig
                 make download -j32
+                make -j$(nproc) 'IGNORE_ERRORS=n m'
+                cp -R bin/targets/mediatek/filogic/packages/ files/www/repo/
                 make -j$(nproc) 'IGNORE_ERRORS=n m'
                 rm -rf bin/targets/mediatek/filogic/packages
                 echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
