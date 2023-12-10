@@ -37,6 +37,7 @@ jobs:
                 sed -i "45s/<255 96 0>/<0 96 255>/" target/linux/mediatek/files-5.15/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
+                rm -rf files/etc/opkg
                 mv r3 .config
                 make defconfig
                 make download -j32
