@@ -70,3 +70,4 @@ CONFIG_USE_LLVM_BUILD=y
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_smartrg_sdg-8614 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_smartrg_sdg-8622 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_smartrg_sdg-8632 is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_zbtlink_zbt-z8103ax is not set
