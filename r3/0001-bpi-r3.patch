@@ -64,8 +64,8 @@ index 4013c149f1..6d8f66c388 100644
 -		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2" "eth1 wan"
 +		ucidef_set_interfaces_lan_wan "eth1 lan1 lan2 lan3 lan4 sfp2" wan
  		;;
- 	cetron,ct3003|\
- 	confiabits,mt7981|\
+ 	cmcc,rax3000m|\
+ 	h3c,magic-nx30-pro|\
 diff --git a/package/firmware/wireless-regdb/patches/600-custom.patch b/package/firmware/wireless-regdb/patches/600-custom.patch
 new file mode 100644
 index 0000000000..46590f4d28
