@@ -17,7 +17,7 @@ CONFIG_HAS_BPF_TOOLCHAIN=y
 CONFIG_IB=y
 CONFIG_KERNEL_BUILD_DOMAIN="buildhost"
 CONFIG_KERNEL_BUILD_USER="builder"
-CONFIG_KERNEL_WERROR=y
+# CONFIG_KERNEL_WERRORis not set
 CONFIG_PACKAGE_libxdp=m
 CONFIG_PACKAGE_mt7981-wo-firmware=m
 CONFIG_PACKAGE_qosify=m
@@ -40,6 +40,7 @@ CONFIG_USE_LLVM_BUILD=y
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_cudy_wr3000-v1 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_glinet_gl-mt3000 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_glinet_gl-mt6000 is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_jdcloud_re-cp-03 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_h3c_magic-nx30-pro is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_mediatek_mt7981-rfb is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_mediatek_mt7986a-rfb-nand is not set
