@@ -47,7 +47,7 @@ jobs:
                 rm -rf bin/targets/mediatek/filogic/packages
                 echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
             - name: Create release
-              uses: ncipollo/release-action@v1.13.0
+              uses: ncipollo/release-action@v1.14.0
               with:
                 allowUpdates: true
                 name: BPI-R3 Images ${{ env.D }}
