@@ -67,40 +67,29 @@ index f73f2daef6..279c167b83 100644
 
  include $(INCLUDE_DIR)/target.mk
  DEFAULT_PACKAGES += \
-diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-index 4013c149f1..6d8f66c388 100644
---- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-+++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-@@ -19,7 +19,7 @@ mediatek_setup_interfaces()
- 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 lan5" eth1
- 		;;
- 	bananapi,bpi-r3)
--		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2" "eth1 wan"
-+		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2 eth1 eth2" wan
- 		;;
- 	cmcc,rax3000m|\
- 	h3c,magic-nx30-pro|\
-diff --git a/package/firmware/wireless-regdb/patches/600-custom.patch b/package/firmware/wireless-regdb/patches/600-custom.patch
+diff --git a/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch b/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch
 new file mode 100644
-index 0000000000..46590f4d28
+index 0000000000..dfa0195e94
 --- /dev/null
-+++ b/package/firmware/wireless-regdb/patches/600-custom.patch
-@@ -0,0 +1,30 @@
++++ b/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch
+@@ -0,0 +1,32 @@
++diff --git a/db.txt b/db.txt
++index 36e07b8..1e759b3 100644
 +--- a/db.txt
 ++++ b/db.txt
-+@@ -353,8 +353,8 @@ country CL: DFS-JP
-+ # https://wap.miit.gov.cn/cms_files/filemanager/1226211233/attach/20219/d125301b13454551b698ff5afa49ca28.pdf
++@@ -406,8 +406,8 @@ country CL: DFS-JP
++ # https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20236/d1dc19424d5a4cfe90d631adeee8dd58.pdf
 + # Note: The transmit power for 5150-5350MHz bands can be raised by 3dBm when TPC is implemented
 + country CN: DFS-FCC
 +-	(2400 - 2483.5 @ 40), (20)
-+-	(5150 - 5350 @ 80), (20), DFS, AUTO-BW
++-	(5150 - 5350 @ 80), (20), DFS, AUTO-BW, NO-OUTDOOR
 ++	(2400 - 2483.5 @ 40), (30)
 ++	(5150 - 5350 @ 160), (30)
 + 	(5725 - 5850 @ 80), (33)
 + 	# 60 GHz band channels 1,4: 28dBm, channels 2,3: 44dBm
 + 	# ref: http://www.miit.gov.cn/n11293472/n11505629/n11506593/n11960250/n11960606/n11960700/n12330791.files/n12330790.pdf
-+@@ -1626,14 +1626,12 @@ country US: DFS-FCC
-+ 	(920-928 @ 8), (30)
++@@ -1789,14 +1789,12 @@ country US: DFS-FCC
++ 	(920 - 928 @ 8), (30)
 + 	(2400 - 2472 @ 40), (30)
 + 	# 5.15 ~ 5.25 GHz: 30 dBm for master mode, 23 dBm for clients
 +-	(5150 - 5250 @ 80), (23), AUTO-BW
