@@ -30,8 +30,8 @@ jobs:
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
-                wget https://gist.githubusercontent.com/mj22226/f6db007367a22a31f9cb1c109a032b45/raw/be368c4f1605f652a001d81548c3a3e14adf6cb7/luci-app-diskman.patch
-                git apply luci-app-diskman.patch
+                wget https://gist.githubusercontent.com/mj22226/363cefecd314e45b49d8eafff8473fcf/raw/69b47c9a972e15056f94870d76d93a5146893f99/01-diskman.patch
+                git apply 01-diskman.patch
                 cd -
                 sed -i "13s/'1'/'0'/" feeds/packages/utils/dockerd/files/etc/config/dockerd
                 sed -i "45s/<255 96 0>/<0 96 255>/" target/linux/mediatek/files-5.15/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
