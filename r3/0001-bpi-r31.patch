@@ -53,20 +53,6 @@ index 0000000000..2e6ff2dc22
 + 	/* OK, it's not open. Create cache info for it */
 + 	mtdblk->count = 1;
 + 	mutex_init(&mtdblk->cache_mutex);
-diff --git a/target/linux/mediatek/Makefile b/target/linux/mediatek/Makefile
-index f73f2daef6..279c167b83 100644
---- a/target/linux/mediatek/Makefile
-+++ b/target/linux/mediatek/Makefile
-@@ -8,8 +8,7 @@ BOARDNAME:=MediaTek Ralink ARM
- SUBTARGETS:=mt7622 mt7623 mt7629 filogic
- FEATURES:=dt-overlay emmc fpu gpio nand pci pcie rootfs-part separate_ramdisk squashfs usb
-
--KERNEL_PATCHVER:=5.15
--KERNEL_TESTING_PATCHVER:=6.1
-+KERNEL_PATCHVER:=6.1
-
- include $(INCLUDE_DIR)/target.mk
- DEFAULT_PACKAGES += \
 diff --git a/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch b/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch
 new file mode 100644
 index 0000000000..dfa0195e94
