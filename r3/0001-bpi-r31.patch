@@ -91,6 +91,19 @@ index 0000000000..dfa0195e94
 + 	# https://www.federalregister.gov/documents/2021/05/03/2021-08802/use-of-the-5850-5925-ghz-band
 + 	# max. 33 dBm AP @ 20MHz, 36 dBm AP @ 40Mhz+, 6 dB less for clients
 + 	(5850 - 5895 @ 40), (27), NO-OUTDOOR, AUTO-BW, NO-IR
+diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+index 5542f1518a..84507ec003 100644
+--- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
++++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+@@ -33,7 +33,7 @@ mediatek_setup_interfaces()
+ 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 lan5" eth1
+ 		;;
+ 	bananapi,bpi-r3)
+-		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2" "eth1 wan"
++		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2 eth1 eth2" "wan"
+ 		;;
+ 	bananapi,bpi-r3-mini)
+ 		ucidef_set_interfaces_lan_wan eth0 eth1
 -- 
 2.39.2
 
