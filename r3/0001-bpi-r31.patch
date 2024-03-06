@@ -102,8 +102,8 @@ index 5542f1518a..84507ec003 100644
 -		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2" "eth1 wan"
 +		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2 eth1 eth2" "wan"
  		;;
- 	bananapi,bpi-r3-mini)
- 		ucidef_set_interfaces_lan_wan eth0 eth1
+ 	cmcc,rax3000m|\
+ 	h3c,magic-nx30-pro|\
 -- 
 2.39.2
 
