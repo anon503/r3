@@ -1,7 +1,7 @@
 name: bpi-r3 v1.2 images
 on:
   schedule:
-    - cron: '00 15 * * *'
+    - cron: '00 20 * * *'
 
 jobs:
     build:
@@ -26,7 +26,6 @@ jobs:
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/* openwrt/
                 cd openwrt
-                echo "COMMIT=$(git ls-remote https://github.com/openwrt/openwrt.git | head -1 | sed "s/HEAD//")" >> $GITHUB_ENV
                 wget https://downloads.openwrt.org/snapshots/targets/mediatek/filogic/llvm-bpf-15.0.7.Linux-x86_64.tar.xz
                 tar -xvf llvm-bpf-15.0.7.Linux-x86_64.tar.xz
                 git apply 0001-bpi-r31.patch
@@ -64,7 +63,6 @@ jobs:
               uses: ncipollo/release-action@v1.14.0
               with:
                 allowUpdates: true
-                commit: ${{ env.COMMIT }}
                 name: BPI-R3 v1.2 Images ${{ env.D }}
                 tag: v1.2
                 replacesArtifacts: true
