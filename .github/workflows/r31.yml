@@ -1,5 +1,7 @@
-name: bpi-r3 v6.1 images
-on: [push]
+name: bpi-r3 v1.2 images
+on:
+  schedule:
+    - cron: '05 05 * * *'
 
 jobs:
     build:
@@ -24,37 +26,45 @@ jobs:
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/* openwrt/
                 cd openwrt
-                git reset --hard b61ecb7d756b9302fa4e1463f47a591f0a81028e
                 wget https://downloads.openwrt.org/snapshots/targets/mediatek/filogic/llvm-bpf-15.0.7.Linux-x86_64.tar.xz
                 tar -xvf llvm-bpf-15.0.7.Linux-x86_64.tar.xz
                 git apply 0001-bpi-r31.patch
+                git apply 6.1.81.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
                 wget https://gist.githubusercontent.com/mj22226/363cefecd314e45b49d8eafff8473fcf/raw/69b47c9a972e15056f94870d76d93a5146893f99/01-diskman.patch
                 git apply 01-diskman.patch
                 cd -
+                cd  feeds/packages
+                wget https://gist.githubusercontent.com/mj22226/351f11e66f08f06e37a985719a31ddb4/raw/b35ba7a3aac1949bd6bbeaad065a0a93dc3c34f0/01-cpu.patch
+                wget https://gist.githubusercontent.com/mj22226/b66f5c1bd5fc7e1cb3cf2c690b5dbd5a/raw/b955e726cbb0948d932c8d6143229ad604320149/20-lxc.patch
+                wget https://github.com/mj22226/packages/commit/314f848745eed3daa28368ca6c487e6f0a9fc665.patch
+                git apply 01-cpu.patch
+                git apply 20-lxc.patch
+                git apply 314f848745eed3daa28368ca6c487e6f0a9fc665.patch
+                cd -
                 sed -i "13s/'1'/'0'/" feeds/packages/utils/dockerd/files/etc/config/dockerd
-                sed -i "28s/<255 96 0>/<0 52 96 255>/" target/linux/mediatek/patches-6.1/018-v6.5-arm64-dts-mt7986-add-pwm-fan-and-cooling-maps-to-BPI.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
-                sed -i '129d' package/base-files/Makefile
-                sed -i '135d' package/base-files/Makefile
                 mkdir -p files/www/repo
                 mv r31 .config
                 make defconfig
                 make download -j32
                 make -j$(nproc) 'IGNORE_ERRORS=n m'
-                cp -R bin/targets/mediatek/filogic/packages/ files/www/repo/
-                make -j$(nproc) 'IGNORE_ERRORS=n m'
+                tar -czvf bin/targets/mediatek/filogic/packages.tar.gz bin/targets/mediatek/filogic/packages
                 rm -rf bin/targets/mediatek/filogic/packages
                 echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
+            - name: Delete tag
+              run: gh release delete v1.2 --cleanup-tag || true
+              env:
+                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
             - name: Create release
               uses: ncipollo/release-action@v1.14.0
               with:
                 allowUpdates: true
                 name: BPI-R3 v6.1 Images ${{ env.D }}
-                tag: r3-v6-${{ env.D }}
+                tag: v1.2
                 replacesArtifacts: true
                 prerelease: false
                 token: "${{ secrets.GITHUB_TOKEN }}"
