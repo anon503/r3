@@ -1,58 +1,54 @@
-From 775502c3c62d8812822fc39562d9949569e0c3a8 Mon Sep 17 00:00:00 2001
-From: NN <nn@gmail.com>
-Date: Sun, 2 Apr 2023 00:11:01 -0400
-Subject: [PATCH] bpi-r3
+From c389a380e73496c726113fffcd9ae95dc212aba1 Mon Sep 17 00:00:00 2001
+From: u u <u@gmail.com>
+Date: Wed, 6 Mar 2024 17:15:03 -0500
+Subject: [PATCH 1/2] github feeds
 
 ---
- config/Config-images.in                       |  2 +-
- include/target.mk                             |  2 +-
- .../hack-6.1/400-fixup-ubi-warning.patch     | 13 ++++++++++++
+ feeds.conf.default                            |  8 ++---
+ package/base-files/Makefile                   |  2 --
+ .../600-custom-change-txpower-and-dfs.patch   | 32 +++++++++++++++++++
+ .../hack-6.1/400-fixup-ubi-warning.patch      | 13 ++++++++
+ .../filogic/base-files/etc/board.d/02_network |  2 +-
+ ...-add-pwm-fan-and-cooling-maps-to-BPI.patch |  2 +-
+ 6 files changed, 51 insertions(+), 8 deletions(-)
+ create mode 100644 package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch
+ create mode 100644 target/linux/generic/hack-6.1/400-fixup-ubi-warning.patch
 
-diff --git a/config/Config-images.in b/config/Config-images.in
-index 8c4616f37c..a2c9be7d22 100644
---- a/config/Config-images.in
-+++ b/config/Config-images.in
-@@ -296,7 +296,7 @@ menu "Target Images"
- 	config TARGET_ROOTFS_PARTSIZE
- 		int "Root filesystem partition size (in MiB)"
- 		depends on USES_ROOTFS_PART || TARGET_ROOTFS_EXT4FS
--		default 104
-+		default 256
- 		help
- 		  Select the root filesystem partition size.
+diff --git a/feeds.conf.default b/feeds.conf.default
+index fc679335e0..afa01cf060 100644
+--- a/feeds.conf.default
++++ b/feeds.conf.default
+@@ -1,7 +1,7 @@
+-src-git packages https://git.openwrt.org/feed/packages.git
+-src-git luci https://git.openwrt.org/project/luci.git
+-src-git routing https://git.openwrt.org/feed/routing.git
+-src-git telephony https://git.openwrt.org/feed/telephony.git
++src-git packages https://github.com/openwrt/packages.git
++src-git luci https://github.com/openwrt/luci.git
++src-git routing https://github.com/openwrt/routing.git
++src-git telephony https://github.com/openwrt/telephony.git
+ #src-git video https://github.com/openwrt/video.git
+ #src-git targets https://github.com/openwrt/targets.git
+ #src-git oldpackages http://git.openwrt.org/packages.git
+diff --git a/package/base-files/Makefile b/package/base-files/Makefile
+index 67fc5d29c1..f8fc70a4fd 100644
+--- a/package/base-files/Makefile
++++ b/package/base-files/Makefile
+@@ -126,14 +126,12 @@ ifdef CONFIG_SIGNED_PACKAGES
  
-diff --git a/include/target.mk b/include/target.mk
-index 992f955344..aedf348ab4 100644
---- a/include/target.mk
-+++ b/include/target.mk
-@@ -25,7 +25,7 @@ DEFAULT_PACKAGES:=\
- 	uci \
- 	uclient-fetch \
- 	urandom-seed \
--	urngd
-+	urngd bridger luci-app-openvpn openvpn-openssl openvpn-easy-rsa collectd-mod-conntrack collectd-mod-cpufreq collectd-mod-irq collectd-mod-thermal luci-app-ksmbd luci-proto-wireguard bash blkid block-mount blockd btrfs-progs ca-certificates cgi-io collectd collectd-mod-cpu collectd-mod-interface collectd-mod-iwinfo collectd-mod-load collectd-mod-memory collectd-mod-network collectd-mod-rrdtool containerd -dnsmasq dnsmasq-full docker docker-compose dockerd fdisk fstools fwtool getrandom iw iwinfo jansson jshn jsonfilter kernel kmod-asn1-decoder kmod-asn1-encoder kmod-br-netfilter kmod-crypto-acompress kmod-crypto-aead kmod-crypto-authenc kmod-crypto-cbc kmod-crypto-ccm kmod-crypto-cmac kmod-crypto-crc32c kmod-crypto-ctr kmod-crypto-deflate kmod-crypto-des kmod-crypto-echainiv kmod-crypto-gcm kmod-crypto-gf128 kmod-crypto-ghash kmod-crypto-hash kmod-crypto-hmac kmod-crypto-manager kmod-crypto-md5 kmod-crypto-michael-mic kmod-crypto-null kmod-crypto-rng kmod-crypto-seqiv kmod-crypto-sha1 kmod-crypto-sha256 kmod-dax kmod-dm kmod-dummy kmod-fs-autofs4 kmod-fs-btrfs kmod-fs-exfat kmod-fs-ext4 kmod-fs-ntfs3 kmod-fuse kmod-hwmon-core kmod-ikconfig kmod-ipsec kmod-ipt-conntrack kmod-ipt-core kmod-ipt-extra kmod-ipt-nat kmod-ipt-nat6 kmod-ipt-physdev kmod-iptunnel kmod-keys-encrypted kmod-keys-trusted kmod-lib-crc-ccitt kmod-lib-crc16 kmod-lib-crc32c kmod-lib-lzo kmod-lib-raid6 kmod-lib-textsearch kmod-lib-xor kmod-lib-zlib-deflate kmod-lib-zlib-inflate kmod-lib-zstd kmod-libphy kmod-macvlan kmod-nf-conntrack kmod-nf-conntrack-netlink kmod-nf-conntrack6 kmod-nf-flow kmod-nf-ipt kmod-nf-ipt6 kmod-nf-ipvs kmod-nf-log kmod-nf-log6 kmod-nf-nat kmod-nf-nat6 kmod-nf-nathelper kmod-nf-nathelper-extra kmod-nf-reject kmod-nf-reject6 kmod-nfnetlink kmod-nft-compat kmod-nft-core kmod-nft-fib kmod-nft-nat kmod-nft-offload kmod-nls-base kmod-oid-registry kmod-ppp kmod-pppoe kmod-pppox kmod-random-core kmod-scsi-core kmod-slhc kmod-thermal kmod-tpm kmod-udptunnel4 kmod-udptunnel6 kmod-usb-core kmod-usb-storage kmod-usb-storage-extras kmod-usb-storage-uas kmod-usb-xhci-hcd kmod-usb3 kmod-veth kmod-vxlan libattr libblkid libblobmsg-json libcap libcomerr libdevmapper libevdev libext2fs libfdisk libgmp libiptext libiptext-nft libiptext6 libiwinfo libiwinfo-data libjson-c libjson-script libltdl liblua liblucihttp liblucihttp-lua liblucihttp-ucode liblzo libmbedtls libmnl libmount libncurses libnetfilter-conntrack libnettle libnfnetlink libnftnl libnl-tiny libopenssl libparted libreadline librrd1 libseccomp libsmartcols libss libubox libubus libubus-lua libuci libuclient libucode libudev-zero libusb-1.0 libustream-mbedtls libuuid libuv libwebsockets-full libxtables logd lsblk lua luci luci-app-dockerman luci-app-firewall luci-app-opkg luci-app-statistics luci-app-ttyd luci-base luci-compat luci-lib-base luci-lib-docker luci-lib-ip luci-lib-jsonc luci-lib-nixio luci-light luci-lua-runtime luci-mod-admin-full luci-mod-network luci-mod-status luci-mod-system luci-proto-ipv6 luci-proto-ppp luci-theme-bootstrap mount-utils mtd nftables-json ntfs-3g odhcp6c odhcpd-ipv6only openwrt-keyring parted ppp procd procd-seccomp procd-ujail rpcd rpcd-mod-file rpcd-mod-iwinfo rpcd-mod-luci rpcd-mod-rrdns rpcd-mod-ucode rrdtool1 runc smartmontools terminfo tini ttyd ubi-utils ubox ubus ubusd ucode ucode-mod-fs ucode-mod-html ucode-mod-lua ucode-mod-math ucode-mod-ubus ucode-mod-uci uhttpd uhttpd-mod-ubus usbutils usign vsftpd wireless-regdb xtables-nft btop htop ucert luci-app-commands luci-app-diskman luci-app-pbr luci-app-adblock adb collectd-mod-sensors pciutils smartmontools-drivedb kmod-ata-ahci kmod-ata-core kmod-nvme kmod-usb-net-rndis resolveip wget-ssl ip-full ethtool iperf3-ssl tcpdump-mini luci-app-sqm luci-app-nlbwmon kmod-mtd-rw atop ccrypt certtool cryptsetup cryptsetup-ssh kmod-crypto-user kmod-hwmon-gpiofan kmod-hwmon-pwmfan kmod-i2c-core kmod-mt76-usb kmod-mt76x02-common kmod-mt76x02-usb kmod-mt76x2-common kmod-mt76x2u kmod-mt7921-common kmod-mt7921-firmware kmod-mt7921e kmod-mt7921u kmod-mt792x-common kmod-mt792x-usb kmod-usb-net-cdc-ncm kmod-usb-net-rtl8152 kmod-usb-printer libaio libgnutls libpopt libssh lvm2 arp-scan arp-scan-database kmod-crypto-arc4 kmod-crypto-crc32 kmod-cryptodev kmod-fs-f2fs kmod-fs-squashfs kmod-fs-vfat kmod-gre kmod-l2tp kmod-mppe kmod-netatop kmod-nls-cp437 kmod-pppol2tp kmod-pptp kmod-usb-net-ipheth kmod-usb-net-qmi-wwan kmod-usb-uhci kmod-usb-wdm netatop ppp-mod-pppol2tp ppp-mod-pptp xl2tpd
+   endef
  
- ifneq ($(CONFIG_SELINUX),)
- DEFAULT_PACKAGES+=busybox-selinux procd-selinux
-diff --git a/target/linux/generic/hack-6.1/400-fixup-ubi-warning.patch b/target/linux/generic/hack-6.1/400-fixup-ubi-warning.patch
-new file mode 100644
-index 0000000000..2e6ff2dc22
---- /dev/null
-+++ b/target/linux/generic/hack-6.1/400-fixup-ubi-warning.patch
-@@ -0,0 +1,13 @@
-+--- a/drivers/mtd/mtdblock.c
-++++ b/drivers/mtd/mtdblock.c
-+@@ -257,10 +257,6 @@ static int mtdblock_open(struct mtd_blkt
-+ 		return 0;
-+ 	}
-+ 
-+-	if (mtd_type_is_nand(mbd->mtd))
-+-		pr_warn("%s: MTD device '%s' is NAND, please consider using UBI block devices instead.\n",
-+-			mbd->tr->name, mbd->mtd->name);
-+-
-+ 	/* OK, it's not open. Create cache info for it */
-+ 	mtdblk->count = 1;
-+ 	mutex_init(&mtdblk->cache_mutex);
+-ifndef CONFIG_BUILDBOT
+   define Package/base-files/install-key
+ 	mkdir -p $(1)/etc/opkg/keys
+ 	$(CP) $(BUILD_KEY).pub $(1)/etc/opkg/keys/`$(STAGING_DIR_HOST)/bin/usign -F -p $(BUILD_KEY).pub`
+ 
+   endef
+ endif
+-endif
+ 
+ ifeq ($(CONFIG_NAND_SUPPORT),)
+   define Package/base-files/nand-support
 diff --git a/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch b/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch
 new file mode 100644
 index 0000000000..dfa0195e94
@@ -91,8 +87,27 @@ index 0000000000..dfa0195e94
 + 	# https://www.federalregister.gov/documents/2021/05/03/2021-08802/use-of-the-5850-5925-ghz-band
 + 	# max. 33 dBm AP @ 20MHz, 36 dBm AP @ 40Mhz+, 6 dB less for clients
 + 	(5850 - 5895 @ 40), (27), NO-OUTDOOR, AUTO-BW, NO-IR
+diff --git a/target/linux/generic/hack-6.1/400-fixup-ubi-warning.patch b/target/linux/generic/hack-6.1/400-fixup-ubi-warning.patch
+new file mode 100644
+index 0000000000..2eb85cb7b1
+--- /dev/null
++++ b/target/linux/generic/hack-6.1/400-fixup-ubi-warning.patch
+@@ -0,0 +1,13 @@
++--- a/drivers/mtd/mtdblock.c
+++++ b/drivers/mtd/mtdblock.c
++@@ -261,10 +261,6 @@ static int mtdblock_open(struct mtd_blkt
++ 		return 0;
++ 	}
++ 
++-	if (mtd_type_is_nand(mbd->mtd))
++-		pr_warn("%s: MTD device '%s' is NAND, please consider using UBI block devices instead.\n",
++-			mbd->tr->name, mbd->mtd->name);
++-
++ 	/* OK, it's not open. Create cache info for it */
++ 	mtdblk->count = 1;
++ 	mutex_init(&mtdblk->cache_mutex);
 diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-index 5542f1518a..84507ec003 100644
+index dbda950cc5..d26b22a200 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 @@ -33,7 +33,7 @@ mediatek_setup_interfaces()
@@ -100,10 +115,23 @@ index 5542f1518a..84507ec003 100644
  		;;
  	bananapi,bpi-r3)
 -		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2" "eth1 wan"
-+		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2 eth1 eth2" "wan"
++		ucidef_set_interfaces_lan_wan "eth1 eth2 lan1 lan2 lan3 lan4 sfp2" wan
  		;;
- 	cmcc,rax3000m|\
- 	h3c,magic-nx30-pro|\
+ 	bananapi,bpi-r3-mini)
+ 		ucidef_set_interfaces_lan_wan eth0 eth1
+diff --git a/target/linux/mediatek/patches-6.1/018-v6.5-arm64-dts-mt7986-add-pwm-fan-and-cooling-maps-to-BPI.patch b/target/linux/mediatek/patches-6.1/018-v6.5-arm64-dts-mt7986-add-pwm-fan-and-cooling-maps-to-BPI.patch
+index ca7d872a1b..3c3a2e39f9 100644
+--- a/target/linux/mediatek/patches-6.1/018-v6.5-arm64-dts-mt7986-add-pwm-fan-and-cooling-maps-to-BPI.patch
++++ b/target/linux/mediatek/patches-6.1/018-v6.5-arm64-dts-mt7986-add-pwm-fan-and-cooling-maps-to-BPI.patch
+@@ -25,7 +25,7 @@ Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+ +		compatible = "pwm-fan";
+ +		#cooling-cells = <2>;
+ +		/* cooling level (0, 1, 2) - pwm inverted */
+-+		cooling-levels = <255 96 0>;
+++		cooling-levels = <0 52 96 255>;
+ +		pwms = <&pwm 0 10000 0>;
+ +		status = "okay";
+ +	};
 -- 
 2.39.2
 
