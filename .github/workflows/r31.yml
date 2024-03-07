@@ -5,7 +5,7 @@ on:
 
 jobs:
     build:
-        name: Build BPI-R3 v6.1 Images
+        name: Build BPI-R3 v1.2 Images
         runs-on: ubuntu-latest
         steps:
             - name: Maximize build space
@@ -63,7 +63,7 @@ jobs:
               uses: ncipollo/release-action@v1.14.0
               with:
                 allowUpdates: true
-                name: BPI-R3 v6.1 Images ${{ env.D }}
+                name: BPI-R3 v1.2 Images ${{ env.D }}
                 tag: v1.2
                 replacesArtifacts: true
                 prerelease: false
