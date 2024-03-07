@@ -1,7 +1,7 @@
 name: bpi-r3 v1.2 images
 on:
   schedule:
-    - cron: '40 14 * * *'
+    - cron: '00 15 * * *'
 
 jobs:
     build:
