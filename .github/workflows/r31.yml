@@ -1,5 +1,7 @@
 name: bpi-r3 v1.2 images
-on: [push]
+on:
+  schedule:
+    - cron: '00 08 * * *'
 
 jobs:
     build:
