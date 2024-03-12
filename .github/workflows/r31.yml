@@ -1,5 +1,6 @@
 name: bpi-r3 v1.2 images
 on:
+   workflow_dispatch:
    schedule:
     - cron: '01 02 * * *'
 jobs:
