@@ -28,20 +28,22 @@ jobs:
                 cd openwrt
                 wget https://downloads.openwrt.org/snapshots/targets/mediatek/filogic/llvm-bpf-15.0.7.Linux-x86_64.tar.xz
                 tar -xvf llvm-bpf-15.0.7.Linux-x86_64.tar.xz
+                wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/14908.patch
+                git apply 14908.patch
                 git apply 0001-bpi-r31.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
                 wget https://gist.githubusercontent.com/mj22226/363cefecd314e45b49d8eafff8473fcf/raw/69b47c9a972e15056f94870d76d93a5146893f99/01-diskman.patch
+                wget https://github.com/mj22226/luci/commit/83758ce27a1795353939e8becd18833840241e4a.patch
+                git apply 83758ce27a1795353939e8becd18833840241e4a.patch
                 git apply 01-diskman.patch
                 cd -
                 cd  feeds/packages
                 wget https://gist.githubusercontent.com/mj22226/351f11e66f08f06e37a985719a31ddb4/raw/b35ba7a3aac1949bd6bbeaad065a0a93dc3c34f0/01-cpu.patch
                 wget https://gist.githubusercontent.com/mj22226/b66f5c1bd5fc7e1cb3cf2c690b5dbd5a/raw/b955e726cbb0948d932c8d6143229ad604320149/20-lxc.patch
-                wget https://github.com/mj22226/packages/commit/314f848745eed3daa28368ca6c487e6f0a9fc665.patch
                 git apply 01-cpu.patch
                 git apply 20-lxc.patch
-                git apply 314f848745eed3daa28368ca6c487e6f0a9fc665.patch
                 cd -
                 sed -i "13s/'1'/'0'/" feeds/packages/utils/dockerd/files/etc/config/dockerd
                 ./scripts/feeds update -a
