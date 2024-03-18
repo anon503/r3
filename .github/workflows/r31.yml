@@ -35,8 +35,6 @@ jobs:
                 ./scripts/feeds install -a
                 cd feeds/luci
                 wget https://gist.githubusercontent.com/mj22226/363cefecd314e45b49d8eafff8473fcf/raw/69b47c9a972e15056f94870d76d93a5146893f99/01-diskman.patch
-                wget https://github.com/mj22226/luci/commit/83758ce27a1795353939e8becd18833840241e4a.patch
-                git apply 83758ce27a1795353939e8becd18833840241e4a.patch
                 git apply 01-diskman.patch
                 cd -
                 cd  feeds/packages
