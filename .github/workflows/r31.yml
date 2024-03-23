@@ -66,6 +66,6 @@ jobs:
                 name: BPI-R3 v1.2 Images ${{ env.D }}
                 tag: v1.2
                 replacesArtifacts: true
-                prerelease: false
+                makeLatest: true
                 token: "${{ secrets.GITHUB_TOKEN }}"
                 artifacts: openwrt/bin/targets/mediatek/filogic/*
