@@ -67,6 +67,6 @@ jobs:
                 name: WRX36 v6.1 Images ${{ env.D }}
                 tag: v6.1
                 replacesArtifacts: true
-                prerelease: false
+                prerelease: true
                 token: "${{ secrets.GITHUB_TOKEN }}"
                 artifacts: openwrt/bin/targets/qualcommax/ipq807x/*
