@@ -117,8 +117,8 @@ index dbda950cc5..d26b22a200 100644
 -		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 sfp2" "eth1 wan"
 +		ucidef_set_interfaces_lan_wan "eth1 eth2 lan1 lan2 lan3 lan4 sfp2" wan
  		;;
- 	bananapi,bpi-r3-mini)
- 		ucidef_set_interfaces_lan_wan eth0 eth1
+ 	bananapi,bpi-r3-mini|\
+ 	edgecore,eap111)
 diff --git a/target/linux/mediatek/patches-6.1/018-v6.5-arm64-dts-mt7986-add-pwm-fan-and-cooling-maps-to-BPI.patch b/target/linux/mediatek/patches-6.1/018-v6.5-arm64-dts-mt7986-add-pwm-fan-and-cooling-maps-to-BPI.patch
 index ca7d872a1b..3c3a2e39f9 100644
 --- a/target/linux/mediatek/patches-6.1/018-v6.5-arm64-dts-mt7986-add-pwm-fan-and-cooling-maps-to-BPI.patch
