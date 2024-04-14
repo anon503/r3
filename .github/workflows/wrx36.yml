@@ -2,7 +2,7 @@ name: WRX36 images
 on:
    workflow_dispatch:
    schedule:
-    - cron: '01 00 * * *'
+    - cron: '01 08 * * *'
 jobs:
     build:
         name: Build WRX36 Images
