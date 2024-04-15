@@ -10,36 +10,6 @@ Subject: [PATCH] revert
  toolchain/musl/patches/900-iconv_size_hack.patch        | 2 +-
  4 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/package/libs/elfutils/Makefile b/package/libs/elfutils/Makefile
-index ac5841c604..f7364c36be 100644
---- a/package/libs/elfutils/Makefile
-+++ b/package/libs/elfutils/Makefile
-@@ -7,12 +7,12 @@
- include $(TOPDIR)/rules.mk
- 
- PKG_NAME:=elfutils
--PKG_VERSION:=0.191
-+PKG_VERSION:=0.189
- PKG_RELEASE:=1
- 
- PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
- PKG_SOURCE_URL:=https://sourceware.org/$(PKG_NAME)/ftp/$(PKG_VERSION)
--PKG_HASH:=df76db71366d1d708365fc7a6c60ca48398f14367eb2b8954efc8897147ad871
-+PKG_HASH:=39bd8f1a338e2b7cd4abc3ff11a0eddc6e690f69578a57478d8179b4148708c8
- 
- PKG_MAINTAINER:=Luiz Angelo Daros de Luca <luizluca@gmail.com>
- PKG_LICENSE:=GPL-3.0-or-later
-diff --git a/package/libs/elfutils/patches/005-build_only_libs.patch b/package/libs/elfutils/patches/005-build_only_libs.patch
-index 598b734874..304b85c47a 100644
---- a/package/libs/elfutils/patches/005-build_only_libs.patch
-+++ b/package/libs/elfutils/patches/005-build_only_libs.patch
-@@ -7,5 +7,5 @@
- -	  libasm debuginfod src po doc tests
- +	  libasm
-  
-- EXTRA_DIST = elfutils.spec GPG-KEY NOTES CONTRIBUTING SECURITY \
-+ EXTRA_DIST = elfutils.spec GPG-KEY NOTES CONTRIBUTING \
-  	     COPYING COPYING-GPLV2 COPYING-LGPLV3
 diff --git a/toolchain/musl/common.mk b/toolchain/musl/common.mk
 index 35bdfd184b..94444eaf75 100644
 --- a/toolchain/musl/common.mk
