@@ -119,19 +119,6 @@ index dbda950cc5..d26b22a200 100644
  		;;
  	bananapi,bpi-r3-mini|\
  	edgecore,eap111)
-diff --git a/target/linux/mediatek/patches-6.1/018-v6.5-arm64-dts-mt7986-add-pwm-fan-and-cooling-maps-to-BPI.patch b/target/linux/mediatek/patches-6.1/018-v6.5-arm64-dts-mt7986-add-pwm-fan-and-cooling-maps-to-BPI.patch
-index ca7d872a1b..3c3a2e39f9 100644
---- a/target/linux/mediatek/patches-6.1/018-v6.5-arm64-dts-mt7986-add-pwm-fan-and-cooling-maps-to-BPI.patch
-+++ b/target/linux/mediatek/patches-6.1/018-v6.5-arm64-dts-mt7986-add-pwm-fan-and-cooling-maps-to-BPI.patch
-@@ -25,7 +25,7 @@ Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
- +		compatible = "pwm-fan";
- +		#cooling-cells = <2>;
- +		/* cooling level (0, 1, 2) - pwm inverted */
--+		cooling-levels = <255 96 0>;
-++		cooling-levels = <0 52 96 255>;
- +		pwms = <&pwm 0 10000 0>;
- +		status = "okay";
- +	};
 -- 
 2.39.2
 
