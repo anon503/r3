@@ -31,7 +31,7 @@ index fc679335e0..afa01cf060 100644
  #src-git targets https://github.com/openwrt/targets.git
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/package/base-files/Makefile b/package/base-files/Makefile
-index 67fc5d29c1..f8fc70a4fd 100644
+index b1a834e1bf..b9f4d73c82 100644
 --- a/package/base-files/Makefile
 +++ b/package/base-files/Makefile
 @@ -126,14 +126,12 @@ ifdef CONFIG_SIGNED_PACKAGES
@@ -87,12 +87,23 @@ index 0000000000..dfa0195e94
 + 	# https://www.federalregister.gov/documents/2021/05/03/2021-08802/use-of-the-5850-5925-ghz-band
 + 	# max. 33 dBm AP @ 20MHz, 36 dBm AP @ 40Mhz+, 6 dB less for clients
 + 	(5850 - 5895 @ 40), (27), NO-OUTDOOR, AUTO-BW, NO-IR
-diff --git a/target/linux/generic/hack-6.1/400-fixup-ubi-warning.patch b/target/linux/generic/hack-6.1/400-fixup-ubi-warning.patch
+diff --git a/target/linux/generic/hack-6.6/400-fixup-ubi-warning.patch b/target/linux/generic/hack-6.6/400-fixup-ubi-warning.patch
 new file mode 100644
-index 0000000000..2eb85cb7b1
+index 0000000000..22d59a92cc
 --- /dev/null
-+++ b/target/linux/generic/hack-6.1/400-fixup-ubi-warning.patch
-@@ -0,0 +1,13 @@
++++ b/target/linux/generic/hack-6.6/400-fixup-ubi-warning.patch
+@@ -0,0 +1,24 @@
++--- a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
+++++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
++@@ -42,7 +42,7 @@
++ 		compatible = "pwm-fan";
++ 		#cooling-cells = <2>;
++ 		/* cooling level (0, 1, 2) - pwm inverted */
++-		cooling-levels = <255 96 0>;
+++		cooling-levels = <0 96 255>;
++ 		pwms = <&pwm 0 10000>;
++ 		status = "okay";
++ 	};
 +--- a/drivers/mtd/mtdblock.c
 ++++ b/drivers/mtd/mtdblock.c
 +@@ -261,10 +261,6 @@ static int mtdblock_open(struct mtd_blkt
@@ -100,17 +111,17 @@ index 0000000000..2eb85cb7b1
 + 	}
 + 
 +-	if (mtd_type_is_nand(mbd->mtd))
-+-		pr_warn("%s: MTD device '%s' is NAND, please consider using UBI block devices instead.\n",
++-		pr_warn_ratelimited("%s: MTD device '%s' is NAND, please consider using UBI block devices instead.\n",
 +-			mbd->tr->name, mbd->mtd->name);
 +-
 + 	/* OK, it's not open. Create cache info for it */
 + 	mtdblk->count = 1;
 + 	mutex_init(&mtdblk->cache_mutex);
 diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-index dbda950cc5..d26b22a200 100644
+index 4de3cf044d..f660e00e1e 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-@@ -33,7 +33,7 @@ mediatek_setup_interfaces()
+@@ -35,7 +35,7 @@ mediatek_setup_interfaces()
  		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 lan5" eth1
  		;;
  	bananapi,bpi-r3)
@@ -120,5 +131,5 @@ index dbda950cc5..d26b22a200 100644
  	bananapi,bpi-r3-mini|\
  	edgecore,eap111)
 -- 
-2.39.2
+2.40.1
 
