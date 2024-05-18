@@ -6,13 +6,12 @@ Subject: [PATCH 1/2] github feeds
 ---
  feeds.conf.default                            |  8 ++---
  package/base-files/Makefile                   |  2 --
- .../600-custom-change-txpower-and-dfs.patch   | 32 +++++++++++++++++++
- .../hack-6.1/400-fixup-ubi-warning.patch      | 13 ++++++++
+ .../600-custom-change-txpower-and-dfs.patch   | 30 +++++++++++++++++++
+ .../hack-6.6/400-fixup-ubi-warning.patch      | 24 +++++++++++++++
  .../filogic/base-files/etc/board.d/02_network |  2 +-
- ...-add-pwm-fan-and-cooling-maps-to-BPI.patch |  2 +-
- 6 files changed, 51 insertions(+), 8 deletions(-)
+ 5 files changed, 59 insertions(+), 7 deletions(-)
  create mode 100644 package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch
- create mode 100644 target/linux/generic/hack-6.1/400-fixup-ubi-warning.patch
+ create mode 100644 target/linux/generic/hack-6.6/400-fixup-ubi-warning.patch
 
 diff --git a/feeds.conf.default b/feeds.conf.default
 index fc679335e0..afa01cf060 100644
@@ -31,10 +30,10 @@ index fc679335e0..afa01cf060 100644
  #src-git targets https://github.com/openwrt/targets.git
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/package/base-files/Makefile b/package/base-files/Makefile
-index b1a834e1bf..b9f4d73c82 100644
+index 0aa7ecd854..cd40c26f7e 100644
 --- a/package/base-files/Makefile
 +++ b/package/base-files/Makefile
-@@ -126,14 +126,12 @@ ifdef CONFIG_SIGNED_PACKAGES
+@@ -140,14 +140,12 @@ ifdef CONFIG_SIGNED_PACKAGES
  
    endef
  
@@ -42,8 +41,8 @@ index b1a834e1bf..b9f4d73c82 100644
    define Package/base-files/install-key
  	mkdir -p $(1)/etc/opkg/keys
  	$(CP) $(BUILD_KEY).pub $(1)/etc/opkg/keys/`$(STAGING_DIR_HOST)/bin/usign -F -p $(BUILD_KEY).pub`
- 
    endef
+ endif
  endif
 -endif
  
@@ -51,12 +50,10 @@ index b1a834e1bf..b9f4d73c82 100644
    define Package/base-files/nand-support
 diff --git a/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch b/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch
 new file mode 100644
-index 0000000000..dfa0195e94
+index 0000000000..ebdbb6d22b
 --- /dev/null
 +++ b/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch
-@@ -0,0 +1,32 @@
-+diff --git a/db.txt b/db.txt
-+index 36e07b8..1e759b3 100644
+@@ -0,0 +1,30 @@
 +--- a/db.txt
 ++++ b/db.txt
 +@@ -406,8 +406,8 @@ country CL: DFS-JP
