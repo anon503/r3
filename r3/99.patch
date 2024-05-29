@@ -1175,7 +1175,7 @@ index 896c95ea7d..cea473fe48 100644
 -LINUX_VERSION-6.6 = .32
 -LINUX_KERNEL_HASH-6.6.32 = aaa824eaf07f61911d22b75ff090a403c3dd0bd73e23933e0bba8b5971436ce1
 +LINUX_VERSION-6.6 = .33-rc1
-+LINUX_KERNEL_HASH-6.6.33-rc1 = 5ff6baf31666ae733f06d150bb1a13cdd69e7a49c8cd5440cb7117077a587f79
++LINUX_KERNEL_HASH-6.6.33-rc1 = 3f75964d6d4c6e2cbc3567b78535c98d9a377811f7948401b3e12b29d79a1c74
 diff --git a/scripts/download.pl b/scripts/download.pl
 index c14ec07e44..def2a1051b 100755
 --- a/scripts/download.pl
