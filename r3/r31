@@ -650,4 +650,5 @@ CONFIG_BPF_TOOLCHAIN_PREBUILT=y
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_zyxel_nwa50ax-pro is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_openwrt_one is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_wavlink_wl-wn586x3 is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tplink_re6000xd is not set
 CONFIG_USE_LLVM_PREBUILT=y
