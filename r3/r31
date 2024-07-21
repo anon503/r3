@@ -673,4 +673,5 @@ CONFIG_BPF_TOOLCHAIN_PREBUILT=y
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_zyxel_ex5601-t0-ubootmod is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_zyxel_ex5700-telenor is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_zyxel_nwa50ax-pro is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_abt_asr3000 is not set
 CONFIG_USE_LLVM_PREBUILT=y
