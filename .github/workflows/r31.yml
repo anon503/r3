@@ -40,10 +40,10 @@ jobs:
                 cd  feeds/packages
                 wget https://gist.githubusercontent.com/mj22226/351f11e66f08f06e37a985719a31ddb4/raw/b35ba7a3aac1949bd6bbeaad065a0a93dc3c34f0/01-cpu.patch
                 wget https://gist.githubusercontent.com/mj22226/b66f5c1bd5fc7e1cb3cf2c690b5dbd5a/raw/b955e726cbb0948d932c8d6143229ad604320149/20-lxc.patch
-                wget https://github.com/mj22226/packages/commit/13a665397dd4cafd9f5bb6fbe1fdd4172c69a4f0.patch
+                wget https://github.com/mj22226/packages/commit/37264a2e636b790df9cb037db695505341030e98.patch
                 git apply 01-cpu.patch
                 git apply 20-lxc.patch
-                git apply 13a665397dd4cafd9f5bb6fbe1fdd4172c69a4f0.patch
+                git apply 37264a2e636b790df9cb037db695505341030e98.patch
                 cd -
                 sed -i "13s/'1'/'0'/" feeds/packages/utils/dockerd/files/etc/config/dockerd
                 ./scripts/feeds update -a
