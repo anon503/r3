@@ -28,10 +28,6 @@ jobs:
                 cd openwrt
                 wget https://downloads.openwrt.org/snapshots/targets/mediatek/filogic/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 tar -xvf llvm-bpf-18.1.7.Linux-x86_64.tar.zst
-                wget https://github.com/mj22226/source/commit/74f2c28850a99e5c4217a62d7cd45fb0e859bfbc.patch
-                wget https://github.com/mj22226/source/commit/472ba099ea972d5c4986bbffcae9e67e5a174b61.patch
-                git apply 74f2c28850a99e5c4217a62d7cd45fb0e859bfbc.patch
-                git apply 472ba099ea972d5c4986bbffcae9e67e5a174b61.patch
                 git apply 0001-bpi-r31.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
@@ -54,22 +50,21 @@ jobs:
                 make download -j32
                 make -j$(nproc) 'IGNORE_ERRORS=n m'
                 tar -czvf bin/targets/mediatek/filogic/packages.tar.gz bin/targets/mediatek/filogic/packages
-                tar -czvf bin/targets/mediatek/filogic/logs.tar.gz logs
                 rm -rf bin/targets/mediatek/filogic/packages
                 echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
             - name: Delete tag
               uses: ClementTsang/delete-tag-and-release@v0.4.0
               with:
                 delete_release: true
-                tag_name: v1.2-rc
+                tag_name: v1.2
               env:
                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: Create release
               uses: ncipollo/release-action@v1.14.0
               with:
                 allowUpdates: true
-                name: BPI-R3 v1.2-rc Images ${{ env.D }}
-                tag: v1.2-rc
+                name: BPI-R3 v1.2 Images ${{ env.D }}
+                tag: v1.2
                 replacesArtifacts: true
                 makeLatest: true
                 token: "${{ secrets.GITHUB_TOKEN }}"
