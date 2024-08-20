@@ -50,4 +50,4 @@ jobs:
                 replacesArtifacts: true
                 makeLatest: true
                 token: "${{ secrets.GITHUB_TOKEN }}"
-                artifacts: openwrt/bin/targets/ipq40xx/generic*
+                artifacts: openwrt/bin/targets/ipq40xx/generic/*
