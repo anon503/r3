@@ -94,7 +94,7 @@ index 68a47c9082..e87d9cae7f 100644
 +	kmod-usb3 ath10k-firmware-qca4019-ct kmod-usb-dwc3 \
 +	uboot-envtools luci-app-statistics luci-app-ttyd luci-proto-wireguard luci-app-ttyd \
 +	luci-app-openvpn collectd-mod-conntrack collectd-mod-cpufreq collectd-mod-sensors \
-+	collectd-mod-thermal vsftpd openvpn-easy-rsa openvpn-openssl luci
++	collectd-mod-thermal vsftpd openvpn-easy-rsa openvpn-openssl luci luci-app-filebrowser
  
  $(eval $(call BuildTarget))
 diff --git a/target/linux/ipq40xx/image/generic.mk b/target/linux/ipq40xx/image/generic.mk
