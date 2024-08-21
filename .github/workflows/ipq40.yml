@@ -25,7 +25,6 @@ jobs:
                 cp -rf r3/* openwrt/
                 cd openwrt
                 git apply 40.patch
-                git apply 16173.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
                 mv ipq40 .config
