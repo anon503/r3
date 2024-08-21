@@ -28,8 +28,6 @@ jobs:
                 cd openwrt
                 wget https://downloads.openwrt.org/snapshots/targets/mediatek/filogic/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 tar -xvf llvm-bpf-18.1.7.Linux-x86_64.tar.zst
-                wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/16173.patch
-                git apply 16173.patch
                 git apply 0001-bpi-r31.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
