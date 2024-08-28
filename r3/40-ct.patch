@@ -588,7 +588,7 @@ index 929cff72ea..984533f5ce 100644
  	BLOCKSIZE := 128k
  	PAGESIZE := 2048
 @@ -1282,6 +1343,7 @@ define Device/zyxel_nbg6617
- 	DEVICE_VENDOR := ZyXEL
+ 	DEVICE_VENDOR := Zyxel
  	DEVICE_MODEL := NBG6617
  	SOC := qcom-ipq4018
 +	DEFAULT := n
