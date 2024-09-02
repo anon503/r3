@@ -33,7 +33,18 @@ jobs:
                 ./scripts/feeds install -a
                 wget https://downloads.openwrt.org/snapshots/targets/rockchip/armv8/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 tar -xvf llvm-bpf-18.1.7.Linux-x86_64.tar.zst
-                wget https://raw.githubusercontent.com/mj22226/openwrt/linux-6.0/.github/workflows/config.buildinfo -O .config
+                echo "CONFIG_TARGET_rockchip=y" > .config
+                echo "CONFIG_TARGET_rockchip_armv8=y" >> .config
+                echo "CONFIG_TARGET_MULTI_PROFILE=y" >> .config
+                echo "CONFIG_TARGET_PER_DEVICE_ROOTFS=y" >> .config
+                echo "CONFIG_PACKAGE_luci=y" >> .config
+                echo "CONFIG_PACKAGE_luci-app-ttyd=y" >> .config
+                echo "CONFIG_PACKAGE_kmod-usb-net-rtl8152=y" >> .config
+                echo "CONFIG_PACKAGE_kmod-usb-storage=y" >> .config
+                echo "CONFIG_PACKAGE_kmod-usb-storage-uas=y" >> .config
+                echo "CONFIG_PACKAGE_mount-utils=y" >> .config
+                echo "CONFIG_PACKAGE_block-mount=y" >> .config
+                echo "CONFIG_PACKAGE_blockd=y" >> .config
                 make defconfig
                 wget https://gist.githubusercontent.com/mj22226/23edc25efeb65ef69d8eb6598f4f8179/raw/29c862e3e2558852523f4e8edd5f3d0cc145067e/01-key.patch
                 git apply 01-key.patch
