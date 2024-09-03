@@ -63,10 +63,9 @@ jobs:
                 mkdir -p files/www/repo
                 wget https://gist.githubusercontent.com/mj22226/b55f1575d30418ca2988804c70d9cc60/raw/e3b213211d937587169def6b3d91a5e34ba26f67/04.patch
                 git apply 04.patch
-                make -j$(nproc) 'IGNORE_ERRORS=n m'
-                cp -R bin/targets/rockchip/armv8/packages/ files/www/repo/
-                rm -rf bin/targets/rockchip/armv8/*.gz
-                make -j$(nproc) 'IGNORE_ERRORS=n m'
+                make -j$(nproc) 'IGNORE_ERRORS=n m' || true
+                tar -czvf bin/targets/rockchip/armv8/packages.tar.gz bin/targets/rockchip/armv8/packages || true
+                tar -czvf bin/targets/rockchip/armv8/logs.tar.gz logs
                 rm -rf bin/targets/rockchip/armv8/packages
                 echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
             - name: Delete tag
