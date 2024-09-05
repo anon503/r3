@@ -27,7 +27,7 @@ jobs:
                 git apply 9d62749914fd98695d387e7a38f4cae9fee6a221.patch
                 git apply 354308d13dccd1d654704abf627aa5da2d9907e3.patch
                 wget https://github.com/openwrt/openwrt/pull/16181.patch
-                gut apply 16181.patch
+                git apply 16181.patch
                 git apply 38.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
