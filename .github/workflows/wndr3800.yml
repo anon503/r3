@@ -15,8 +15,6 @@ jobs:
                 cd openwrt
                 wget https://downloads.openwrt.org/snapshots/targets/ath79/generic/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 tar -xvf llvm-bpf-18.1.7.Linux-x86_64.tar.zst
-                wget https://github.com/mj22226/openwrt/commit/fc597c22cf2c6bca49523e4fd0caa51a38d40275.patch
-                git apply fc597c22cf2c6bca49523e4fd0caa51a38d40275.patch
                 wget https://github.com/mj22226/openwrt/commit/c17ad496131b0ee1614ddd453b4b7b64a161dbd1.patch
                 wget https://github.com/mj22226/openwrt/commit/659ed09bdaf47f47b6d98e7690cadc59ba47da5f.patch
                 wget https://github.com/mj22226/openwrt/commit/9d62749914fd98695d387e7a38f4cae9fee6a221.patch
