@@ -37,6 +37,7 @@ jobs:
                 git apply 659ed09bdaf47f47b6d98e7690cadc59ba47da5f.patch
                 git apply 9d62749914fd98695d387e7a38f4cae9fee6a221.patch
                 git apply 354308d13dccd1d654704abf627aa5da2d9907e3.patch
+                echo "src-git youtubeUnblock https://github.com/Waujito/youtubeUnblock.git;openwrt" >> feeds.conf.default
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
