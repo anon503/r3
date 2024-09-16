@@ -32,6 +32,8 @@ jobs:
                 make defconfig
                 make download -j32
                 make -j$(nproc) 'IGNORE_ERRORS=n m'
+                tar -czvf bin/targets/ipq40xx/generic/packages.tar.gz bin/targets/ipq40xx/generic/packages
+                tar -czvf bin/targets/ipq40xx/generic/feeds-packages.tar.gz bin/packages
                 rm -rf bin/targets/ipq40xx/generic/packages
                 echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
             - name: Delete tag
