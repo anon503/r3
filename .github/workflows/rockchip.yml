@@ -26,6 +26,7 @@ jobs:
             - name: Build
               run: |
                 git clone https://github.com/openwrt/openwrt.git
+                cp -rf r3/config-rockchip openwrt/
                 cd openwrt
                 git remote add source https://github.com/mj22226/source.git
                 git fetch source
@@ -55,7 +56,6 @@ jobs:
                 ./scripts/feeds install -a -f
                 wget https://downloads.openwrt.org/snapshots/targets/rockchip/armv8/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 tar -xvf llvm-bpf-18.1.7.Linux-x86_64.tar.zst
-                cp -rf r3/config-rockchip openwrt/
                 mv config-rockchip .config
                 make defconfig
                 wget https://gist.githubusercontent.com/mj22226/23edc25efeb65ef69d8eb6598f4f8179/raw/29c862e3e2558852523f4e8edd5f3d0cc145067e/01-key.patch
