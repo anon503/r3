@@ -59,6 +59,7 @@ jobs:
                 make download -j32
                 make -j$(nproc) 'IGNORE_ERRORS=n m' || true
                 tar -czvf bin/targets/mediatek/filogic/packages.tar.gz bin/targets/mediatek/filogic/packages || true
+                tar -czvf bin/targets/mediatek/filogic/feeds-packages.tar.gz bin/packages || true
                 tar -czvf bin/targets/mediatek/filogic/logs.tar.gz logs
                 rm -rf bin/targets/mediatek/filogic/packages || true
                 echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
