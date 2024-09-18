@@ -24,6 +24,8 @@ jobs:
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/* openwrt/
                 cd openwrt
+                wget https://github.com/mj22226/source/commit/b474cbc279d66a4604a30dc69630876db3e41604.patch
+                git apply b474cbc279d66a4604a30dc69630876db3e41604.patch
                 git apply 40.patch
                 echo "src-git youtubeUnblock https://github.com/antnyfls/youtubeUnblock.git;openwrt" >> feeds.conf.default
                 ./scripts/feeds update -a
