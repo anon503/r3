@@ -1,13 +1,14 @@
-From e9fbe51680313666da1fac9d6124fc5eea924110 Mon Sep 17 00:00:00 2001
-From: yuhui <yuhui@ni.com>
-Date: Thu, 19 Sep 2024 17:17:56 -0400
-Subject: [PATCH] cudy-x6
+From 93f6258738b491f4735e3c8a0d92016e6cb4b7e8 Mon Sep 17 00:00:00 2001
+From: yuhui <yuhui@hu>
+Date: Thu, 19 Sep 2024 17:55:43 -0400
+Subject: [PATCH] cudy x6
 
 ---
  include/target.mk                             |  4 +--
  .../600-custom-change-txpower-and-dfs.patch   | 32 +++++++++++++++++++
+ target/linux/generic/config-6.6               |  2 +-
  target/linux/ramips/mt7621/target.mk          |  2 +-
- 3 files changed, 35 insertions(+), 3 deletions(-)
+ 4 files changed, 36 insertions(+), 4 deletions(-)
  create mode 100644 package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch
 
 diff --git a/include/target.mk b/include/target.mk
@@ -69,6 +70,19 @@ index 0000000000..dfa0195e94
 + 	# https://www.federalregister.gov/documents/2021/05/03/2021-08802/use-of-the-5850-5925-ghz-band
 + 	# max. 33 dBm AP @ 20MHz, 36 dBm AP @ 40Mhz+, 6 dB less for clients
 + 	(5850 - 5895 @ 40), (27), NO-OUTDOOR, AUTO-BW, NO-IR
+diff --git a/target/linux/generic/config-6.6 b/target/linux/generic/config-6.6
+index d5c40eae91..73a5200f72 100644
+--- a/target/linux/generic/config-6.6
++++ b/target/linux/generic/config-6.6
+@@ -3119,7 +3119,7 @@ CONFIG_LINEAR_RANGES=y
+ # CONFIG_LIQUIDIO is not set
+ # CONFIG_LIQUIDIO_VF is not set
+ # CONFIG_LIRC is not set
+-CONFIG_LIST_HARDENED=y
++# CONFIG_LIST_HARDENED is not set
+ # CONFIG_LITEX_LITEETH is not set
+ # CONFIG_LITEX_SOC_CONTROLLER is not set
+ # CONFIG_LIVEPATCH is not set
 diff --git a/target/linux/ramips/mt7621/target.mk b/target/linux/ramips/mt7621/target.mk
 index 2b9a1312af..e428774642 100644
 --- a/target/linux/ramips/mt7621/target.mk
