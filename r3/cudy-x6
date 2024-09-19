@@ -374,3 +374,4 @@ CONFIG_MODULE_DEFAULT_uboot-envtools=m
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_zyxel_nwa55axe is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_zyxel_wap6805 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_zyxel_wsm20 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_netis_n6 is not set
