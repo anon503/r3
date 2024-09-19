@@ -31,7 +31,7 @@ jobs:
                 make defconfig
                 make download -j32
                 make -j$(nproc) 'IGNORE_ERRORS=n m'
-                rm -rf bin/ramips/mt7621/packages
+                rm -rf bin/targets/ramips/mt7621/packages
                 echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
             - name: Delete tag
               uses: ClementTsang/delete-tag-and-release@v0.4.0
@@ -49,4 +49,4 @@ jobs:
                 replacesArtifacts: true
                 makeLatest: true
                 token: "${{ secrets.GITHUB_TOKEN }}"
-                artifacts: openwrt/bin/ramips/mt7621/*
+                artifacts: openwrt/bin/targets/ramips/mt7621/*
