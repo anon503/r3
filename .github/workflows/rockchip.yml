@@ -72,6 +72,7 @@ jobs:
                 mv bin/packages/aarch64_generic/base/*cpufreq* bin/targets/rockchip/armv8/packages/
                 tar -czvf bin/targets/rockchip/armv8/packages.tar.gz bin/targets/rockchip/armv8/packages || true
                 tar -czvf bin/targets/rockchip/armv8/logs.tar.gz logs
+                make -j$(nproc) 'IGNORE_ERRORS=n m' || true
                 rm -rf bin/targets/rockchip/armv8/packages
                 echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
             - name: Delete tag
