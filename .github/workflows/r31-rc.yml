@@ -29,12 +29,12 @@ jobs:
                 wget https://downloads.openwrt.org/snapshots/targets/mediatek/filogic/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 tar -xvf llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 wget https://github.com/mj22226/openwrt/commit/c17ad496131b0ee1614ddd453b4b7b64a161dbd1.patch
-                wget https://github.com/mj22226/openwrt/commit/659ed09bdaf47f47b6d98e7690cadc59ba47da5f.patch
+                wget https://github.com/mj22226/openwrt/commit/fa1c60cf174def9579f45be9b310c939182be4d7.patch
                 wget https://github.com/mj22226/openwrt/commit/9d62749914fd98695d387e7a38f4cae9fee6a221.patch
                 wget https://github.com/mj22226/openwrt/commit/354308d13dccd1d654704abf627aa5da2d9907e3.patch
                 git apply 0001-bpi-r31.patch
                 git apply c17ad496131b0ee1614ddd453b4b7b64a161dbd1.patch
-                git apply 659ed09bdaf47f47b6d98e7690cadc59ba47da5f.patch
+                git apply fa1c60cf174def9579f45be9b310c939182be4d7.patch
                 git apply 9d62749914fd98695d387e7a38f4cae9fee6a221.patch
                 git apply 354308d13dccd1d654704abf627aa5da2d9907e3.patch
                 echo "src-git youtubeUnblock https://github.com/antnyfls/youtubeUnblock.git;openwrt" >> feeds.conf.default
