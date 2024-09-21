@@ -682,5 +682,5 @@ CONFIG_BPF_TOOLCHAIN_PREBUILT=y
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_abt_asr3000 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tplink_tl-xtr8488 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_cudy_ap3000outdoor-v1 is not set
-3 CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_smartrg_sdg-8733a is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_smartrg_sdg-8733a is not set
 CONFIG_USE_LLVM_PREBUILT=y
