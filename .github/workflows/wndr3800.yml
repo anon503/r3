@@ -15,15 +15,15 @@ jobs:
                 cd openwrt
                 wget https://downloads.openwrt.org/snapshots/targets/ath79/generic/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 tar -xvf llvm-bpf-18.1.7.Linux-x86_64.tar.zst
-                wget https://github.com/mj22226/openwrt/commit/c17ad496131b0ee1614ddd453b4b7b64a161dbd1.patch
-                wget https://github.com/mj22226/openwrt/commit/659ed09bdaf47f47b6d98e7690cadc59ba47da5f.patch
-                wget https://github.com/mj22226/openwrt/commit/9d62749914fd98695d387e7a38f4cae9fee6a221.patch
-                wget https://github.com/mj22226/openwrt/commit/354308d13dccd1d654704abf627aa5da2d9907e3.patch
+                wget https://github.com/mj22226/openwrt/commit/8d6a26e3355ec68c5456f649a9973e30722feca5.patch
+                wget https://github.com/mj22226/openwrt/commit/6aee43063df659f0b4a800e1cf38ec8780e40f07.patch
+                wget https://github.com/mj22226/openwrt/commit/b852add35e01fc971cebe0731c5d2901224e7dd7.patch
+                wget https://github.com/mj22226/openwrt/commit/edb2797b14b688946c883bfd95710a5cbe27b4f9.patch
                 git apply 0001-bpi-r31.patch
-                git apply c17ad496131b0ee1614ddd453b4b7b64a161dbd1.patch
-                git apply 659ed09bdaf47f47b6d98e7690cadc59ba47da5f.patch
-                git apply 9d62749914fd98695d387e7a38f4cae9fee6a221.patch
-                git apply 354308d13dccd1d654704abf627aa5da2d9907e3.patch
+                git apply 8d6a26e3355ec68c5456f649a9973e30722feca5.patch
+                git apply 6aee43063df659f0b4a800e1cf38ec8780e40f07.patch
+                git apply b852add35e01fc971cebe0731c5d2901224e7dd7.patch
+                git apply edb2797b14b688946c883bfd95710a5cbe27b4f9.patch
                 git apply 38.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
