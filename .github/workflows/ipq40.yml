@@ -25,7 +25,14 @@ jobs:
                 cp -rf r3/* openwrt/
                 cd openwrt
                 git apply 40.patch
-                echo "src-git youtubeUnblock https://github.com/antnyfls/youtubeUnblock.git;openwrt" >> feeds.conf.default
+                wget https://github.com/mj22226/source/commit/788de1c9e424386c7973a5b1aff6ae736795b291.patch
+                git apply 788de1c9e424386c7973a5b1aff6ae736795b291.patch
+                ./scripts/feeds update -a
+                ./scripts/feeds install -a -f
+                cd feeds/luci
+                wget https://github.com/openwrt/luci/commit/10319bbcc4fa50e29e18ecc0b29c8a26124604f2.patch
+                git apply 10319bbcc4fa50e29e18ecc0b29c8a26124604f2.patch
+                cd -
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
                 mv ipq40 .config
