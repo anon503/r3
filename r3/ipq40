@@ -100,6 +100,7 @@ CONFIG_PACKAGE_losetup=m
 CONFIG_PACKAGE_ltq-dsl-base=m
 CONFIG_PACKAGE_ltq-vdsl-vr11-app=m
 CONFIG_PACKAGE_luci-app-filebrowser=y
+CONFIG_PACKAGE_luci-app-filemanager=y
 CONFIG_PACKAGE_mkf2fs=m
 CONFIG_PACKAGE_u-boot-fritz1200=y
 CONFIG_PACKAGE_u-boot-fritz3000=y
