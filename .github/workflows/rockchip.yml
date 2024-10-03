@@ -34,9 +34,8 @@ jobs:
                 git format-patch main...linux-6.6 --stdout > 001.patch
                 git checkout main
                 git apply 001.patch
-                wget https://github.com/anon1045/e27xx/commit/66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
-                git apply 66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
-                echo "src-git youtubeUnblock https://github.com/antnyfls/youtubeUnblock.git;openwrt" >> feeds.conf.default
+                wget https://github.com/anon1045/e27xx/commit/6e59495382f626a830ec2f73fa48d4555cb9cc0b.patch
+                git apply 6e59495382f626a830ec2f73fa48d4555cb9cc0b.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
