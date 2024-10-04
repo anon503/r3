@@ -27,11 +27,20 @@ jobs:
               run: |
                 git clone https://github.com/openwrt/openwrt.git
                 cd openwrt
+                wget https://downloads.openwrt.org/snapshots/targets/rockchip/armv8/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
+                tar -xvf llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 wget https://mirror-03.infra.openwrt.org/snapshots/targets/rockchip/armv8/config.buildinfo -O .config
                 echo "CONFIG_PACKAGE_luci=y" >> .config
                 echo "CONFIG_PACKAGE_kmod-usb-net-rtl8152=y" >> .config
+                echo "CONFIG_BUILD_LOG=y" >> .config
+                echo "CONFIG_USE_LLVM_PREBUILT=y" >> .config
+                echo "# CONFIG_BPF_TOOLCHAIN_BUILD_LLVM is not set" >> .config
+                echo "CONFIG_BPF_TOOLCHAIN_PREBUILT=y" >> .config
+                echo "# CONFIG_COLLECT_KERNEL_DEBUG is not set" >> .config
+                echo "# CONFIG_MAKE_TOOLCHAIN is not set" >> .config
+                echo "# CONFIG_SDK is not set" >> .config
                 make defconfig
                 make download -j32
                 make -j$(nproc) 'IGNORE_ERRORS=n m' || true
