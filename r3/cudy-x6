@@ -376,3 +376,7 @@ CONFIG_MODULE_DEFAULT_uboot-envtools=m
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_zyxel_wap6805 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_zyxel_wsm20 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_netis_n6 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_dlink_dir-2150-r1 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wmc-x1800gst is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wsc-x1800gs is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_ruijie_rg-ew1200g-pro-v1.1 is not set
