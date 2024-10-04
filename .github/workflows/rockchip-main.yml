@@ -33,6 +33,7 @@ jobs:
                 echo "CONFIG_PACKAGE_luci=y" >> .config
                 echo "CONFIG_PACKAGE_kmod-usb-net-rtl8152=y" >> .config
                 make defconfig
+                make download -j32
                 make -j$(nproc) 'IGNORE_ERRORS=n m' || true
                 tar -czvf bin/targets/rockchip/armv8/packages.tar.gz bin/targets/rockchip/armv8/packages || true
                 tar -czvf bin/targets/rockchip/armv8/logs.tar.gz logs
