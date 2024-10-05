@@ -42,7 +42,7 @@ jobs:
                 echo "# CONFIG_COLLECT_KERNEL_DEBUG is not set" >> .config
                 echo "# CONFIG_MAKE_TOOLCHAIN is not set" >> .config
                 echo "# CONFIG_SDK is not set" >> .config
-                echo CONFIG_TARGET_ROOTFS_PARTSIZE=1040" >> .config
+                echo "CONFIG_TARGET_ROOTFS_PARTSIZE=1040" >> .config
                 make defconfig
                 make download -j32
                 make -j$(nproc) 'IGNORE_ERRORS=n m' || true
