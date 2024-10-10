@@ -25,8 +25,8 @@ jobs:
                 cp -rf r3/* openwrt/
                 cd openwrt
                 git apply mt7621.patch
-                wget https://github.com/anon1045/e27xx/commit/55067f05b1eef410f99d1e1d8dfc3e140f82ef62.patch
-                git apply 55067f05b1eef410f99d1e1d8dfc3e140f82ef62.patch
+                wget https://github.com/anon1045/e27xx/commit/07885e3cffaadd42654be2ae7e346874f28d6f82.patch
+                git apply 07885e3cffaadd42654be2ae7e346874f28d6f82.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
                 cd feeds/luci
