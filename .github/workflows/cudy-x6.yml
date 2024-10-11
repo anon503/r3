@@ -24,21 +24,12 @@ jobs:
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/* openwrt/
                 cd openwrt
-                git checkout f8ca3519369998a24406bbfbcf5e30349b0530e7
-                wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/16655.patch
-                git apply 16655.patch
                 git apply mt7621.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
                 cd feeds/luci
                 wget https://github.com/openwrt/luci/commit/10319bbcc4fa50e29e18ecc0b29c8a26124604f2.patch
-                wget https://github.com/openwrt/luci/pull/7307.patch
                 git apply 10319bbcc4fa50e29e18ecc0b29c8a26124604f2.patch
-                git apply 7307.patch
-                cd -
-                cd  feeds/packages
-                wget https://patch-diff.githubusercontent.com/raw/openwrt/packages/pull/25088.patch
-                git apply 25088.patch
                 cd -
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
