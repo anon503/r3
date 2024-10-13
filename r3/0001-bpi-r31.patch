@@ -1,15 +1,15 @@
-From 23306bc2ea0741d0f645fa9d52714e638b47c12d Mon Sep 17 00:00:00 2001
-From: u u <u@gmail.com>
-Date: Wed, 6 Mar 2024 17:15:03 -0500
-Subject: [PATCH] github feeds
+From 776f1253578bcafa0c75658b68114b0e9216388f Mon Sep 17 00:00:00 2001
+From: n n <nn@gnail.com>
+Date: Sun, 13 Oct 2024 13:59:37 -0400
+Subject: [PATCH] r3
 
 ---
- feeds.conf.default                            |  8 ++---
- package/base-files/Makefile                   |  2 --
- .../600-custom-change-txpower-and-dfs.patch   | 30 +++++++++++++++++++
- .../hack-6.6/400-fixup-ubi-warning.patch      | 24 +++++++++++++++
+ feeds.conf.default                            |  8 ++--
+ package/base-files/Makefile                   |  2 -
+ .../600-custom-change-txpower-and-dfs.patch   | 39 +++++++++++++++++++
+ .../hack-6.6/400-fixup-ubi-warning.patch      | 24 ++++++++++++
  .../filogic/base-files/etc/board.d/02_network |  2 +-
- 5 files changed, 59 insertions(+), 7 deletions(-)
+ 5 files changed, 68 insertions(+), 7 deletions(-)
  create mode 100644 package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch
  create mode 100644 target/linux/generic/hack-6.6/400-fixup-ubi-warning.patch
 
@@ -30,7 +30,7 @@ index fc679335e0..afa01cf060 100644
  #src-git targets https://github.com/openwrt/targets.git
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/package/base-files/Makefile b/package/base-files/Makefile
-index 4425bb346d..8c101b4e8b 100644
+index 313bf377b4..f273896a0c 100644
 --- a/package/base-files/Makefile
 +++ b/package/base-files/Makefile
 @@ -134,14 +134,12 @@ ifdef CONFIG_SIGNED_PACKAGES
@@ -50,24 +50,25 @@ index 4425bb346d..8c101b4e8b 100644
    define Package/base-files/nand-support
 diff --git a/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch b/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch
 new file mode 100644
-index 0000000000..ebdbb6d22b
+index 0000000000..b9e91b89ff
 --- /dev/null
 +++ b/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch
-@@ -0,0 +1,30 @@
+@@ -0,0 +1,39 @@
 +--- a/db.txt
 ++++ b/db.txt
-+@@ -406,8 +406,8 @@ country CL: DFS-JP
++@@ -421,9 +421,8 @@ country CL: DFS-JP
 + # https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20236/d1dc19424d5a4cfe90d631adeee8dd58.pdf
-+ # Note: The transmit power for 5150-5350MHz bands can be raised by 3dBm when TPC is implemented
++ # Note: The transmit power for 5250-5350MHz bands can be raised by 3dBm when TPC is implemented
 + country CN: DFS-FCC
 +-	(2400 - 2483.5 @ 40), (20)
-+-	(5150 - 5350 @ 80), (20), DFS, AUTO-BW, NO-OUTDOOR
++-	(5150 - 5250 @ 80), (23), NO-OUTDOOR, AUTO-BW
++-	(5250 - 5350 @ 80), (20), NO-OUTDOOR, DFS, AUTO-BW
 ++	(2400 - 2483.5 @ 40), (30)
 ++	(5150 - 5350 @ 160), (30)
 + 	(5725 - 5850 @ 80), (33)
 + 	# 60 GHz band channels 1,4: 28dBm, channels 2,3: 44dBm
 + 	# ref: http://www.miit.gov.cn/n11293472/n11505629/n11506593/n11960250/n11960606/n11960700/n12330791.files/n12330790.pdf
-+@@ -1789,14 +1789,12 @@ country US: DFS-FCC
++@@ -1916,20 +1915,18 @@ country US: DFS-FCC
 + 	(920 - 928 @ 8), (30)
 + 	(2400 - 2472 @ 40), (30)
 + 	# 5.15 ~ 5.25 GHz: 30 dBm for master mode, 23 dBm for clients
@@ -83,7 +84,15 @@ index 0000000000..ebdbb6d22b
 ++	(5470 - 5850 @ 160), (30)
 + 	# https://www.federalregister.gov/documents/2021/05/03/2021-08802/use-of-the-5850-5925-ghz-band
 + 	# max. 33 dBm AP @ 20MHz, 36 dBm AP @ 40Mhz+, 6 dB less for clients
-+ 	(5850 - 5895 @ 40), (27), NO-OUTDOOR, AUTO-BW, NO-IR
++-	(5850 - 5895 @ 40), (27), NO-OUTDOOR, AUTO-BW, NO-IR
+++	(5850 - 5895 @ 40), (27), NO-OUTDOOR, AUTO-BW
++ 	# 6g band
++ 	# https://www.federalregister.gov/documents/2020/05/26/2020-11236/unlicensed-use-of-the-6ghz-band
++-	(5925 - 7125 @ 320), (12), NO-OUTDOOR, NO-IR
+++	(5925 - 7125 @ 320), (12), AUTO-BW
++ 	# 60g band
++ 	# reference: section IV-D https://docs.fcc.gov/public/attachments/FCC-16-89A1.pdf
++ 	# channels 1-6 EIRP=40dBm(43dBm peak)
 diff --git a/target/linux/generic/hack-6.6/400-fixup-ubi-warning.patch b/target/linux/generic/hack-6.6/400-fixup-ubi-warning.patch
 new file mode 100644
 index 0000000000..22d59a92cc
@@ -115,10 +124,10 @@ index 0000000000..22d59a92cc
 + 	mtdblk->count = 1;
 + 	mutex_init(&mtdblk->cache_mutex);
 diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-index fc4bc07b2f..e7dbdfbe48 100644
+index 74ee571bc0..42c8603a24 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-@@ -35,7 +35,7 @@ mediatek_setup_interfaces()
+@@ -43,7 +43,7 @@ mediatek_setup_interfaces()
  		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 lan5" eth1
  		;;
  	bananapi,bpi-r3)
@@ -128,5 +137,5 @@ index fc4bc07b2f..e7dbdfbe48 100644
  	bananapi,bpi-r3-mini|\
  	edgecore,eap111)
 -- 
-2.43.0
+2.46.0
 
