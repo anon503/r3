@@ -40,11 +40,13 @@ jobs:
                 ./scripts/feeds install -a
                 cd feeds/luci
                 wget https://gist.githubusercontent.com/mj22226/363cefecd314e45b49d8eafff8473fcf/raw/69b47c9a972e15056f94870d76d93a5146893f99/01-diskman.patch
-                wget https://github.com/openwrt/luci/commit/10319bbcc4fa50e29e18ecc0b29c8a26124604f2.patch
+                wget https://github.com/anon1045/a-l/commit/97c9653c4ce8efa43d190fad31d7d88682e09fdd.patch
                 git apply 01-diskman.patch
-                git apply 10319bbcc4fa50e29e18ecc0b29c8a26124604f2.patch
+                git apply 97c9653c4ce8efa43d190fad31d7d88682e09fdd.patch
                 cd -
                 cd  feeds/packages
+                wget https://patch-diff.githubusercontent.com/raw/openwrt/packages/pull/25143.patch
+                git apply 25143.patch
                 wget https://gist.githubusercontent.com/mj22226/351f11e66f08f06e37a985719a31ddb4/raw/b35ba7a3aac1949bd6bbeaad065a0a93dc3c34f0/01-cpu.patch
                 wget https://gist.githubusercontent.com/mj22226/b66f5c1bd5fc7e1cb3cf2c690b5dbd5a/raw/b955e726cbb0948d932c8d6143229ad604320149/20-lxc.patch
                 git apply 01-cpu.patch
