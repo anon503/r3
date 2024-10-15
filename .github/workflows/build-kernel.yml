@@ -1,0 +1,32 @@
+name: Build Kernel
+
+on:
+  workflow_dispatch:
+jobs:
+  create_tar:
+    name: Create kernel tar
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout kernel 6.6
+        uses: actions/checkout@v4
+        with:
+          repository: mj22226/linux
+          ref: refs/heads/linux-6.6
+          path: linux-6.6.57
+      - name: Pack kernel
+        run: |
+             tar -c linux-6.6.57 | xz > linux-6.6.57.tar.xz
+             sha256sum *.xz > sha256sum
+
+      - name: Release build artifacts
+        uses: ncipollo/release-action@v1.14.0
+        with:
+          allowUpdates: true
+          prerelease: false
+          name: kernel v6.6
+          tag: v6.6
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: |
+                    *.xz
+                    sha256sum
