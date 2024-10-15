@@ -28,8 +28,8 @@ jobs:
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
                 cd feeds/luci
-                wget https://github.com/anon1045/a-l/commit/97c9653c4ce8efa43d190fad31d7d88682e09fdd.patch
-                git apply 97c9653c4ce8efa43d190fad31d7d88682e09fdd.patch
+                wget https://github.com/openwrt/luci/commit/10319bbcc4fa50e29e18ecc0b29c8a26124604f2.patch
+                git apply 10319bbcc4fa50e29e18ecc0b29c8a26124604f2.patch
                 cd -
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
