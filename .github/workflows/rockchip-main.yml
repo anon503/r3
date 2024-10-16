@@ -27,6 +27,8 @@ jobs:
               run: |
                 git clone https://github.com/openwrt/openwrt.git
                 cd openwrt
+                wget https://github.com/anon1045/e27xx/commit/4896f5843a9028b575424d99a53f5468e0a564a0.patch
+                git apply 4896f5843a9028b575424d99a53f5468e0a564a0.patch
                 wget https://downloads.openwrt.org/snapshots/targets/rockchip/armv8/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 tar -xvf llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 ./scripts/feeds update -a
