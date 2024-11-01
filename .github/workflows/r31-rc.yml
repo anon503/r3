@@ -28,15 +28,15 @@ jobs:
                 cd openwrt
                 wget https://downloads.openwrt.org/snapshots/targets/mediatek/filogic/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 tar -xvf llvm-bpf-18.1.7.Linux-x86_64.tar.zst
-                wget https://github.com/mj22226/openwrt/commit/848e171336e93686c886333ef978537b35c090d6.patch
-                wget https://github.com/mj22226/openwrt/commit/cd3b961bd2bccd10f385fa94bd55285113f27da0.patch
-                wget https://github.com/mj22226/openwrt/commit/8b9b1723955a93498ed6df58f3b22a92fb991aaa.patch
-                wget https://github.com/mj22226/openwrt/commit/0964b12f6d827e73a0f96ef118d81f4d4263bc46.patch
+                wget https://github.com/mj22226/openwrt/commit/4d4846f42fd7adccaf48b74e2b78ffb6ad65a0c3.patch
+                wget https://github.com/mj22226/openwrt/commit/39cc506742e0c8d169154d38e76ef96639571d6e.patch
+                wget https://github.com/mj22226/openwrt/commit/fa2a15649e128716741aaca5596ca8bf49b359d6.patch
+                wget https://github.com/mj22226/openwrt/commit/530745f9e994a3bea1b73f6bd0af967155a30140.patch
                 git apply 0001-bpi-r31.patch
-                git apply 848e171336e93686c886333ef978537b35c090d6.patch
-                git apply cd3b961bd2bccd10f385fa94bd55285113f27da0.patch
-                git apply 8b9b1723955a93498ed6df58f3b22a92fb991aaa.patch
-                git apply 0964b12f6d827e73a0f96ef118d81f4d4263bc46.patch
+                git apply 4d4846f42fd7adccaf48b74e2b78ffb6ad65a0c3.patch
+                git apply 39cc506742e0c8d169154d38e76ef96639571d6e.patch
+                git apply fa2a15649e128716741aaca5596ca8bf49b359d6.patch
+                git apply 530745f9e994a3bea1b73f6bd0af967155a30140.patch
                 echo "src-git youtubeUnblock https://github.com/antnyfls/youtubeUnblock.git;openwrt" >> feeds.conf.default
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
@@ -49,10 +49,8 @@ jobs:
                 cd  feeds/packages
                 wget https://gist.githubusercontent.com/mj22226/351f11e66f08f06e37a985719a31ddb4/raw/b35ba7a3aac1949bd6bbeaad065a0a93dc3c34f0/01-cpu.patch
                 wget https://gist.githubusercontent.com/mj22226/b66f5c1bd5fc7e1cb3cf2c690b5dbd5a/raw/b955e726cbb0948d932c8d6143229ad604320149/20-lxc.patch
-                wget https://github.com/mj22226/packages/commit/072bf7ef41364463c42a978c0f47f7b52bbb783e.patch
                 git apply 01-cpu.patch
                 git apply 20-lxc.patch
-                git apply 072bf7ef41364463c42a978c0f47f7b52bbb783e.patch
                 cd -
                 sed -i "13s/'1'/'0'/" feeds/packages/utils/dockerd/files/etc/config/dockerd
                 ./scripts/feeds update -a
