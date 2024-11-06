@@ -10,9 +10,9 @@ jobs:
     steps:
       - name: Pack kernel
         run: |
-             wget https://github.com/mj22226/linux/archive/refs/tags/v6.6.57-rc2.tar.gz
-             tar -xf v6.6.57-rc2.tar.gz --one-top-level=linux-6.6.57
-             tar -c linux-6.6.57 | xz > linux-6.6.57.tar.xz
+             wget https://github.com/mj22226/linux/archive/refs/tags/v6.6.60-rc1.tar.gz
+             tar -xf v6.6.60-rc1.tar.gz --one-top-level=linux-6.6.60
+             tar -c linux-6.6.60 | xz > linux-6.6.60.tar.xz
              sha256sum *.xz > sha256sum
 
       - name: Release build artifacts
