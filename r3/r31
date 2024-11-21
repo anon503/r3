@@ -618,6 +618,7 @@ CONFIG_BPF_TOOLCHAIN_PREBUILT=y
 # CONFIG_PACKAGE_mt7988-2p5g-phy-firmware is not set
 # CONFIG_PACKAGE_zyxel-bootconfig is not set
 # CONFIG_SDK is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_gatonetworks_gdsp is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_acelink_ew-7886cax is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_acer_predator-w6 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_arcadyan_mozart is not set
