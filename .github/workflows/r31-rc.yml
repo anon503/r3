@@ -26,22 +26,27 @@ jobs:
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/* openwrt/
                 cd openwrt
+                wget https://github.com/mj22226/source/commit/d72f2d74215470a0ca8541b7c311e0b732e66687.patch
+                wget https://github.com/mj22226/source/commit/441b9066b3dfdefaf80c9c3c7d45b39084b427f0.patch
+                git apply d72f2d74215470a0ca8541b7c311e0b732e66687.patch
+                git apply 441b9066b3dfdefaf80c9c3c7d45b39084b427f0.patch
                 wget https://downloads.openwrt.org/snapshots/targets/mediatek/filogic/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 tar -xvf llvm-bpf-18.1.7.Linux-x86_64.tar.zst
+                wget https://github.com/mj22226/openwrt/commit/dad6157b87692364ae2f6d7602e45159b012eefb.patch
+                wget https://github.com/mj22226/openwrt/commit/4514a3916ce224f322b9c688f7d1436ab5bfaf76.patch
+                wget https://github.com/mj22226/openwrt/commit/fe111d81bc0cdf00b30ffc4013a31817d20b1801.patch
+                wget https://github.com/mj22226/openwrt/commit/ffd16d2aebeeee3df9818cbe27e964091de7cda9.patch
                 wget https://github.com/mj22226/openwrt/commit/4d4846f42fd7adccaf48b74e2b78ffb6ad65a0c3.patch
-                wget https://github.com/mj22226/openwrt/commit/39cc506742e0c8d169154d38e76ef96639571d6e.patch
-                wget https://github.com/mj22226/openwrt/commit/fa2a15649e128716741aaca5596ca8bf49b359d6.patch
-                wget https://github.com/mj22226/openwrt/commit/530745f9e994a3bea1b73f6bd0af967155a30140.patch
-                git apply 0001-bpi-r31.patch
+                git apply dad6157b87692364ae2f6d7602e45159b012eefb.patch
+                git apply 4514a3916ce224f322b9c688f7d1436ab5bfaf76.patch
+                git apply fe111d81bc0cdf00b30ffc4013a31817d20b1801.patch
+                git apply ffd16d2aebeeee3df9818cbe27e964091de7cda9.patch
                 git apply 4d4846f42fd7adccaf48b74e2b78ffb6ad65a0c3.patch
-                git apply 39cc506742e0c8d169154d38e76ef96639571d6e.patch
-                git apply fa2a15649e128716741aaca5596ca8bf49b359d6.patch
-                git apply 530745f9e994a3bea1b73f6bd0af967155a30140.patch
-                echo "src-git youtubeUnblock https://github.com/antnyfls/youtubeUnblock.git;openwrt" >> feeds.conf.default
+                git apply 0001-bpi-r31.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
-                wget https://gist.githubusercontent.com/mj22226/363cefecd314e45b49d8eafff8473fcf/raw/69b47c9a972e15056f94870d76d93a5146893f99/01-diskman.patch
+                wget https://gist.githubusercontent.com/mj22226/363cefecd314e45b49d8eafff8473fcf/raw/f327d1fcae5513be3abbeea1c6696c1da845a635/01-diskman.patch
                 wget https://github.com/openwrt/luci/commit/10319bbcc4fa50e29e18ecc0b29c8a26124604f2.patch
                 git apply 01-diskman.patch
                 git apply 10319bbcc4fa50e29e18ecc0b29c8a26124604f2.patch
