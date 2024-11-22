@@ -43,7 +43,6 @@ jobs:
                 git apply ffd16d2aebeeee3df9818cbe27e964091de7cda9.patch
                 git apply 4d4846f42fd7adccaf48b74e2b78ffb6ad65a0c3.patch
                 git apply 0001-bpi-r31.patch
-                git apply 0001-arg.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
