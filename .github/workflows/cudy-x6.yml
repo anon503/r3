@@ -25,7 +25,6 @@ jobs:
                 cp -rf r3/* openwrt/
                 cd openwrt
                 git apply mt7621.patch
-                git apply 0001-arg.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
                 cd feeds/luci
