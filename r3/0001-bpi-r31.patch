@@ -1,16 +1,16 @@
-From 776f1253578bcafa0c75658b68114b0e9216388f Mon Sep 17 00:00:00 2001
-From: n n <nn@gnail.com>
-Date: Sun, 13 Oct 2024 13:59:37 -0400
-Subject: [PATCH] r3
+From 5dbece5470020bdc440fdb2cff7a12c77d6f617d Mon Sep 17 00:00:00 2001
+From: l k <lk@gmoil.com>
+Date: Fri, 22 Nov 2024 07:03:55 -0500
+Subject: [PATCH] fix
 
 ---
- feeds.conf.default                            |  8 ++--
- package/base-files/Makefile                   |  2 -
- .../600-custom-change-txpower-and-dfs.patch   | 39 +++++++++++++++++++
- .../hack-6.6/400-fixup-ubi-warning.patch      | 24 ++++++++++++
+ feeds.conf.default                            |  8 +--
+ package/base-files/Makefile                   |  4 --
+ .../firmware/wireless-regdb/patches/005.patch | 54 +++++++++++++++++++
+ .../hack-6.6/400-fixup-ubi-warning.patch      | 24 +++++++++
  .../filogic/base-files/etc/board.d/02_network |  2 +-
- 5 files changed, 68 insertions(+), 7 deletions(-)
- create mode 100644 package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch
+ 5 files changed, 83 insertions(+), 9 deletions(-)
+ create mode 100644 package/firmware/wireless-regdb/patches/005.patch
  create mode 100644 target/linux/generic/hack-6.6/400-fixup-ubi-warning.patch
 
 diff --git a/feeds.conf.default b/feeds.conf.default
@@ -30,7 +30,7 @@ index fc679335e0..afa01cf060 100644
  #src-git targets https://github.com/openwrt/targets.git
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/package/base-files/Makefile b/package/base-files/Makefile
-index a2ea3c5d00847e..86266543672571 100644
+index a2ea3c5d00..8626654367 100644
 --- a/package/base-files/Makefile
 +++ b/package/base-files/Makefile
 @@ -121,12 +121,10 @@ endef
@@ -61,15 +61,30 @@ index a2ea3c5d00847e..86266543672571 100644
  
  ifeq ($(CONFIG_NAND_SUPPORT),)
    define Package/base-files/nand-support
-diff --git a/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch b/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch
+diff --git a/package/firmware/wireless-regdb/patches/005.patch b/package/firmware/wireless-regdb/patches/005.patch
 new file mode 100644
-index 0000000000..b9e91b89ff
+index 0000000000..8eb7b4db5a
 --- /dev/null
-+++ b/package/firmware/wireless-regdb/patches/600-custom-change-txpower-and-dfs.patch
-@@ -0,0 +1,39 @@
++++ b/package/firmware/wireless-regdb/patches/005.patch
+@@ -0,0 +1,54 @@
 +--- a/db.txt
 ++++ b/db.txt
-+@@ -421,9 +421,8 @@ country CL: DFS-JP
++@@ -95,11 +95,9 @@ country AN: DFS-ETSI
++ # Source:
++ # https://www.boletinoficial.gob.ar/detalleAviso/primera/287126/20230524
++ country AR: DFS-FCC
++-	(2402 - 2482 @ 40), (20)
++-	(5170 - 5250 @ 80), (17), AUTO-BW
++-	(5250 - 5330 @ 80), (24), DFS, AUTO-BW
++-	(5490 - 5730 @ 160), (24), DFS
++-	(5735 - 5835 @ 80), (30)
+++	(2402 - 2482 @ 40), (30)
+++	(5170 - 5330 @ 160), (30)
+++	(5490 - 5835 @ 160), (30)
++ 	(5925 - 7125 @ 320), (12), NO-OUTDOOR
++ 
++ country AS: DFS-FCC
++@@ -421,9 +419,8 @@ country CL: DFS-JP
 + # https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20236/d1dc19424d5a4cfe90d631adeee8dd58.pdf
 + # Note: The transmit power for 5250-5350MHz bands can be raised by 3dBm when TPC is implemented
 + country CN: DFS-FCC
@@ -81,7 +96,7 @@ index 0000000000..b9e91b89ff
 + 	(5725 - 5850 @ 80), (33)
 + 	# 60 GHz band channels 1,4: 28dBm, channels 2,3: 44dBm
 + 	# ref: http://www.miit.gov.cn/n11293472/n11505629/n11506593/n11960250/n11960606/n11960700/n12330791.files/n12330790.pdf
-+@@ -1916,20 +1915,18 @@ country US: DFS-FCC
++@@ -1916,20 +1913,18 @@ country US: DFS-FCC
 + 	(920 - 928 @ 8), (30)
 + 	(2400 - 2472 @ 40), (30)
 + 	# 5.15 ~ 5.25 GHz: 30 dBm for master mode, 23 dBm for clients
@@ -137,10 +152,10 @@ index 0000000000..22d59a92cc
 + 	mtdblk->count = 1;
 + 	mutex_init(&mtdblk->cache_mutex);
 diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-index 74ee571bc0..42c8603a24 100644
+index fff39006da..20b01fb35a 100644
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-@@ -43,7 +43,7 @@ mediatek_setup_interfaces()
+@@ -52,7 +52,7 @@ mediatek_setup_interfaces()
  		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4 lan5" eth1
  		;;
  	bananapi,bpi-r3)
