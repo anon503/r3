@@ -76,19 +76,6 @@ index 9eec780b53..bf21156cc3 100644
  # CONFIG_LITEX_LITEETH is not set
  # CONFIG_LITEX_SOC_CONTROLLER is not set
  # CONFIG_LIVEPATCH is not set
-diff --git a/target/linux/ramips/mt7621/target.mk b/target/linux/ramips/mt7621/target.mk
-index 2b9a1312af..e428774642 100644
---- a/target/linux/ramips/mt7621/target.mk
-+++ b/target/linux/ramips/mt7621/target.mk
-@@ -10,7 +10,7 @@ KERNELNAME:=vmlinux vmlinuz
- # make Kernel/CopyImage use $LINUX_DIR/vmlinuz
- IMAGES_DIR:=../../..
- 
--DEFAULT_PACKAGES += wpad-basic-mbedtls uboot-envtools kmod-crypto-hw-eip93
-+DEFAULT_PACKAGES += -wpad-basic-mbedtls wpad-openssl uboot-envtools kmod-crypto-hw-eip93
- 
- define Target/Description
- 	Build firmware images for Ralink MT7621 based boards.
 -- 
 2.46.2
 
