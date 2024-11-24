@@ -26,10 +26,6 @@ jobs:
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/* openwrt/
                 cd openwrt
-                wget https://github.com/mj22226/source/commit/d72f2d74215470a0ca8541b7c311e0b732e66687.patch
-                wget https://github.com/mj22226/source/commit/441b9066b3dfdefaf80c9c3c7d45b39084b427f0.patch
-                git apply d72f2d74215470a0ca8541b7c311e0b732e66687.patch
-                git apply 441b9066b3dfdefaf80c9c3c7d45b39084b427f0.patch
                 wget https://downloads.openwrt.org/snapshots/targets/mediatek/filogic/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 tar -xvf llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 wget https://github.com/mj22226/openwrt/commit/dad6157b87692364ae2f6d7602e45159b012eefb.patch
