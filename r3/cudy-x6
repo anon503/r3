@@ -386,3 +386,7 @@ CONFIG_MODULE_DEFAULT_uboot-envtools=m
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wmc-x1800gst is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wsc-x1800gs is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_ruijie_rg-ew1200g-pro-v1.1 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_gemtek_wvrtm-127acn is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_gemtek_wvrtm-130acn is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_ubnt_edgerouter-x-sfp is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_ubnt_edgerouter-x is not set
