@@ -27,12 +27,6 @@ jobs:
                 git apply mt7621.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
-                cd feeds/luci
-                wget https://github.com/openwrt/luci/commit/10319bbcc4fa50e29e18ecc0b29c8a26124604f2.patch
-                git apply 10319bbcc4fa50e29e18ecc0b29c8a26124604f2.patch
-                cd -
-                ./scripts/feeds update -a
-                ./scripts/feeds install -a -f
                 mv cudy-x6 .config
                 make defconfig
                 make download -j32
