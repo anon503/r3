@@ -1,6 +1,8 @@
 CONFIG_TARGET_ramips=y
 CONFIG_TARGET_ramips_mt7621=y
 CONFIG_TARGET_MULTI_PROFILE=y
+CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_asus_4g-ax56=y
+CONFIG_TARGET_DEVICE_PACKAGES_ramips_mt7621_DEVICE_asus_4g-ax56=""
 CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_cudy_x6-v1=y
 CONFIG_TARGET_DEVICE_PACKAGES_ramips_mt7621_DEVICE_cudy_x6-v1=""
 CONFIG_DEVEL=y
@@ -23,17 +25,19 @@ CONFIG_OPENVPN_openssl_ENABLE_LZO=y
 CONFIG_OPENVPN_openssl_ENABLE_PORT_SHARE=y
 CONFIG_PACKAGE_arp-scan=y
 CONFIG_PACKAGE_arp-scan-database=y
+CONFIG_PACKAGE_bridge=y
 CONFIG_PACKAGE_curl=y
 CONFIG_PACKAGE_htop=y
 CONFIG_PACKAGE_ip-tiny=y
-CONFIG_PACKAGE_bridge=y
 CONFIG_PACKAGE_kmod-br-netfilter=y
-CONFIG_PACKAGE_kmod-nft-bridge=y
 CONFIG_PACKAGE_kmod-crypto-kpp=y
 CONFIG_PACKAGE_kmod-crypto-lib-chacha20=y
 CONFIG_PACKAGE_kmod-crypto-lib-chacha20poly1305=y
 CONFIG_PACKAGE_kmod-crypto-lib-curve25519=y
 CONFIG_PACKAGE_kmod-crypto-lib-poly1305=y
+CONFIG_PACKAGE_kmod-ipt-core=y
+CONFIG_PACKAGE_kmod-nf-ipt=y
+CONFIG_PACKAGE_kmod-nft-bridge=y
 CONFIG_PACKAGE_kmod-tun=y
 CONFIG_PACKAGE_kmod-udptunnel4=y
 CONFIG_PACKAGE_kmod-udptunnel6=y
@@ -46,6 +50,7 @@ CONFIG_PACKAGE_liblz4=y
 CONFIG_PACKAGE_liblzo=y
 CONFIG_PACKAGE_libncurses=y
 CONFIG_PACKAGE_libnghttp2=y
+CONFIG_PACKAGE_libopenssl-conf=y
 CONFIG_PACKAGE_libpcap=y
 CONFIG_PACKAGE_libpcre2=y
 CONFIG_PACKAGE_libubus-lua=y
@@ -55,8 +60,6 @@ CONFIG_PACKAGE_luci-app-filebrowser=y
 CONFIG_PACKAGE_luci-app-filemanager=y
 CONFIG_PACKAGE_luci-app-openvpn=y
 CONFIG_PACKAGE_luci-app-watchcat=y
-CONFIG_PACKAGE_luci-app-eventcat=y
-CONFIG_PACKAGE_eventcat=y
 CONFIG_PACKAGE_luci-compat=y
 CONFIG_PACKAGE_luci-lib-base=y
 CONFIG_PACKAGE_luci-lib-ip=y
@@ -69,6 +72,8 @@ CONFIG_PACKAGE_luci-proto-wireguard=y
 CONFIG_PACKAGE_openssl-util=y
 CONFIG_PACKAGE_openvpn-easy-rsa=y
 CONFIG_PACKAGE_openvpn-openssl=y
+CONFIG_PACKAGE_relayd=y
+CONFIG_PACKAGE_resolveip=y
 CONFIG_PACKAGE_terminfo=y
 CONFIG_PACKAGE_ucode-mod-lua=y
 CONFIG_PACKAGE_vsftpd-tls=y
@@ -77,7 +82,6 @@ CONFIG_PACKAGE_wget-ssl=y
 CONFIG_PACKAGE_wireguard-tools=y
 CONFIG_TARGET_ALL_PROFILES=y
 CONFIG_TARGET_OPTIONS=y
-CONFIG_MODULE_DEFAULT_uboot-envtools=m
 # CONFIG_OPENVPN_openssl_ENABLE_SMALL is not set
 # CONFIG_PACKAGE_chat is not set
 # CONFIG_PACKAGE_comgt is not set
@@ -87,10 +91,12 @@ CONFIG_MODULE_DEFAULT_uboot-envtools=m
 # CONFIG_PACKAGE_kmod-ath is not set
 # CONFIG_PACKAGE_kmod-ath9k is not set
 # CONFIG_PACKAGE_kmod-eeprom-93cx6 is not set
+# CONFIG_PACKAGE_kmod-gpio-nxp-74hc164 is not set
+# CONFIG_PACKAGE_kmod-gpio-pca953x is not set
+# CONFIG_PACKAGE_kmod-i2c-algo-pca is not set
 # CONFIG_PACKAGE_kmod-i2c-core is not set
 # CONFIG_PACKAGE_kmod-leds-ubnt-ledbar is not set
 # CONFIG_PACKAGE_kmod-libphy is not set
-# CONFIG_PACKAGE_kmod-mii is not set
 # CONFIG_PACKAGE_kmod-mmc is not set
 # CONFIG_PACKAGE_kmod-mmc-mtk is not set
 # CONFIG_PACKAGE_kmod-mt7603 is not set
@@ -99,7 +105,6 @@ CONFIG_MODULE_DEFAULT_uboot-envtools=m
 # CONFIG_PACKAGE_kmod-mt7663-firmware-ap is not set
 # CONFIG_PACKAGE_kmod-mt76x0e is not set
 # CONFIG_PACKAGE_kmod-mt76x2 is not set
-# CONFIG_PACKAGE_kmod-nls-base is not set
 # CONFIG_PACKAGE_kmod-phylink is not set
 # CONFIG_PACKAGE_kmod-pps is not set
 # CONFIG_PACKAGE_kmod-pps-gpio is not set
@@ -108,20 +113,16 @@ CONFIG_MODULE_DEFAULT_uboot-envtools=m
 # CONFIG_PACKAGE_kmod-rt2x00-lib is not set
 # CONFIG_PACKAGE_kmod-scsi-core is not set
 # CONFIG_PACKAGE_kmod-sfp is not set
-# CONFIG_PACKAGE_kmod-usb-core is not set
+# CONFIG_PACKAGE_kmod-spi-bitbang is not set
+# CONFIG_PACKAGE_kmod-spi-gpio is not set
 # CONFIG_PACKAGE_kmod-usb-ledtrig-usbport is not set
-# CONFIG_PACKAGE_kmod-usb-net is not set
-# CONFIG_PACKAGE_kmod-usb-net-cdc-ether is not set
 # CONFIG_PACKAGE_kmod-usb-net-cdc-mbim is not set
-# CONFIG_PACKAGE_kmod-usb-net-cdc-ncm is not set
 # CONFIG_PACKAGE_kmod-usb-net-huawei-cdc-ncm is not set
 # CONFIG_PACKAGE_kmod-usb-net-qmi-wwan is not set
 # CONFIG_PACKAGE_kmod-usb-net-rndis is not set
-# CONFIG_PACKAGE_kmod-usb-serial is not set
-# CONFIG_PACKAGE_kmod-usb-serial-option is not set
+# CONFIG_PACKAGE_kmod-usb-serial-xr_usb_serial_common is not set
 # CONFIG_PACKAGE_kmod-usb-wdm is not set
 # CONFIG_PACKAGE_kmod-usb2 is not set
-# CONFIG_PACKAGE_kmod-usb3 is not set
 # CONFIG_PACKAGE_rssileds is not set
 # CONFIG_PACKAGE_rt2800-pci-firmware is not set
 # CONFIG_PACKAGE_uencrypt-mbedtls is not set
@@ -137,6 +138,7 @@ CONFIG_MODULE_DEFAULT_uboot-envtools=m
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_arcadyan_we420223-99 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_asiarf_ap7621-001 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_asiarf_ap7621-nv1 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_asus_4g-ax56 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_asus_rp-ac56 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_asus_rp-ac87 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_asus_rt-ac57u-v1 is not set
@@ -174,6 +176,7 @@ CONFIG_MODULE_DEFAULT_uboot-envtools=m
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_dlink_dir-1960-a1 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_dlink_dir-2055-a1 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_dlink_dir-2150-a1 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_dlink_dir-2150-r1 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_dlink_dir-2640-a1 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_dlink_dir-2660-a1 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_dlink_dir-3040-a1 is not set
@@ -195,6 +198,7 @@ CONFIG_MODULE_DEFAULT_uboot-envtools=m
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_edimax_rg21s is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wmc-m1267gst2 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wmc-s1267gs2 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wmc-x1800gst is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wrc-1167ghbk2-s is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wrc-1167gs2-b is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wrc-1167gst2 is not set
@@ -208,9 +212,12 @@ CONFIG_MODULE_DEFAULT_uboot-envtools=m
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wrc-2533gst is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wrc-2533gst2 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wrc-x1800gs is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wsc-x1800gs is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_etisalat_s3 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_firefly_firewrt is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_gehua_ghl-r-001 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_gemtek_wvrtm-127acn is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_gemtek_wvrtm-130acn is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_glinet_gl-mt1300 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_gnubee_gb-pc1 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_gnubee_gb-pc2 is not set
@@ -285,6 +292,7 @@ CONFIG_MODULE_DEFAULT_uboot-envtools=m
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_netgear_wax202 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_netgear_wax214v2 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_netgear_wndr3700-v5 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_netis_n6 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_netis_wf2881 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_openfi_5pro is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_oraybox_x3a is not set
@@ -294,6 +302,7 @@ CONFIG_MODULE_DEFAULT_uboot-envtools=m
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_renkforce_ws-wn530hp3-a is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_rostelecom_rt-fe-1a is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_rostelecom_rt-sf-1 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_ruijie_rg-ew1200g-pro-v1.1 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_samknows_whitebox-v8 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_sercomm_na502 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_sercomm_na502s is not set
@@ -325,6 +334,8 @@ CONFIG_MODULE_DEFAULT_uboot-envtools=m
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_tplink_re650-v1 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_tplink_re650-v2 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_tplink_tl-wpa8631p-v3 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_ubnt_edgerouter-x is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_ubnt_edgerouter-x-sfp is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_ubnt_unifi-6-lite is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_ubnt_unifi-flexhd is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_ubnt_unifi-nanohd is not set
@@ -381,12 +392,3 @@ CONFIG_MODULE_DEFAULT_uboot-envtools=m
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_zyxel_nwa55axe is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_zyxel_wap6805 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_zyxel_wsm20 is not set
-# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_netis_n6 is not set
-# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_dlink_dir-2150-r1 is not set
-# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wmc-x1800gst is not set
-# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_elecom_wsc-x1800gs is not set
-# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_ruijie_rg-ew1200g-pro-v1.1 is not set
-# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_gemtek_wvrtm-127acn is not set
-# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_gemtek_wvrtm-130acn is not set
-# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_ubnt_edgerouter-x-sfp is not set
-# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_ubnt_edgerouter-x is not set
