@@ -39,7 +39,9 @@ jobs:
                 wget https://github.com/anon503/e27xx./commit/a2d4040fe1d80bd581838bc214675ca433025068.patch
                 git apply a2d4040fe1d80bd581838bc214675ca433025068.patch
                 wget https://raw.githubusercontent.com/anon540/r3/refs/heads/main/r3/0001-ar.patch
+                wget https://github.com/anon1045/e27xx/commit/66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
                 git apply 0001-ar.patch
+                git apply 66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
