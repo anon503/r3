@@ -34,10 +34,10 @@ jobs:
                 git format-patch main...linux-6.6 --stdout > 001.patch
                 git checkout main
                 git apply 001.patch
-                wget https://github.com/mj22226/source/commit/b88a9889187a7bcb0d67063129f6d91bd6c98ec5.patch
-                git apply b88a9889187a7bcb0d67063129f6d91bd6c98ec5.patch
-                wget https://github.com/anon1045/e27xx/commit/66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
-                git apply 66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
+                wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/17217.patch
+                git apply 17217.patch
+                wget https://github.com/anon503/e27xx./commit/9012dedc79c44c0a7171f8bd48eb3c852deb67f0.patch
+                git apply 9012dedc79c44c0a7171f8bd48eb3c852deb67f0.patch
                 wget https://raw.githubusercontent.com/anon540/r3/refs/heads/main/r3/0001-ar.patch
                 git apply 0001-ar.patch
                 ./scripts/feeds update -a
