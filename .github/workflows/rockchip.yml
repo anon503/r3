@@ -36,8 +36,8 @@ jobs:
                 git apply 001.patch
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/17217.patch
                 git apply 17217.patch
-                wget https://github.com/anon503/e27xx./commit/689460a653910964e26ac07bb0e6ac78a3567259.patch
-                git apply 689460a653910964e26ac07bb0e6ac78a3567259.patch
+                wget https://github.com/anon503/e27xx./commit/a2d4040fe1d80bd581838bc214675ca433025068.patch
+                git apply a2d4040fe1d80bd581838bc214675ca433025068.patch
                 wget https://raw.githubusercontent.com/anon540/r3/refs/heads/main/r3/0001-ar.patch
                 git apply 0001-ar.patch
                 ./scripts/feeds update -a
