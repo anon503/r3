@@ -27,7 +27,7 @@ jobs:
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/17271.patch
                 git apply 17271.patch
                 wget https://github.com/mj22226/source/commit/4989a4fc7e95212826fb2327ed0329bfac699a73.patch
-                git 4989a4fc7e95212826fb2327ed0329bfac699a73.patch
+                git apply 4989a4fc7e95212826fb2327ed0329bfac699a73.patch
                 git apply mt7621.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
