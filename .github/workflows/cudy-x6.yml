@@ -24,15 +24,15 @@ jobs:
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/* openwrt/
                 cd openwrt
-                wget https://github.com/mj22226/source/commit/135df4e0eddef30232634052e0ad278a96d2e77b.patch
-                git apply 135df4e0eddef30232634052e0ad278a96d2e77b.patch
+                wget https://github.com/mj22226/openwrt/commit/a65346061f2eadf751568cb4dce49e9e9140daab.patch
+                git apply a65346061f2eadf751568cb4dce49e9e9140daab.patch
                 git apply mt7621.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
                 mv cudy-x6 .config
                 make defconfig
                 make download -j32
-                make -j$(nproc) V=s 'IGNORE_ERRORS=n m'
+                make -j$(nproc) 'IGNORE_ERRORS=n m'
                 rm -rf bin/targets/ramips/mt7621/packages
                 echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
             - name: Delete tag
