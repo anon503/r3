@@ -698,4 +698,6 @@ CONFIG_BPF_TOOLCHAIN_PREBUILT=y
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_mercusys_mr90x-v1-ubi is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_keenetic_kn-3811 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_nradio_c8-668gl is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_cudy_ap3000-v is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tenbay_wr3000k is not set
 CONFIG_USE_LLVM_PREBUILT=y
