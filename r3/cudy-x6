@@ -392,3 +392,4 @@ CONFIG_TARGET_OPTIONS=y
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_zyxel_wap6805 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_zyxel_wsm20 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_confiabits_mt7621-v1 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_keenetic_kn-1910 is not set
