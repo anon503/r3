@@ -34,8 +34,8 @@ jobs:
                 git format-patch main...linux-6.6 --stdout > 001.patch
                 git checkout main
                 git apply 001.patch
-                wget https://github.com/anon503/e27xx./commit/bce7b3dbe2e2349eca6a34559b688e43173b61da.patch
-                git apply bce7b3dbe2e2349eca6a34559b688e43173b61da.patch
+                wget https://github.com/anon503/e27xx./commit/f2e0a2ec7fdee2e2872cc60de1c101a8c17feff5.patch
+                git apply f2e0a2ec7fdee2e2872cc60de1c101a8c17feff5.patch
                 wget https://raw.githubusercontent.com/anon540/r3/refs/heads/main/r3/0001-ar.patch
                 wget https://github.com/anon1045/e27xx/commit/66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
                 git apply 0001-ar.patch
