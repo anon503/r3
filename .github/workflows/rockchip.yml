@@ -61,7 +61,7 @@ jobs:
                 sed -i "13s/'1'/'0'/" feeds/packages/utils/dockerd/files/etc/config/dockerd
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
-                wget https://downloads.openwrt.org/snapshots/targets/rockchip/armv8/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
+                wget https://ftp.snt.utwente.nl/pub/software/lede/snapshots/targets/rockchip/armv8/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 tar -xvf llvm-bpf-18.1.7.Linux-x86_64.tar.zst
                 mv config-rockchip .config
                 make defconfig
