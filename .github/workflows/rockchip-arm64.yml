@@ -13,9 +13,11 @@ jobs:
             - name: CPU cores
               run: |
                 getconf _NPROCESSORS_ONLN
+            - uses: actions/checkout@v4
             - uses: actions/setup-go@v5
               with:
-                go-version: '1.23.5'
+                go-version: '1.22.10'
+            - run: go version
             - name: Maximize build space
               uses: AdityaGarg8/remove-unwanted-software@master
               with:
