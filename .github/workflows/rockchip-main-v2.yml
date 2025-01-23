@@ -1,4 +1,4 @@
-name: Build rockchip main
+name: Build rockchip main v2
 on:
    workflow_dispatch:
 jobs:
