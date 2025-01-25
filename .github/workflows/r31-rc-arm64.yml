@@ -47,6 +47,7 @@ jobs:
                 ./scripts/feeds install -a -f
                 mkdir -p files/www/repo
                 mv r31 .config
+                echo 'CONFIG_GOLANG_EXTERNAL_BOOTSTRAP_ROOT="/opt/hostedtoolcache/go/1.23.5/arm64/bin"' >> .config
                 make defconfig
                 make download -j32
                 make -j$(nproc) 'IGNORE_ERRORS=n m' || true
