@@ -19,7 +19,7 @@ jobs:
             - name: Build
               run: |
                 git clone https://github.com/openwrt/openwrt.git
-                cp -rf r3/config-rockchip openwrt/
+                cp -rf r3/config-rockchip-v3 openwrt/
                 cd openwrt
                 git remote add source https://github.com/mj22226/source.git
                 git fetch source
