@@ -60,8 +60,6 @@ jobs:
                 git apply 01-key.patch
                 make download -j32
                 rm 01-key.patch
-                htop
-                sleep 10
                 make -j$(nproc) 'IGNORE_ERRORS=n m' || true
                 tar -czvf bin/targets/rockchip/armv8/packages.tar.gz bin/targets/rockchip/armv8/packages || true
                 tar -czvf bin/targets/rockchip/armv8/logs.tar.gz logs
