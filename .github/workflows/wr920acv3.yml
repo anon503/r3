@@ -22,7 +22,7 @@ jobs:
                 cd openwrt
                 wget https://github.com/mj22226/openwrt/commit/e5c9619699c7147724c92bb7460d8d4b2d02529f.patch
                 git apply e5c9619699c7147724c92bb7460d8d4b2d02529f.patch
-                git apply mt7621.patch
+                git apply mt76x8.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
                 mv wr920acv3 .config
