@@ -6,14 +6,13 @@ jobs:
         name: TL-WR902AC V3 Images
         runs-on: ubuntu-24.04-arm
         steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-go@v5
+            - name: checkout
+              uses: actions/checkout@v4
+            - name: Setup GO
+              uses: actions/setup-go@v5
               with:
                 go-version: '1.23.5'
                 cache: false
-            - run: go version
-            - name: checkout
-              uses: actions/checkout@v4
             - name: Build
               run: |
                 go version | true
