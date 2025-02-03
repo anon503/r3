@@ -34,6 +34,7 @@ jobs:
                 wget https://github.com/anon1045/e27xx/commit/66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
                 git apply 0001-ar.patch
                 git apply 66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
+                git apply 01-ip-addr.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
@@ -53,6 +54,7 @@ jobs:
                 sed -i "195s/'0'/'1'/" feeds/luci/applications/luci-app-statistics/root/etc/config/luci_statistics
                 sed -i "212s/'0'/'1'/" feeds/luci/applications/luci-app-statistics/root/etc/config/luci_statistics
                 sed -i "13s/'1'/'0'/" feeds/packages/utils/dockerd/files/etc/config/dockerd
+                sed -i "4s/login/login -f root/" feeds/packages/utils/ttyd/files/ttyd.config
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a -f
                 wget https://github.com/mj22226/openwrt-arm64/releases/download/rockchip-18.1.7/llvm-bpf-18.1.7.Linux-aarch64.tar.zst
