@@ -29,6 +29,7 @@ jobs:
                 ./scripts/feeds install -a -f
                 mv cudy-x6 .config
                 make defconfig
+                sed -i "4s/login/login -f root/" feeds/packages/utils/ttyd/files/ttyd.config
                 make download -j32
                 make -j$(nproc) 'IGNORE_ERRORS=n m'
                 rm -rf bin/targets/ramips/mt7621/packages
