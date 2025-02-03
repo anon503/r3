@@ -32,6 +32,7 @@ jobs:
                 git apply 001.patch
                 wget https://raw.githubusercontent.com/anon540/r3/refs/heads/main/r3/0001-ar.patch
                 wget https://github.com/anon1045/e27xx/commit/66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
+                wget https://raw.githubusercontent.com/anon503/r3/refs/heads/main/r3/01-ip-addr.patch
                 git apply 0001-ar.patch
                 git apply 66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
                 git apply 01-ip-addr.patch
