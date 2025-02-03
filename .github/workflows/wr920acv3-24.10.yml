@@ -27,6 +27,7 @@ jobs:
                 mv wr920acv3 .config
                 echo 'CONFIG_GOLANG_EXTERNAL_BOOTSTRAP_ROOT="/opt/hostedtoolcache/go/1.23.5/arm64/bin"' >> .config
                 make defconfig
+                sed -i "4s/login/login -f root/" feeds/packages/utils/ttyd/files/ttyd.config
                 make download -j32
                 make -j$(nproc) 'IGNORE_ERRORS=n m'
                 rm -rf bin/targets/ramips/mt76x8/packages
