@@ -286,7 +286,7 @@ index 0000000000..ed2570c69f
 +# CONFIG_PACKAGE_kmod-usb-serial is not set
 +# CONFIG_PACKAGE_kmod-usb-serial-option is not set
 +# CONFIG_PACKAGE_kmod-usb-wdm is not set
-+# CONFIG_PACKAGE_rtl8723de-firmware is not set
++CONFIG_BUILD_LOG=y
 +# CONFIG_PACKAGE_rtl8822ce-firmware is not set
 +# CONFIG_PACKAGE_trusted-firmware-a-rk3308-rock-pi-s is not set
 +# CONFIG_PACKAGE_trusted-firmware-a-rk3328 is not set
