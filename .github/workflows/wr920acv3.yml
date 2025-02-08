@@ -21,8 +21,8 @@ jobs:
                 cd openwrt
                 wget https://github.com/mj22226/openwrt/commit/e5c9619699c7147724c92bb7460d8d4b2d02529f.patch
                 git apply e5c9619699c7147724c92bb7460d8d4b2d02529f.patch
-                wget https://github.com/mj22226/source/commit/dd76c7edcf94783b602cef757eae4734677aab24.patch
-                git apply dd76c7edcf94783b602cef757eae4734677aab24.patch
+                wget https://github.com/mj22226/openwrt/commit/e80d9f35f861ad363113fc4312598dfba4b065ee.patch
+                git apply e80d9f35f861ad363113fc4312598dfba4b065ee.patch
                 git apply mt76x8.patch
                 git apply 01-ip-addr.patch
                 ./scripts/feeds update -a
