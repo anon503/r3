@@ -16,6 +16,7 @@ jobs:
               run: |
                 git clone https://github.com/immortalwrt/immortalwrt.git openwrt
                 cp -rf r3/m4.patch openwrt/
+                cp -rf r3/rk-m4 openwrt/
                 cd openwrt
                 wget https://raw.githubusercontent.com/anon540/r3/refs/heads/main/r3/0001-ar.patch
                 wget https://raw.githubusercontent.com/anon503/r3/refs/heads/main/r3/01-ip-addr.patch
