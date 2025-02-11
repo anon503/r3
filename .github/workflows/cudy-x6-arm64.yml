@@ -25,6 +25,8 @@ jobs:
                 git apply e5c9619699c7147724c92bb7460d8d4b2d02529f.patch
                 wget https://github.com/mj22226/openwrt/commit/e80d9f35f861ad363113fc4312598dfba4b065ee.patch
                 git apply e80d9f35f861ad363113fc4312598dfba4b065ee.patch
+                wget https://github.com/mj22226/openwrt/commit/8b7cd7d3d4c035a25e461901f72aeed64fba3516.patch
+                git apply 8b7cd7d3d4c035a25e461901f72aeed64fba3516.patch
                 git apply mt7621.patch
                 git apply 01-ip-addr.patch
                 ./scripts/feeds update -a
