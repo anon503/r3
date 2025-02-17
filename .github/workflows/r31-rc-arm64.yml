@@ -22,8 +22,8 @@ jobs:
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/* openwrt/
                 cd openwrt
-                wget https://github.com/mj22226/source/commit/904dc41f19bdfd4ab7befd188a05ef6f2539847d.patch
-                git apply 904dc41f19bdfd4ab7befd188a05ef6f2539847d.patch
+                wget https://github.com/mj22226/openwrt/commit/03eeac3582a46a37e047c2a0c3f2b0d18d1317a8.patch
+                git apply 03eeac3582a46a37e047c2a0c3f2b0d18d1317a8.patch
                 wget https://github.com/mj22226/source/commit/5cd76700cd39422e1bc9576096b201df7020ad5a.patch
                 git apply 5cd76700cd39422e1bc9576096b201df7020ad5a.patch
                 wget https://github.com/mj22226/openwrt-arm64/releases/download/filogic-18.1.7/llvm-bpf-18.1.7.Linux-aarch64.tar.zst
