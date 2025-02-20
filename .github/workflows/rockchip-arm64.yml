@@ -29,7 +29,6 @@ jobs:
                 git switch linux-6.6
                 git format-patch main...linux-6.6 --stdout > 001.patch
                 git checkout main
-                git reset --hard b74318481b424cf72ef178881c567e9f049c04dc
                 git apply 001.patch
                 wget https://raw.githubusercontent.com/anon540/r3/refs/heads/main/r3/0001-ar.patch
                 wget https://github.com/anon1045/e27xx/commit/66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
@@ -44,12 +43,14 @@ jobs:
                 git apply 01-diskman.patch
                 cd -
                 cd  feeds/packages
+                wget https://patch-diff.githubusercontent.com/raw/openwrt/packages/pull/26022.patch
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/packages/pull/25783.patch
                 wget https://gist.githubusercontent.com/mj22226/351f11e66f08f06e37a985719a31ddb4/raw/b35ba7a3aac1949bd6bbeaad065a0a93dc3c34f0/01-cpu.patch
                 wget https://gist.githubusercontent.com/mj22226/b66f5c1bd5fc7e1cb3cf2c690b5dbd5a/raw/b955e726cbb0948d932c8d6143229ad604320149/20-lxc.patch
                 git apply 01-cpu.patch
                 git apply 20-lxc.patch
-                git apply 25783.patch
+                git apply 25783
+                git apply 26022
                 cd -
                 sed -i "71s/'0'/'1'/" feeds/luci/applications/luci-app-statistics/root/etc/config/luci_statistics
                 sed -i "84s/'0'/'1'/" feeds/luci/applications/luci-app-statistics/root/etc/config/luci_statistics
