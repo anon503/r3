@@ -24,10 +24,12 @@ jobs:
                 cd openwrt
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/18043.patch
                 git apply 18043.patch
-                wget https://github.com/mj22226/openwrt/commit/c0a8d59ae3778b5fb17adfa8272510acfddaadaa.patch
-                git apply c0a8d59ae3778b5fb17adfa8272510acfddaadaa.patch
-                wget https://github.com/mj22226/source/commit/5cd76700cd39422e1bc9576096b201df7020ad5a.patch
-                git apply 5cd76700cd39422e1bc9576096b201df7020ad5a.patch
+                wget https://github.com/mj22226/source/commit/aadb72133fbe73bdefa713007d4f692a691a2cb6.patch
+                git apply aadb72133fbe73bdefa713007d4f692a691a2cb6.patch
+                wget https://github.com/mj22226/source/commit/29496754f6709479c04ef944aff63931aae23335.patch
+                git apply 29496754f6709479c04ef944aff63931aae23335.patch
+                wget https://github.com/mj22226/source/commit/a77d629dbab2c5c41390e31fe0ce000c33c7a71c.patch
+                git apply a77d629dbab2c5c41390e31fe0ce000c33c7a71c.patch
                 wget https://github.com/mj22226/openwrt-arm64/releases/download/filogic-18.1.7/llvm-bpf-18.1.7.Linux-aarch64.tar.zst
                 tar -xvf llvm-bpf-18.1.7.Linux-aarch64.tar.zst
                 wget https://github.com/mj22226/openwrt/commit/4d4846f42fd7adccaf48b74e2b78ffb6ad65a0c3.patch
