@@ -19,8 +19,8 @@ jobs:
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/* openwrt/
                 cd openwrt
-                wget https://github.com/anon503/e27xx./commit/09a483d68338e6e3415ff90ede97cc9a08eebfbd.patch
-                git apply 09a483d68338e6e3415ff90ede97cc9a08eebfbd.patch
+                wget https://github.com/anon503/e27xx./commit/6e517ba81aa76a3ac4029031f86998f51bd9f6f7.patch
+                git apply 6e517ba81aa76a3ac4029031f86998f51bd9f6f7.patch
                 git apply mt76x8.patch
                 git apply 01-ip-addr.patch
                 ./scripts/feeds update -a
