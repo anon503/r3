@@ -5,14 +5,20 @@ CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_tplink_tl-wr902ac-v3=y
 CONFIG_TARGET_DEVICE_PACKAGES_ramips_mt76x8_DEVICE_tplink_tl-wr902ac-v3=""
 CONFIG_DEVEL=y
 CONFIG_TARGET_PER_DEVICE_ROOTFS=y
+CONFIG_GOLANG_EXTERNAL_BOOTSTRAP_ROOT="/opt/hostedtoolcache/go/1.23.5/arm64/bin"
 # CONFIG_KERNEL_WERROR is not set
 CONFIG_PACKAGE_cgi-io=y
+CONFIG_PACKAGE_libcap-ng=y
 CONFIG_PACKAGE_liblucihttp=y
 CONFIG_PACKAGE_liblucihttp-ucode=y
+CONFIG_PACKAGE_libpthread=y
+CONFIG_PACKAGE_librt=y
+CONFIG_PACKAGE_libuuid=y
 CONFIG_PACKAGE_luci=y
 CONFIG_PACKAGE_luci-app-filemanager=y
 CONFIG_PACKAGE_luci-app-firewall=y
 CONFIG_PACKAGE_luci-app-package-manager=y
+CONFIG_PACKAGE_luci-app-upnp=y
 CONFIG_PACKAGE_luci-base=y
 CONFIG_PACKAGE_luci-light=y
 CONFIG_PACKAGE_luci-mod-admin-full=y
@@ -23,7 +29,7 @@ CONFIG_PACKAGE_luci-proto-ipv6=y
 CONFIG_PACKAGE_luci-proto-ppp=y
 CONFIG_PACKAGE_luci-proto-relay=y
 CONFIG_PACKAGE_luci-theme-bootstrap=y
-CONFIG_PACKAGE_luci-app-upnp=y
+CONFIG_PACKAGE_miniupnpd-nftables=y
 CONFIG_PACKAGE_relayd=y
 CONFIG_PACKAGE_rpcd=y
 CONFIG_PACKAGE_rpcd-mod-file=y
@@ -72,6 +78,7 @@ CONFIG_TARGET_OPTIONS=y
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_comfast_cf-wr617ac is not set
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_comfast_cf-wr758ac-v1 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_comfast_cf-wr758ac-v2 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_cudy_m1200-v1 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_cudy_tr1200-v1 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_cudy_wr1000 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_d-team_pbr-d1 is not set
@@ -166,7 +173,6 @@ CONFIG_TARGET_OPTIONS=y
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_xiaomi_miwifi-nano is not set
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_yuncore_cpe200 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_yuncore_m300 is not set
-# CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_cudy_m1200-v1 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_zbtlink_zbt-we1226 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_zbtlink_zbt-we2426-b is not set
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_zyxel_keenetic-extra-ii is not set
