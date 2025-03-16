@@ -397,3 +397,4 @@ CONFIG_TARGET_OPTIONS=y
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_cudy_m1300-v2 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_genexis_pulse-ex400 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_zyxel_lte7490-m904 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt7621_DEVICE_maginon_mc-1200ac is not set
