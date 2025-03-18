@@ -5,15 +5,19 @@ on:
 jobs:
   create_tar:
     name: Create kernel tar
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
 
     steps:
+      - name: Checkout kernel 6.6
+        uses: actions/checkout@v4
+        with:
+          repository: anon503/linux
+          ref: refs/heads/linux-6.6
+          path: linux-6.6.84
       - name: Pack kernel
         run: |
-             wget https://github.com/mj22226/linux/archive/refs/tags/v6.6.60-rc1.tar.gz
-             tar -xf v6.6.60-rc1.tar.gz --one-top-level=linux-6.6.60
-             tar -c linux-6.6.60 | xz > linux-6.6.60.tar.xz
-             sha256sum *.xz > sha256sum
+             tar -c linux-6.6.84 | xz -T0 > linux-6.6.84.tar.xz
+             sha256sum linux-6.6.84.tar.xz > sha256sum-linux-6.6.84
 
       - name: Release build artifacts
         uses: ncipollo/release-action@v1.14.0
