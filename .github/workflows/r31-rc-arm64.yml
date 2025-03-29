@@ -22,8 +22,11 @@ jobs:
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/* openwrt/
                 cd openwrt
-                wget https://github.com/mj22226/openwrt/commit/cd37b0c5f0c1b56809b8b2207aff5338cfa45dc8.patch
-                git apply cd37b0c5f0c1b56809b8b2207aff5338cfa45dc8.patch
+                wget https://github.com/mj22226/openwrt/commit/3bd118d18687ad8e8270960a3e729c23ef3ed41f.patch
+                git apply 3bd118d18687ad8e8270960a3e729c23ef3ed41f.patch
+                wget https://github.com/mj22226/openwrt/commit/68aa201818f7e405764e4e982b8a444c81572caa.patch
+                git apply 68aa201818f7e405764e4e982b8a444c81572caa.patch
+                
                 wget https://github.com/mj22226/source/commit/aadb72133fbe73bdefa713007d4f692a691a2cb6.patch
                 git apply aadb72133fbe73bdefa713007d4f692a691a2cb6.patch
                 wget https://github.com/mj22226/source/commit/29496754f6709479c04ef944aff63931aae23335.patch
