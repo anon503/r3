@@ -176,3 +176,4 @@ CONFIG_TARGET_OPTIONS=y
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_zbtlink_zbt-we2426-b is not set
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_zyxel_keenetic-extra-ii is not set
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_keenetic_kn-1221 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_mercusys_mb130-4g-v1 is not set
