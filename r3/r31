@@ -720,4 +720,5 @@ CONFIG_BPF_TOOLCHAIN_PREBUILT=y
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_huasifei_wh3000 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_netis_nx31 is not set
 # CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_netcore_n60-pro is not set
+# CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_mercusys_mr80x-v3 is not set
 CONFIG_USE_LLVM_PREBUILT=y
