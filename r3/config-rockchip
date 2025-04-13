@@ -757,4 +757,6 @@ CONFIG_BPF_TOOLCHAIN_PREBUILT=y
 # CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_xunlong_orangepi-5-plus is not set
 # CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_xunlong_orangepi-r1-plus is not set
 # CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_xunlong_orangepi-r1-plus-lts is not set
+# CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-4se is not set
+# CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_radxa_rock-4c-plus is not set
 CONFIG_USE_LLVM_PREBUILT=y
