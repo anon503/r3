@@ -22,8 +22,6 @@ jobs:
               run: |
                 git clone https://github.com/openwrt/openwrt.git
                 cd openwrt
-                wget https://github.com/mj22226/source/commit/bc7eaac686e001452d345e46e20c3f8ab7fd2494.patch
-                git apply bc7eaac686e001452d345e46e20c3f8ab7fd2494.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 wget https://mirror-03.infra.openwrt.org/snapshots/targets/rockchip/armv8/config.buildinfo -O .config
