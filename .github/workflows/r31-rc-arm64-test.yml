@@ -61,8 +61,8 @@ jobs:
                 make -j$(nproc) 'IGNORE_ERRORS=n m' || true
                 tar -czvf bin/targets/mediatek/filogic/packages.tar.gz bin/targets/mediatek/filogic/packages || true
                 tar -czvf bin/targets/mediatek/filogic/feeds-packages.tar.gz bin/packages || true
-                tar -czvf bin/targets/mediatek/filogic/logs.tar.gz logs
-                cp -R bin/targets/mediatek/filogic/packages/ files/www/repo/
+                tar -czvf bin/targets/mediatek/filogic/logs.tar.gz logs || true
+                cp -R bin/targets/mediatek/filogic/packages/ files/www/repo/ || true
                 make -j$(nproc) 'IGNORE_ERRORS=n m' || true
                 rm -rf bin/targets/mediatek/filogic/packages || true
                 echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
