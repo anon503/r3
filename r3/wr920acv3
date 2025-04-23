@@ -179,3 +179,4 @@ CONFIG_TARGET_OPTIONS=y
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_mercusys_mb130-4g-v1 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_teltonika_rut200 is not set
 # CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_teltonika_rut241 is not set
+# CONFIG_TARGET_DEVICE_ramips_mt76x8_DEVICE_xiaomi_miwifi-3a is not set
