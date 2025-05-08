@@ -22,20 +22,13 @@ jobs:
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/* openwrt/
                 cd openwrt
-                wget https://github.com/mj22226/source/commit/128b8cbc3bd3dadfb88a473455dfd7fb33504e15.patch
-                git apply 128b8cbc3bd3dadfb88a473455dfd7fb33504e15.patch
+                wget https://github.com/mj22226/source/commit/72b9b06fa3a33e7813f214a6c96fe5d94652649e.patch
+                git apply 72b9b06fa3a33e7813f214a6c96fe5d94652649e.patch
                 git revert --no-commit e8b470139c78db269f0ac4908662d7aa9c4586ed
-                
-                wget https://github.com/mj22226/source/commit/aadb72133fbe73bdefa713007d4f692a691a2cb6.patch
-                git apply aadb72133fbe73bdefa713007d4f692a691a2cb6.patch
-                wget https://github.com/mj22226/source/commit/29496754f6709479c04ef944aff63931aae23335.patch
-                git apply 29496754f6709479c04ef944aff63931aae23335.patch
-                wget https://github.com/mj22226/source/commit/a77d629dbab2c5c41390e31fe0ce000c33c7a71c.patch
-                git apply a77d629dbab2c5c41390e31fe0ce000c33c7a71c.patch
+                wget https://gist.githubusercontent.com/anon503/404095754ac6b88c2b749648d04310bd/raw/b42bb629623b0fb239e66ad1bbc9ab9b211d3b21/rtl8814.patch
+                git apply rtl8814.patch
                 wget https://github.com/mj22226/openwrt-arm64/releases/download/filogic-18.1.7/llvm-bpf-18.1.7.Linux-aarch64.tar.zst
                 tar -xvf llvm-bpf-18.1.7.Linux-aarch64.tar.zst
-                wget https://github.com/mj22226/openwrt/commit/4d4846f42fd7adccaf48b74e2b78ffb6ad65a0c3.patch
-                git apply 4d4846f42fd7adccaf48b74e2b78ffb6ad65a0c3.patch
                 git apply 0001-bpi-r31.patch
                 git apply 01-ip-addr.patch
                 ./scripts/feeds update -a
