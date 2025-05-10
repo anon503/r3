@@ -24,7 +24,7 @@ jobs:
                 cd openwrt
                 wget https://github.com/mj22226/openwrt/commit/23dd31ae8fdf01d3962e1c0ba9510f9d63efa5de.patch
                 git apply 23dd31ae8fdf01d3962e1c0ba9510f9d63efa5de.patch
-                git revert --no-commit e8b470139c78db269f0ac4908662d7aa9c4586ed
+
                 wget https://gist.githubusercontent.com/anon503/404095754ac6b88c2b749648d04310bd/raw/b42bb629623b0fb239e66ad1bbc9ab9b211d3b21/rtl8814.patch
                 git apply rtl8814.patch
                 wget https://github.com/mj22226/openwrt-arm64/releases/download/filogic-18.1.7/llvm-bpf-18.1.7.Linux-aarch64.tar.zst
