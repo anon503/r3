@@ -24,6 +24,8 @@ jobs:
                 cd openwrt
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/18835.patch
                 git apply 18835.patch
+                wget https://github.com/mj22226/source/commit/f6397e3cf88d020f1f0227910b7083f1ed73e315.patch
+                git apply f6397e3cf88d020f1f0227910b7083f1ed73e315.patch
 
                 wget https://gist.githubusercontent.com/anon503/404095754ac6b88c2b749648d04310bd/raw/b42bb629623b0fb239e66ad1bbc9ab9b211d3b21/rtl8814.patch
                 git apply rtl8814.patch
