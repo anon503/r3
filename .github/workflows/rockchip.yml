@@ -27,6 +27,9 @@ jobs:
               run: |
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/config-rockchip openwrt/
+                cp -rf r3/0001-ar.patch openwrt/
+                cp -rf r3/66332b9cebe3ef77cf4b4217877e059353bdcca3.patch openwrt/
+                cp -rf r3/01-ip-addr.patch openwrt/
                 cd openwrt
                 git remote add source https://github.com/mj22226/source.git
                 git fetch source
@@ -34,11 +37,8 @@ jobs:
                 git format-patch main...linux-6.6 --stdout > 001.patch
                 git checkout main
                 git apply 001.patch
-                wget https://raw.githubusercontent.com/anon540/r3/refs/heads/main/r3/0001-ar.patch
-                wget https://github.com/anon1045/e27xx/commit/66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
                 git apply 0001-ar.patch
                 git apply 66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
-                wget https://raw.githubusercontent.com/anon503/r3/refs/heads/main/r3/01-ip-addr.patch
                 git apply 01-ip-addr.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
