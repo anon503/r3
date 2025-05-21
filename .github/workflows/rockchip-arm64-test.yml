@@ -32,7 +32,6 @@ jobs:
                 git switch linux-6.6
                 git format-patch main...linux-6.6 --stdout > 001.patch
                 git checkout main
-                git revert --no-commi 0caa30b66aaa2186bb875453c2b92d9cd3e27303
                 git apply 001.patch
                 git apply 0001-ar.patch
                 git apply 66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
