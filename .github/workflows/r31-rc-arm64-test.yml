@@ -24,8 +24,8 @@ jobs:
                 cd openwrt
                 wget https://github.com/mj22226/source/commit/70e7ba0523694cf6a4d492851a92f67c11e4479e.patch
                 git apply 70e7ba0523694cf6a4d492851a92f67c11e4479e.patch
-                wget https://github.com/mj22226/source/commit/f6397e3cf88d020f1f0227910b7083f1ed73e315.patch
-                git apply f6397e3cf88d020f1f0227910b7083f1ed73e315.patch
+                wget https://github.com/mj22226/openwrt/commit/e50e9daa7983f5000a21bacd5d4cac41337c671b.patch
+                git apply e50e9daa7983f5000a21bacd5d4cac41337c671b.patch
 
                 wget https://gist.githubusercontent.com/anon503/404095754ac6b88c2b749648d04310bd/raw/b42bb629623b0fb239e66ad1bbc9ab9b211d3b21/rtl8814.patch
                 git apply rtl8814.patch
