@@ -72,8 +72,6 @@ jobs:
                 make -j$(nproc) 'IGNORE_ERRORS=n m' || true
                 mv bin/packages/aarch64_generic/base/*cpufreq* bin/targets/rockchip/armv8/packages/
                 make -j$(nproc) package/index V=s
-                cp -R bin/targets/rockchip/armv8/packages/ files/www/repo/
-                make -j$(nproc) 'IGNORE_ERRORS=n m' || true
                 tar -czvf bin/targets/rockchip/armv8/feeds-packages.tar.gz bin/packages || true
                 tar -czvf bin/targets/rockchip/armv8/packages.tar.gz bin/targets/rockchip/armv8/packages || true
                 tar -czvf bin/targets/rockchip/armv8/logs.tar.gz logs
