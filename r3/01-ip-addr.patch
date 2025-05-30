@@ -37,7 +37,7 @@ index fecf82fcaa..c54cfb6267 100755
 +++ b/package/base-files/files/bin/config_generate
 @@ -162,7 +162,7 @@ generate_network() {
  		static)
- 			local ipad
+ 			local ipad netm prefix
  			case "$1" in
 -				lan) ipad=${ipaddr:-"192.168.1.1"} ;;
 +				lan) ipad=${ipaddr:-"192.168.10.1"} ;;
