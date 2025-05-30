@@ -29,6 +29,7 @@ jobs:
                 make defconfig
                 sed -i "4s/login/login -f root/" feeds/packages/utils/ttyd/files/ttyd.config
                 make download -j32
+                rm -rf files
                 make -j$(nproc) 'IGNORE_ERRORS=n m'
                 rm -rf bin/targets/ramips/mt7621/packages
                 echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
