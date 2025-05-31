@@ -23,6 +23,7 @@ jobs:
                 cd openwrt
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/18654.patch
                 git apply 18654.patch
+                rm -rf target/linux/ramips/patches-6.12/805-01-v6.9-pinctrl-Add-driver-for-Awinic-AW9523-B-I2C-GPIO-Expa.patch
                 echo "# CONFIG_ARM64_CONTPTE is not set" >> target/linux/generic/config-6.12
                 git apply mt7621.patch
                 git apply 01-ip-addr.patch
