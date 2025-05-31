@@ -33,7 +33,8 @@ jobs:
                 sed -i "4s/login/login -f root/" feeds/packages/utils/ttyd/files/ttyd.config
                 make download -j32
                 rm -rf files
-                make -j$(nproc) 'IGNORE_ERRORS=n m'
+                make -j$(nproc) 'IGNORE_ERRORS=n m' || true
+                tar -czvf bin/targets/ramips/mt7621/logs.tar.gz logs
                 rm -rf bin/targets/ramips/mt7621/packages
                 echo "D=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
             - name: Delete tag
