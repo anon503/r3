@@ -21,8 +21,10 @@ jobs:
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/* openwrt/
                 cd openwrt
+                git config --global user.email md@any.ccc
+                git config --global user.name 'M Z'
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/18654.patch
-                patch -p 1 -i 18654.patch
+                git am 18654.patch
                 echo "# CONFIG_ARM64_CONTPTE is not set" >> target/linux/generic/config-6.12
                 git apply mt7621.patch
                 git apply 01-ip-addr.patch
