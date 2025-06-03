@@ -24,7 +24,7 @@ jobs:
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/r6 openwrt/
                 cd openwrt
-                git checkout 2037ca29552eb8e158493c39b6922244d33334f2
+                git checkout 241343a2f2f0d3a22b5fd2f16eb0a578c76b4948
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
