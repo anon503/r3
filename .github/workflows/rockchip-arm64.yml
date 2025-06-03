@@ -30,17 +30,8 @@ jobs:
                 git format-patch main...linux-6.6 --stdout > 001.patch
                 git checkout main
                 git apply 001.patch
-                git revert --no-commit e5da961ac4dc93bcad9c9ea509d17ac02835ee00
-                git revert --no-commit 7c6a3e2dde50149841a77d001eddaf95a11fd0fd
-                git revert --no-commit ba27d15f7bd10769dd120db4a6a12103d816c4ee
-                git revert --no-commit cad4447a362781f5fec813b0298daff4bae150a6
-                git revert --no-commit 211aaca1f1046ee0130c57e919a12a63d55c4586
-                git revert --no-commit cf4161746d1597e64113e2721a0b5725016afa08
-                git revert --no-commit d3216173abfc47917807423fc7578406ea29db5b
-
-                git revert --no-commit 54c7538476e08df0635fdd1a2153c77c36a201c8
-                git revert --no-commit df52612351a6a3a886ce63c6b86f4d1dac3d3de8
-                git revert --no-commit 15178d1c0f77ea5be2a526581ed915b964f89469
+                git revert --no-commit 8650a9ee858765966d85b06a5b7f0369aeda0705
+                git revert --no-commit a8c04725f0465d2ae269e0935a14a080ad6316f1
                 wget https://raw.githubusercontent.com/anon540/r3/refs/heads/main/r3/0001-ar.patch
                 wget https://github.com/anon1045/e27xx/commit/66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
                 wget https://raw.githubusercontent.com/anon503/r3/refs/heads/main/r3/01-ip-addr.patch
