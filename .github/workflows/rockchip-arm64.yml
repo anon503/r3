@@ -36,6 +36,9 @@ jobs:
                 git revert --no-commit cad4447a362781f5fec813b0298daff4bae150a6
                 git revert --no-commit 211aaca1f1046ee0130c57e919a12a63d55c4586
                 git revert --no-commit cf4161746d1597e64113e2721a0b5725016afa08
+
+                git revert -no-commit 54c7538476e08df0635fdd1a2153c77c36a201c8
+                git revert -no-commit df52612351a6a3a886ce63c6b86f4d1dac3d3de8
                 git revert --no-commit 15178d1c0f77ea5be2a526581ed915b964f89469
                 wget https://raw.githubusercontent.com/anon540/r3/refs/heads/main/r3/0001-ar.patch
                 wget https://github.com/anon1045/e27xx/commit/66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
