@@ -30,6 +30,9 @@ jobs:
                 git format-patch main...linux-6.6 --stdout > 001.patch
                 git checkout main
                 git apply 001.patch
+                git revert --no-commit 328eb84ee4e2a7573e7d5de348ed0a72d1cb054f
+                git revert --no-commit 45889aecf8aa818bc00ac254b7ef2f6b3246a067
+                git revert --no-commit c1cbcd35e785faa103f1a299637602bea81fe7e4
                 wget https://raw.githubusercontent.com/anon540/r3/refs/heads/main/r3/0001-ar.patch
                 wget https://github.com/anon1045/e27xx/commit/66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
                 wget https://raw.githubusercontent.com/anon503/r3/refs/heads/main/r3/01-ip-addr.patch
