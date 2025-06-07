@@ -24,6 +24,7 @@ jobs:
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/r6 openwrt/
                 cp -rf r3/rk-snapshot openwrt/
+                cp -rf r3/kmod-apk.patch openwrt/
                 cd openwrt
                 wget https://github.com/mj22226/openwrt/commit/e46087b7c1753d1181570f62d1d50485ec23bebf.patch
                 wget https://github.com/mj22226/openwrt/commit/74c5d03b4618b0f24f926fdec3056dfdbcd6d90e.patch
