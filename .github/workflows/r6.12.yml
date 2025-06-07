@@ -25,8 +25,8 @@ jobs:
                 cp -rf r3/r6 openwrt/
                 cp -rf r3/rk-snapshot openwrt/
                 cp -rf r3/kmod-apk.patch openwrt/
-                git config user.email "md@any.ccc"
-                git config user.name "N8 Z1"
+                git config --global user.email md@any.ccc
+                git config --global user.name 'M Z'
                 cd openwrt
                 wget https://github.com/mj22226/openwrt/commit/e46087b7c1753d1181570f62d1d50485ec23bebf.patch
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/19052.patch
