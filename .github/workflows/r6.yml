@@ -34,7 +34,7 @@ jobs:
                 git apply 74c5d03b4618b0f24f926fdec3056dfdbcd6d90e.patch
                 git apply 2c5c90ba389005c3b418bacc7b2027509c87018c.patch
                 git apply 97dc4af7815806ea2967673435b311c187961f2a.patch
-                
+                git apply kmod-apk.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
