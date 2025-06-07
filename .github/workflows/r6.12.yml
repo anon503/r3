@@ -30,8 +30,8 @@ jobs:
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/19052.patch
                 git apply e46087b7c1753d1181570f62d1d50485ec23bebf.patch
                 git am 19052.patch
-                git config --global user.email md@any.ccc
-                git config --global user.name 'M Z'
+                git config user.email md@any.ccc
+                git config user.name 'M Z'
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/18654.patch
                 git am 18654.patch
                 git apply kmod-apk.patch
