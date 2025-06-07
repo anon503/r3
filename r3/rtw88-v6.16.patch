@@ -1,13 +1,14 @@
-From c0aa3f512978e21f15956c1bbd5339c7ad9da575 Mon Sep 17 00:00:00 2001
+From 2bf1687f119c565ff91f0c98f3914e5bb931673c Mon Sep 17 00:00:00 2001
 From: Marty Jones <mj8263788@gmail.com>
-Date: Sat, 7 Jun 2025 15:55:51 -0400
-Subject: [PATCH 1/3] mac80211: realtek: rtw88: sync with v6.16
+Date: Sat, 7 Jun 2025 19:02:25 -0400
+Subject: [PATCH] mac80211: realtek: rtw88: sync with v6.16
 
 Renamed 046..051 pending patches with the merged tag/hash.
 Two patches were skipped, they make use of WQ_BH present since v6.14:
   https://github.com/torvalds/linux/commit/13221be72034d1c34630ab124c43438aefe7e656
   https://github.com/torvalds/linux/commit/3e3aa566dd1803f1697530de6c8489a8350765b3
-Manually refreshed 061-v6.14-wifi-rtw88-Add-support-for-LED-blinking.patch
+Manually refreshed 062-v6.14-wifi-rtw88-Add-support-for-LED-blinking.patch
+Manually refreshed  063-v6.14-wifi-rtw88-add-RTW88_LEDS-depends-on-LEDS_CLASS-to-K.patch
 Manually backported 090-v6.15-wifi-rtw88-Enable-the-new-RTL8814AE-RTL8814AU-driver.patch
 
 git log --no-merges --pretty=oneline --abbrev-commit 4c2c372de...0daa521a drivers/net/wireless/realtek/rtw88:
@@ -63,8 +64,8 @@ fb2fcfbe5eef wifi: rtw88: sdio: Fix disconnection after beacon loss
 a806a8160a0f wifi: rtw88: 8703b: Fix RX/TX issues
 5ad483955acc wifi: rtw88: Delete rf_type member of struct rtw_sta_info
 5b1b9545262b wifi: rtw88: Add USB PHY configuration
-3e3aa566dd18 wifi: rtw88: usb: Preallocate and reuse the RX skbs
-13221be72034 wifi: rtw88: Handle C2H_ADAPTIVITY in rtw_fw_c2h_cmd_handle()
+not backported (3e3aa566dd18 wifi: rtw88: usb: Preallocate and reuse the RX skbs)
+not backported (13221be72034 wifi: rtw88: Handle C2H_ADAPTIVITY in rtw_fw_c2h_cmd_handle() )
 e9048e2935f7 wifi: rtw88: usb: Copy instead of cloning the RX skb
 74a72c367573 wifi: rtw88: 8821a/8812a: Set ptct_efuse_size to 0
 59ab27a9f20f wifi: rtw88: 8812a: Support RFE type 2
@@ -75,8 +76,8 @@ Signed-off-by: Marty Jones <mj8263788@gmail.com>
  ...fi-rtw88-8812au-Add-more-device-IDs.patch} |     6 +-
  ...dd-additional-USB-IDs-for-RTL8812BU.patch} |     8 +-
  ...88-usb-Support-USB-3-with-RTL8812AU.patch} |    38 +-
+ ...821ae-phy-restore-removed-code-to-f.patch} |     8 +-
  ...able-RX-aggregation-for-8821au-8812.patch} |    26 +-
- ...8821ae-phy-restore-removed-code-to-f.patch |    32 -
  ..._packed-attribute-to-efuse-layout-st.patch |   195 +
  ...-wifi-rtw88-8812a-Support-RFE-type-2.patch |    28 +
  ...8821a-8812a-Set-ptct_efuse_size-to-0.patch |    51 +
@@ -111,11 +112,11 @@ Signed-off-by: Marty Jones <mj8263788@gmail.com>
  ...8-Add-some-definitions-for-RTL8814AU.patch |   200 +
  ...-rtw88-Add-rtw8814a_table.c-part-1-2.patch | 12573 ++++++++++++++++
  ...-rtw88-Add-rtw8814a_table.c-part-2-2.patch | 11450 ++++++++++++++
- ...7-v6.15-wifi-rtw88-Add-rtw8814a.-c-h.patch |  2343 +++
- ...088-v6.15-wifi-rtw88-Add-rtw8814ae.c.patch |    50 +
- ...089-v6.15-wifi-rtw88-Add-rtw8814au.c.patch |    73 +
- ...e-the-new-RTL8814AE-RTL8814AU-driver.patch |   147 +
+ ...8-v6.15-wifi-rtw88-Add-rtw8814a.-c-h.patch |  2343 +++
+ ...089-v6.15-wifi-rtw88-Add-rtw8814ae.c.patch |    50 +
+ ...090-v6.15-wifi-rtw88-Add-rtw8814au.c.patch |    73 +
  ..._nonstring-annotations-for-untermina.patch |    34 +
+ ...e-the-new-RTL8814AE-RTL8814AU-driver.patch |   147 +
  ...Remove-redundant-flush_workqueue-cal.patch |    36 +
  ...emove-redundant-flush_workqueue-call.patch |    44 +
  ...nable-switching-the-RTL8814AU-to-USB.patch |    32 +
@@ -133,69 +134,69 @@ Signed-off-by: Marty Jones <mj8263788@gmail.com>
  ...Upload-the-firmware-in-bigger-chunks.patch |   214 +
  ...he-random-error-beacon-valid-message.patch |    73 +
  ...he-para-buffer-size-to-avoid-reading.patch |    38 +
- 62 files changed, 31350 insertions(+), 65 deletions(-)
+ 62 files changed, 31355 insertions(+), 36 deletions(-)
  rename package/kernel/mac80211/patches/rtl/{046-wifi-rtw88-8821au-Add-additional-devices-to-the-USB_.patch => 046-v6.14-wifi-rtw88-8821au-Add-additional-devices-to-the-USB_.patch} (93%)
  rename package/kernel/mac80211/patches/rtl/{047-wifi-rtw88-8812au-Add-more-device-IDs.patch => 047-v6.14-wifi-rtw88-8812au-Add-more-device-IDs.patch} (95%)
  rename package/kernel/mac80211/patches/rtl/{051-wifi-rtw88-Add-additional-USB-IDs-for-RTL8812BU.patch => 048-v6.14-wifi-rtw88-Add-additional-USB-IDs-for-RTL8812BU.patch} (80%)
  rename package/kernel/mac80211/patches/rtl/{048-wifi-rtw88-usb-Support-USB-3-with-RTL8812AU.patch => 049-v6.14-wifi-rtw88-usb-Support-USB-3-with-RTL8812AU.patch} (63%)
- rename package/kernel/mac80211/patches/rtl/{049-wifi-rtw88-usb-Enable-RX-aggregation-for-8821au-8812.patch => 050-v6.14-wifi-rtw88-usb-Enable-RX-aggregation-for-8821au-8812.patch} (73%)
- delete mode 100644 package/kernel/mac80211/patches/rtl/050-wifi-rtlwifi-rtl8821ae-phy-restore-removed-code-to-f.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/051-v6.14-wifi-rtw88-add-__packed-attribute-to-efuse-layout-st.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/052-v6.14-wifi-rtw88-8812a-Support-RFE-type-2.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/053-v6.14-wifi-rtw88-8821a-8812a-Set-ptct_efuse_size-to-0.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/054-v6.14-wifi-rtw88-usb-Copy-instead-of-cloning-the-RX-skb.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/057-v6.14-wifi-rtw88-Add-USB-PHY-configuration.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/058-v6.14-wifi-rtw88-Delete-rf_type-member-of-struct-rtw_sta_i.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/059-v6.14-wifi-rtw88-8703b-Fix-RX-TX-issues.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/060-v6.14-wifi-rtw88-sdio-Fix-disconnection-after-beacon-loss.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/061-v6.14-wifi-rtw88-Add-support-for-LED-blinking.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/062-v6.14-wifi-rtw88-add-RTW88_LEDS-depends-on-LEDS_CLASS-to-K.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/063-v6.14.9-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/064-v6.15-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/065-v6.15-wifi-rtw88-Fix-a-typo-of-debug-message-in-rtw8723d_i.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/066-v6.14.9-wifi-rtw88-Fix-__rtw_download_firmware-for-RTL8814AU.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/067-v6.14.9-wifi-rtw88-Fix-download_firmware_validate-for-RTL881.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/068-v6.15-wifi-rtw88-Extend-struct-rtw_pwr_track_tbl-for-RTL88.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/069-v6.15-wifi-rtw88-Extend-rf_base_addr-and-rf_sipi_addr-for-.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/070-v6.14.9-wifi-rtw88-Extend-rtw_fw_send_ra_info-for-RTL8814AU.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/071-v6.15-wifi-rtw88-Constify-some-more-structs-and-arrays.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/072-v6.15-wifi-rtw88-Rename-RTW_RATE_SECTION_MAX-to-RTW_RATE_S.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/073-v6.15-wifi-rtw88-Extend-TX-power-stuff-for-3-4-spatial-str.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/074-v6.14.9-wifi-rtw88-Fix-rtw_update_sta_info-for-RTL8814AU.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/075-v6.14-wifi-rtw88-Add-support-for-Mercusys-MA30N-and-D-Link.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/076-v6.14.9-wifi-rtw88-Fix-rtw_mac_power_switch-for-RTL8814AU.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/077-v6.14.9-wifi-rtw88-Fix-rtw_desc_to_mcsrate-to-handle-MCS16-3.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/078-v6.14.9-wifi-rtw88-Fix-rtw_init_ht_cap-for-RTL8814AU.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/079-v6.14.9-wifi-rtw88-Fix-rtw_init_vht_cap-for-RTL8814AU.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/080-v6.15-wifi-rtw88-Fix-rtw_rx_phy_stat-for-RTL8814AU.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/081-v6.15-wifi-rtw88-Extend-rtw_phy_config_swing_table-for-RTL.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/082-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_phy_info-for-RTL88.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/083-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_tx_pwr_tbl-for-RTL.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/084-v6.15-wifi-rtw88-Add-some-definitions-for-RTL8814AU.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/085-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-1-2.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/086-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-2-2.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/087-v6.15-wifi-rtw88-Add-rtw8814a.-c-h.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/088-v6.15-wifi-rtw88-Add-rtw8814ae.c.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/089-v6.15-wifi-rtw88-Add-rtw8814au.c.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/090-v6.15wifi-rtw88-Enable-the-new-RTL8814AE-RTL8814AU-driver.patch
+ rename package/kernel/mac80211/patches/rtl/{050-wifi-rtlwifi-rtl8821ae-phy-restore-removed-code-to-f.patch => 050-v6.14-wifi-rtlwifi-rtl8821ae-phy-restore-removed-code-to-f.patch} (78%)
+ rename package/kernel/mac80211/patches/rtl/{049-wifi-rtw88-usb-Enable-RX-aggregation-for-8821au-8812.patch => 051-v6.14-wifi-rtw88-usb-Enable-RX-aggregation-for-8821au-8812.patch} (73%)
+ create mode 100644 package/kernel/mac80211/patches/rtl/052-v6.14-wifi-rtw88-add-__packed-attribute-to-efuse-layout-st.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/053-v6.14-wifi-rtw88-8812a-Support-RFE-type-2.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/054-v6.14-wifi-rtw88-8821a-8812a-Set-ptct_efuse_size-to-0.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/055-v6.14-wifi-rtw88-usb-Copy-instead-of-cloning-the-RX-skb.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/058-v6.14-wifi-rtw88-Add-USB-PHY-configuration.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/059-v6.14-wifi-rtw88-Delete-rf_type-member-of-struct-rtw_sta_i.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/060-v6.14-wifi-rtw88-8703b-Fix-RX-TX-issues.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/061-v6.14-wifi-rtw88-sdio-Fix-disconnection-after-beacon-loss.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/062-v6.14-wifi-rtw88-Add-support-for-LED-blinking.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/063-v6.14-wifi-rtw88-add-RTW88_LEDS-depends-on-LEDS_CLASS-to-K.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/064-v6.14.9-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/065-v6.15-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/066-v6.15-wifi-rtw88-Fix-a-typo-of-debug-message-in-rtw8723d_i.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/067-v6.14.9-wifi-rtw88-Fix-__rtw_download_firmware-for-RTL8814AU.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/068-v6.14.9-wifi-rtw88-Fix-download_firmware_validate-for-RTL881.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/069-v6.15-wifi-rtw88-Extend-struct-rtw_pwr_track_tbl-for-RTL88.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/070-v6.15-wifi-rtw88-Extend-rf_base_addr-and-rf_sipi_addr-for-.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/071-v6.14.9-wifi-rtw88-Extend-rtw_fw_send_ra_info-for-RTL8814AU.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/072-v6.15-wifi-rtw88-Constify-some-more-structs-and-arrays.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/073-v6.15-wifi-rtw88-Rename-RTW_RATE_SECTION_MAX-to-RTW_RATE_S.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/074-v6.15-wifi-rtw88-Extend-TX-power-stuff-for-3-4-spatial-str.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/075-v6.14.9-wifi-rtw88-Fix-rtw_update_sta_info-for-RTL8814AU.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/076-v6.14-wifi-rtw88-Add-support-for-Mercusys-MA30N-and-D-Link.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/077-v6.14.9-wifi-rtw88-Fix-rtw_mac_power_switch-for-RTL8814AU.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/078-v6.14.9-wifi-rtw88-Fix-rtw_desc_to_mcsrate-to-handle-MCS16-3.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/079-v6.14.9-wifi-rtw88-Fix-rtw_init_ht_cap-for-RTL8814AU.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/080-v6.14.9-wifi-rtw88-Fix-rtw_init_vht_cap-for-RTL8814AU.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/081-v6.15-wifi-rtw88-Fix-rtw_rx_phy_stat-for-RTL8814AU.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/082-v6.15-wifi-rtw88-Extend-rtw_phy_config_swing_table-for-RTL.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/083-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_phy_info-for-RTL88.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/084-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_tx_pwr_tbl-for-RTL.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/085-v6.15-wifi-rtw88-Add-some-definitions-for-RTL8814AU.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/086-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-1-2.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/087-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-2-2.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/088-v6.15-wifi-rtw88-Add-rtw8814a.-c-h.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/089-v6.15-wifi-rtw88-Add-rtw8814ae.c.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/090-v6.15-wifi-rtw88-Add-rtw8814au.c.patch
  create mode 100644 package/kernel/mac80211/patches/rtl/091-v6.15-wifi-rtw88-Add-__nonstring-annotations-for-untermina.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/092-v6.16-wifi-rtw88-sdio-Remove-redundant-flush_workqueue-cal.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/093-v6.16-wifi-rtw88-usb-Remove-redundant-flush_workqueue-call.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/094-v6.16-wifi-rtw88-usb-Enable-switching-the-RTL8814AU-to-USB.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/095-v6.16-wifi-rtw88-usb-Enable-RX-aggregation-for-RTL8814AU.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/096-v6.16-wifi-rtw88-Set-AMPDU-factor-to-hardware-for-RTL8814A.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/097-v6.16-wifi-rtw88-Don-t-set-SUPPORTS_AMSDU_IN_AMPDU-for-RTL.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/098-v6.16-wifi-rtw88-Fix-the-module-names-printed-in-dmesg.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/099-v6.16-wifi-rtw88-sdio-map-mgmt-frames-to-queue-TX_DESC_QSE.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/100-v6.16-wifi-rtw88-sdio-call-rtw_sdio_indicate_tx_status-unc.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/101-v6.16-wifi-rtw88-do-not-ignore-hardware-read-error-during-.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/102-v6.16-wifi-rtw88-Fix-RX-aggregation-settings-for-RTL8723DS.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/103-v6.16-wifi-rtw88-Handle-RTL8723D-S-with-blank-efuse.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/104-v6.16-wifi-rtw88-rtw8822bu-VID-PID-for-BUFFALO-WI-U2-866DM.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/105-v6.16-wifi-rtw88-usb-Reduce-control-message-timeout-to-500.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/106-v6.16-wifi-rtw88-usb-Upload-the-firmware-in-bigger-chunks.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/107-v6.16-wifi-rtw88-Fix-the-random-error-beacon-valid-message.patch
- create mode 100644 package/kernel/mac80211/patches/rtl/108-v6.16-wifi-rtw88-fix-the-para-buffer-size-to-avoid-reading.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/091-v6.15wifi-rtw88-Enable-the-new-RTL8814AE-RTL8814AU-driver.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/093-v6.16-wifi-rtw88-sdio-Remove-redundant-flush_workqueue-cal.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/094-v6.16-wifi-rtw88-usb-Remove-redundant-flush_workqueue-call.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/095-v6.16-wifi-rtw88-usb-Enable-switching-the-RTL8814AU-to-USB.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/096-v6.16-wifi-rtw88-usb-Enable-RX-aggregation-for-RTL8814AU.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/097-v6.16-wifi-rtw88-Set-AMPDU-factor-to-hardware-for-RTL8814A.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/098-v6.16-wifi-rtw88-Don-t-set-SUPPORTS_AMSDU_IN_AMPDU-for-RTL.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/099-v6.16-wifi-rtw88-Fix-the-module-names-printed-in-dmesg.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/100-v6.16-wifi-rtw88-sdio-map-mgmt-frames-to-queue-TX_DESC_QSE.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/101-v6.16-wifi-rtw88-sdio-call-rtw_sdio_indicate_tx_status-unc.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/102-v6.16-wifi-rtw88-do-not-ignore-hardware-read-error-during-.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/103-v6.16-wifi-rtw88-Fix-RX-aggregation-settings-for-RTL8723DS.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/104-v6.16-wifi-rtw88-Handle-RTL8723D-S-with-blank-efuse.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/105-v6.16-wifi-rtw88-rtw8822bu-VID-PID-for-BUFFALO-WI-U2-866DM.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/106-v6.16-wifi-rtw88-usb-Reduce-control-message-timeout-to-500.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/107-v6.16-wifi-rtw88-usb-Upload-the-firmware-in-bigger-chunks.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/108-v6.16-wifi-rtw88-Fix-the-random-error-beacon-valid-message.patch
+ create mode 100644 package/kernel/mac80211/patches/rtl/109-v6.16-wifi-rtw88-fix-the-para-buffer-size-to-avoid-reading.patch
 
 diff --git a/package/kernel/mac80211/patches/rtl/046-wifi-rtw88-8821au-Add-additional-devices-to-the-USB_.patch b/package/kernel/mac80211/patches/rtl/046-v6.14-wifi-rtw88-8821au-Add-additional-devices-to-the-USB_.patch
 similarity index 93%
@@ -351,13 +352,41 @@ index 33ca91d77d..694c32f79d 100644
  +		return rtw_usb_switch_mode_new(rtwdev);
   }
   
-diff --git a/package/kernel/mac80211/patches/rtl/049-wifi-rtw88-usb-Enable-RX-aggregation-for-8821au-8812.patch b/package/kernel/mac80211/patches/rtl/050-v6.14-wifi-rtw88-usb-Enable-RX-aggregation-for-8821au-8812.patch
+diff --git a/package/kernel/mac80211/patches/rtl/050-wifi-rtlwifi-rtl8821ae-phy-restore-removed-code-to-f.patch b/package/kernel/mac80211/patches/rtl/050-v6.14-wifi-rtlwifi-rtl8821ae-phy-restore-removed-code-to-f.patch
+similarity index 78%
+rename from package/kernel/mac80211/patches/rtl/050-wifi-rtlwifi-rtl8821ae-phy-restore-removed-code-to-f.patch
+rename to package/kernel/mac80211/patches/rtl/050-v6.14-wifi-rtlwifi-rtl8821ae-phy-restore-removed-code-to-f.patch
+index 798a59351f..3e66f5b249 100644
+--- a/package/kernel/mac80211/patches/rtl/050-wifi-rtlwifi-rtl8821ae-phy-restore-removed-code-to-f.patch
++++ b/package/kernel/mac80211/patches/rtl/050-v6.14-wifi-rtlwifi-rtl8821ae-phy-restore-removed-code-to-f.patch
+@@ -1,8 +1,8 @@
+-From 927dcd0ab53f39ee00a2d1f204b5aac77e28fcf9 Mon Sep 17 00:00:00 2001
++From 5e5903a442bb889a62a0f5d89ac33e53ab08592c Mon Sep 17 00:00:00 2001
+ From: Colin Ian King <colin.i.king@gmail.com>
+ Date: Wed, 6 Nov 2024 15:46:42 +0000
+-Subject: [PATCH 5/6] wifi: rtlwifi: rtl8821ae: phy: restore removed code to
+- fix infinite loop
++Subject: [PATCH] wifi: rtlwifi: rtl8821ae: phy: restore removed code to fix
++ infinite loop
+ 
+ A previous clean-up fix removed the assignment of v2 inside a while loop
+ that turned it into an infinite loop. Fix this by restoring the assignment
+@@ -12,6 +12,8 @@ Fixes: cda37445718d ("wifi: rtlwifi: rtl8821ae: phy: remove some useless code")
+ Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+ Tested-by: Ping-Ke Shih <pkshih@realtek.com>
+ Reviewed-by: Su Hui <suhui@nfschina.com>
++Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
++Link: https://patch.msgid.link/20241106154642.1627886-1-colin.i.king@gmail.com
+ ---
+  drivers/net/wireless/realtek/rtlwifi/rtl8821ae/phy.c | 4 +++-
+  1 file changed, 3 insertions(+), 1 deletion(-)
+diff --git a/package/kernel/mac80211/patches/rtl/049-wifi-rtw88-usb-Enable-RX-aggregation-for-8821au-8812.patch b/package/kernel/mac80211/patches/rtl/051-v6.14-wifi-rtw88-usb-Enable-RX-aggregation-for-8821au-8812.patch
 similarity index 73%
 rename from package/kernel/mac80211/patches/rtl/049-wifi-rtw88-usb-Enable-RX-aggregation-for-8821au-8812.patch
-rename to package/kernel/mac80211/patches/rtl/050-v6.14-wifi-rtw88-usb-Enable-RX-aggregation-for-8821au-8812.patch
+rename to package/kernel/mac80211/patches/rtl/051-v6.14-wifi-rtw88-usb-Enable-RX-aggregation-for-8821au-8812.patch
 index d4c3ef3495..1debe2dc73 100644
 --- a/package/kernel/mac80211/patches/rtl/049-wifi-rtw88-usb-Enable-RX-aggregation-for-8821au-8812.patch
-+++ b/package/kernel/mac80211/patches/rtl/050-v6.14-wifi-rtw88-usb-Enable-RX-aggregation-for-8821au-8812.patch
++++ b/package/kernel/mac80211/patches/rtl/051-v6.14-wifi-rtw88-usb-Enable-RX-aggregation-for-8821au-8812.patch
 @@ -1,7 +1,7 @@
 -From 2b38362bd3b8e0a3691f0a8e82444a54f702e384 Mon Sep 17 00:00:00 2001
 +From ce5dea83ee8f945203144fb891fdcb978216e45a Mon Sep 17 00:00:00 2001
@@ -421,49 +450,11 @@ index d4c3ef3495..1debe2dc73 100644
   	case RTW_CHIP_TYPE_8821C:
   		rtw_usb_dynamic_rx_agg_v1(rtwdev, enable);
   		break;
-diff --git a/package/kernel/mac80211/patches/rtl/050-wifi-rtlwifi-rtl8821ae-phy-restore-removed-code-to-f.patch b/package/kernel/mac80211/patches/rtl/050-wifi-rtlwifi-rtl8821ae-phy-restore-removed-code-to-f.patch
-deleted file mode 100644
-index 798a59351f..0000000000
---- a/package/kernel/mac80211/patches/rtl/050-wifi-rtlwifi-rtl8821ae-phy-restore-removed-code-to-f.patch
-+++ /dev/null
-@@ -1,32 +0,0 @@
--From 927dcd0ab53f39ee00a2d1f204b5aac77e28fcf9 Mon Sep 17 00:00:00 2001
--From: Colin Ian King <colin.i.king@gmail.com>
--Date: Wed, 6 Nov 2024 15:46:42 +0000
--Subject: [PATCH 5/6] wifi: rtlwifi: rtl8821ae: phy: restore removed code to
-- fix infinite loop
--
--A previous clean-up fix removed the assignment of v2 inside a while loop
--that turned it into an infinite loop. Fix this by restoring the assignment
--of v2 from array[] so that v2 is updated inside the loop.
--
--Fixes: cda37445718d ("wifi: rtlwifi: rtl8821ae: phy: remove some useless code")
--Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
--Tested-by: Ping-Ke Shih <pkshih@realtek.com>
--Reviewed-by: Su Hui <suhui@nfschina.com>
-----
-- drivers/net/wireless/realtek/rtlwifi/rtl8821ae/phy.c | 4 +++-
-- 1 file changed, 3 insertions(+), 1 deletion(-)
--
----- a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/phy.c
--+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/phy.c
--@@ -2033,8 +2033,10 @@ static bool _rtl8821ae_phy_config_bb_wit
-- 			if (!_rtl8821ae_check_condition(hw, v1)) {
-- 				i += 2; /* skip the pair of expression*/
-- 				v2 = array[i+1];
---				while (v2 != 0xDEAD)
--+				while (v2 != 0xDEAD) {
-- 					i += 3;
--+					v2 = array[i + 1];
--+				}
-- 			}
-- 		}
-- 	}
-diff --git a/package/kernel/mac80211/patches/rtl/051-v6.14-wifi-rtw88-add-__packed-attribute-to-efuse-layout-st.patch b/package/kernel/mac80211/patches/rtl/051-v6.14-wifi-rtw88-add-__packed-attribute-to-efuse-layout-st.patch
+diff --git a/package/kernel/mac80211/patches/rtl/052-v6.14-wifi-rtw88-add-__packed-attribute-to-efuse-layout-st.patch b/package/kernel/mac80211/patches/rtl/052-v6.14-wifi-rtw88-add-__packed-attribute-to-efuse-layout-st.patch
 new file mode 100644
 index 0000000000..6132bb7d41
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/051-v6.14-wifi-rtw88-add-__packed-attribute-to-efuse-layout-st.patch
++++ b/package/kernel/mac80211/patches/rtl/052-v6.14-wifi-rtw88-add-__packed-attribute-to-efuse-layout-st.patch
 @@ -0,0 +1,195 @@
 +From 0daa521a1c8c29ffbefe6530f0d276e74e2749d0 Mon Sep 17 00:00:00 2001
 +From: Ping-Ke Shih <pkshih@realtek.com>
@@ -660,11 +651,11 @@ index 0000000000..6132bb7d41
 + 
 + enum rtw8822c_dpk_agc_phase {
 + 	RTW_DPK_GAIN_CHECK,
-diff --git a/package/kernel/mac80211/patches/rtl/052-v6.14-wifi-rtw88-8812a-Support-RFE-type-2.patch b/package/kernel/mac80211/patches/rtl/052-v6.14-wifi-rtw88-8812a-Support-RFE-type-2.patch
+diff --git a/package/kernel/mac80211/patches/rtl/053-v6.14-wifi-rtw88-8812a-Support-RFE-type-2.patch b/package/kernel/mac80211/patches/rtl/053-v6.14-wifi-rtw88-8812a-Support-RFE-type-2.patch
 new file mode 100644
 index 0000000000..d59facb3f9
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/052-v6.14-wifi-rtw88-8812a-Support-RFE-type-2.patch
++++ b/package/kernel/mac80211/patches/rtl/053-v6.14-wifi-rtw88-8812a-Support-RFE-type-2.patch
 @@ -0,0 +1,28 @@
 +From 59ab27a9f20f8de6f7989e8a8c3d97c04ed8199c Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -694,11 +685,11 @@ index 0000000000..d59facb3f9
 + 	[3] = { .phy_pg_tbl	= &rtw8812a_bb_pg_rfe3_tbl,
 + 		.txpwr_lmt_tbl	= &rtw8812a_txpwr_lmt_tbl,
 + 		.pwr_track_tbl	= &rtw8812a_rtw_pwr_track_rfe3_tbl, },
-diff --git a/package/kernel/mac80211/patches/rtl/053-v6.14-wifi-rtw88-8821a-8812a-Set-ptct_efuse_size-to-0.patch b/package/kernel/mac80211/patches/rtl/053-v6.14-wifi-rtw88-8821a-8812a-Set-ptct_efuse_size-to-0.patch
+diff --git a/package/kernel/mac80211/patches/rtl/054-v6.14-wifi-rtw88-8821a-8812a-Set-ptct_efuse_size-to-0.patch b/package/kernel/mac80211/patches/rtl/054-v6.14-wifi-rtw88-8821a-8812a-Set-ptct_efuse_size-to-0.patch
 new file mode 100644
 index 0000000000..3b5dea793a
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/053-v6.14-wifi-rtw88-8821a-8812a-Set-ptct_efuse_size-to-0.patch
++++ b/package/kernel/mac80211/patches/rtl/054-v6.14-wifi-rtw88-8821a-8812a-Set-ptct_efuse_size-to-0.patch
 @@ -0,0 +1,51 @@
 +From 74a72c367573ad521becf6cc4d649e14387b3c64 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -751,11 +742,11 @@ index 0000000000..3b5dea793a
 + 	.txff_size = 65536,
 + 	.rxff_size = 16128,
 + 	.rsvd_drv_pg_num = 8,
-diff --git a/package/kernel/mac80211/patches/rtl/054-v6.14-wifi-rtw88-usb-Copy-instead-of-cloning-the-RX-skb.patch b/package/kernel/mac80211/patches/rtl/054-v6.14-wifi-rtw88-usb-Copy-instead-of-cloning-the-RX-skb.patch
+diff --git a/package/kernel/mac80211/patches/rtl/055-v6.14-wifi-rtw88-usb-Copy-instead-of-cloning-the-RX-skb.patch b/package/kernel/mac80211/patches/rtl/055-v6.14-wifi-rtw88-usb-Copy-instead-of-cloning-the-RX-skb.patch
 new file mode 100644
 index 0000000000..30f13f9d38
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/054-v6.14-wifi-rtw88-usb-Copy-instead-of-cloning-the-RX-skb.patch
++++ b/package/kernel/mac80211/patches/rtl/055-v6.14-wifi-rtw88-usb-Copy-instead-of-cloning-the-RX-skb.patch
 @@ -0,0 +1,130 @@
 +From e9048e2935f7d797c2ba047c15b705b57c2fa99a Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -887,11 +878,11 @@ index 0000000000..30f13f9d38
 + 	}
 + }
 + 
-diff --git a/package/kernel/mac80211/patches/rtl/057-v6.14-wifi-rtw88-Add-USB-PHY-configuration.patch b/package/kernel/mac80211/patches/rtl/057-v6.14-wifi-rtw88-Add-USB-PHY-configuration.patch
+diff --git a/package/kernel/mac80211/patches/rtl/058-v6.14-wifi-rtw88-Add-USB-PHY-configuration.patch b/package/kernel/mac80211/patches/rtl/058-v6.14-wifi-rtw88-Add-USB-PHY-configuration.patch
 new file mode 100644
 index 0000000000..606c0fd6fc
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/057-v6.14-wifi-rtw88-Add-USB-PHY-configuration.patch
++++ b/package/kernel/mac80211/patches/rtl/058-v6.14-wifi-rtw88-Add-USB-PHY-configuration.patch
 @@ -0,0 +1,141 @@
 +From 5b1b9545262b5126a3c2776e7e64ff29765cbe6e Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -1034,11 +1025,11 @@ index 0000000000..606c0fd6fc
 + 	ret = rtw_usb_switch_mode(rtwdev);
 + 	if (ret) {
 + 		/* Not a fail, but we do need to skip rtw_register_hw. */
-diff --git a/package/kernel/mac80211/patches/rtl/058-v6.14-wifi-rtw88-Delete-rf_type-member-of-struct-rtw_sta_i.patch b/package/kernel/mac80211/patches/rtl/058-v6.14-wifi-rtw88-Delete-rf_type-member-of-struct-rtw_sta_i.patch
+diff --git a/package/kernel/mac80211/patches/rtl/059-v6.14-wifi-rtw88-Delete-rf_type-member-of-struct-rtw_sta_i.patch b/package/kernel/mac80211/patches/rtl/059-v6.14-wifi-rtw88-Delete-rf_type-member-of-struct-rtw_sta_i.patch
 new file mode 100644
 index 0000000000..6a4998e783
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/058-v6.14-wifi-rtw88-Delete-rf_type-member-of-struct-rtw_sta_i.patch
++++ b/package/kernel/mac80211/patches/rtl/059-v6.14-wifi-rtw88-Delete-rf_type-member-of-struct-rtw_sta_i.patch
 @@ -0,0 +1,60 @@
 +From 5ad483955acc85dc91b88c7b76dc1429e8ba33bc Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -1100,11 +1091,11 @@ index 0000000000..6a4998e783
 + 	u8 stbc_en:2;
 + 	u8 ldpc_en:2;
 + 	bool sgi_enable;
-diff --git a/package/kernel/mac80211/patches/rtl/059-v6.14-wifi-rtw88-8703b-Fix-RX-TX-issues.patch b/package/kernel/mac80211/patches/rtl/059-v6.14-wifi-rtw88-8703b-Fix-RX-TX-issues.patch
+diff --git a/package/kernel/mac80211/patches/rtl/060-v6.14-wifi-rtw88-8703b-Fix-RX-TX-issues.patch b/package/kernel/mac80211/patches/rtl/060-v6.14-wifi-rtw88-8703b-Fix-RX-TX-issues.patch
 new file mode 100644
 index 0000000000..0a512a3859
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/059-v6.14-wifi-rtw88-8703b-Fix-RX-TX-issues.patch
++++ b/package/kernel/mac80211/patches/rtl/060-v6.14-wifi-rtw88-8703b-Fix-RX-TX-issues.patch
 @@ -0,0 +1,59 @@
 +From a806a8160a0fcaff368bb510c8a52eff37faf727 Mon Sep 17 00:00:00 2001
 +From: Vasily Khoruzhick <anarsoul@gmail.com>
@@ -1165,11 +1156,11 @@ index 0000000000..0a512a3859
 + 	rtw_write32(rtwdev, REG_A_RXIQI, tmp_rx_iqi);
 + 	rtw_write32_mask(rtwdev, REG_RXIQK_MATRIX_LSB_11N, BIT_MASK_RXIQ_S1_Y2,
 + 			 BIT_SET_RXIQ_S1_Y2(result[IQK_S1_RX_Y]));
-diff --git a/package/kernel/mac80211/patches/rtl/060-v6.14-wifi-rtw88-sdio-Fix-disconnection-after-beacon-loss.patch b/package/kernel/mac80211/patches/rtl/060-v6.14-wifi-rtw88-sdio-Fix-disconnection-after-beacon-loss.patch
+diff --git a/package/kernel/mac80211/patches/rtl/061-v6.14-wifi-rtw88-sdio-Fix-disconnection-after-beacon-loss.patch b/package/kernel/mac80211/patches/rtl/061-v6.14-wifi-rtw88-sdio-Fix-disconnection-after-beacon-loss.patch
 new file mode 100644
 index 0000000000..790dfe0420
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/060-v6.14-wifi-rtw88-sdio-Fix-disconnection-after-beacon-loss.patch
++++ b/package/kernel/mac80211/patches/rtl/061-v6.14-wifi-rtw88-sdio-Fix-disconnection-after-beacon-loss.patch
 @@ -0,0 +1,31 @@
 +From fb2fcfbe5eef9ae26b0425978435ae1308951e51 Mon Sep 17 00:00:00 2001
 +From: Fiona Klute <fiona.klute@gmx.de>
@@ -1202,11 +1193,11 @@ index 0000000000..790dfe0420
 + 	/* enqueue to wait for tx report */
 + 	if (info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS) {
 + 		rtw_tx_report_enqueue(rtwdev, skb, tx_data->sn);
-diff --git a/package/kernel/mac80211/patches/rtl/061-v6.14-wifi-rtw88-Add-support-for-LED-blinking.patch b/package/kernel/mac80211/patches/rtl/061-v6.14-wifi-rtw88-Add-support-for-LED-blinking.patch
+diff --git a/package/kernel/mac80211/patches/rtl/062-v6.14-wifi-rtw88-Add-support-for-LED-blinking.patch b/package/kernel/mac80211/patches/rtl/062-v6.14-wifi-rtw88-Add-support-for-LED-blinking.patch
 new file mode 100644
 index 0000000000..b261d02e3f
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/061-v6.14-wifi-rtw88-Add-support-for-LED-blinking.patch
++++ b/package/kernel/mac80211/patches/rtl/062-v6.14-wifi-rtw88-Add-support-for-LED-blinking.patch
 @@ -0,0 +1,424 @@
 +From 4b6652bc6d8d5fb0648b3a7a16ef8af4e0345bcd Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -1632,11 +1623,11 @@ index 0000000000..b261d02e3f
 + 	.fill_txdesc_checksum	= rtw8822c_fill_txdesc_checksum,
 + 
 + 	.coex_set_init		= rtw8822c_coex_cfg_init,
-diff --git a/package/kernel/mac80211/patches/rtl/062-v6.14-wifi-rtw88-add-RTW88_LEDS-depends-on-LEDS_CLASS-to-K.patch b/package/kernel/mac80211/patches/rtl/062-v6.14-wifi-rtw88-add-RTW88_LEDS-depends-on-LEDS_CLASS-to-K.patch
+diff --git a/package/kernel/mac80211/patches/rtl/063-v6.14-wifi-rtw88-add-RTW88_LEDS-depends-on-LEDS_CLASS-to-K.patch b/package/kernel/mac80211/patches/rtl/063-v6.14-wifi-rtw88-add-RTW88_LEDS-depends-on-LEDS_CLASS-to-K.patch
 new file mode 100644
-index 0000000000..5b0496286b
+index 0000000000..f1f09fde1a
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/062-v6.14-wifi-rtw88-add-RTW88_LEDS-depends-on-LEDS_CLASS-to-K.patch
++++ b/package/kernel/mac80211/patches/rtl/063-v6.14-wifi-rtw88-add-RTW88_LEDS-depends-on-LEDS_CLASS-to-K.patch
 @@ -0,0 +1,73 @@
 +From b4bfbc50b1b92a0815800eb1231f73bfc917af03 Mon Sep 17 00:00:00 2001
 +From: Ping-Ke Shih <pkshih@realtek.com>
@@ -1696,7 +1687,7 @@ index 0000000000..5b0496286b
 + rtw88_core-$(CONFIG_PM) += wow.o
 + 
 +-rtw88_core-$(CONFIG_LEDS_CLASS) += led.o
-++rtw88_core-$(CONFIG_RTW88_LEDS) += led.o
+++rtw88_core-$(CPTCFG_RTW88_LEDS) += led.o
 + 
 + obj-$(CPTCFG_RTW88_8822B)	+= rtw88_8822b.o
 + rtw88_8822b-objs		:= rtw8822b.o rtw8822b_table.o
@@ -1707,15 +1698,15 @@ index 0000000000..5b0496286b
 + #define __RTW_LED_H
 + 
 +-#ifdef CONFIG_LEDS_CLASS
-++#ifdef CONFIG_RTW88_LEDS
+++#ifdef CPTCFG_RTW88_LEDS
 + 
 + void rtw_led_init(struct rtw_dev *rtwdev);
 + void rtw_led_deinit(struct rtw_dev *rtwdev);
-diff --git a/package/kernel/mac80211/patches/rtl/063-v6.14.9-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch b/package/kernel/mac80211/patches/rtl/063-v6.14.9-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch
+diff --git a/package/kernel/mac80211/patches/rtl/064-v6.14.9-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch b/package/kernel/mac80211/patches/rtl/064-v6.14.9-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch
 new file mode 100644
 index 0000000000..3b3550d9be
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/063-v6.14.9-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch
++++ b/package/kernel/mac80211/patches/rtl/064-v6.14.9-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch
 @@ -0,0 +1,68 @@
 +From 00451eb3bec763f708e7e58326468c1e575e5a66 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -1785,11 +1776,11 @@ index 0000000000..3b3550d9be
 + 	}
 + }
 + 
-diff --git a/package/kernel/mac80211/patches/rtl/064-v6.15-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch b/package/kernel/mac80211/patches/rtl/064-v6.15-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch
+diff --git a/package/kernel/mac80211/patches/rtl/065-v6.15-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch b/package/kernel/mac80211/patches/rtl/065-v6.15-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch
 new file mode 100644
 index 0000000000..ff04eead91
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/064-v6.15-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch
++++ b/package/kernel/mac80211/patches/rtl/065-v6.15-wifi-rtw88-Don-t-use-static-local-variable-in-rtw882.patch
 @@ -0,0 +1,71 @@
 +From 0d1d165eff9d6cfad51113e18d9d8c9a8de27d6d Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -1862,11 +1853,11 @@ index 0000000000..ff04eead91
 + 		}
 + 	}
 + }
-diff --git a/package/kernel/mac80211/patches/rtl/065-v6.15-wifi-rtw88-Fix-a-typo-of-debug-message-in-rtw8723d_i.patch b/package/kernel/mac80211/patches/rtl/065-v6.15-wifi-rtw88-Fix-a-typo-of-debug-message-in-rtw8723d_i.patch
+diff --git a/package/kernel/mac80211/patches/rtl/066-v6.15-wifi-rtw88-Fix-a-typo-of-debug-message-in-rtw8723d_i.patch b/package/kernel/mac80211/patches/rtl/066-v6.15-wifi-rtw88-Fix-a-typo-of-debug-message-in-rtw8723d_i.patch
 new file mode 100644
 index 0000000000..a2404bafe8
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/065-v6.15-wifi-rtw88-Fix-a-typo-of-debug-message-in-rtw8723d_i.patch
++++ b/package/kernel/mac80211/patches/rtl/066-v6.15-wifi-rtw88-Fix-a-typo-of-debug-message-in-rtw8723d_i.patch
 @@ -0,0 +1,39 @@
 +From 105dc94233e48ff30e572a50fb39d7e3dec810fa Mon Sep 17 00:00:00 2001
 +From: Andrew Kreimer <algonell@gmail.com>
@@ -1907,11 +1898,11 @@ index 0000000000..a2404bafe8
 + 		rtw_read32(rtwdev, 0xea0),
 + 		rtw_read32(rtwdev, 0xea8));
 + 
-diff --git a/package/kernel/mac80211/patches/rtl/066-v6.14.9-wifi-rtw88-Fix-__rtw_download_firmware-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/066-v6.14.9-wifi-rtw88-Fix-__rtw_download_firmware-for-RTL8814AU.patch
+diff --git a/package/kernel/mac80211/patches/rtl/067-v6.14.9-wifi-rtw88-Fix-__rtw_download_firmware-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/067-v6.14.9-wifi-rtw88-Fix-__rtw_download_firmware-for-RTL8814AU.patch
 new file mode 100644
 index 0000000000..4de1255764
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/066-v6.14.9-wifi-rtw88-Fix-__rtw_download_firmware-for-RTL8814AU.patch
++++ b/package/kernel/mac80211/patches/rtl/067-v6.14.9-wifi-rtw88-Fix-__rtw_download_firmware-for-RTL8814AU.patch
 @@ -0,0 +1,39 @@
 +From 8425f5c8f04dbcf11ade78f984a494fc0b90e7a0 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -1952,11 +1943,11 @@ index 0000000000..4de1255764
 + 		ret = -EBUSY;
 + 		goto dlfw_fail;
 + 	}
-diff --git a/package/kernel/mac80211/patches/rtl/067-v6.14.9-wifi-rtw88-Fix-download_firmware_validate-for-RTL881.patch b/package/kernel/mac80211/patches/rtl/067-v6.14.9-wifi-rtw88-Fix-download_firmware_validate-for-RTL881.patch
+diff --git a/package/kernel/mac80211/patches/rtl/068-v6.14.9-wifi-rtw88-Fix-download_firmware_validate-for-RTL881.patch b/package/kernel/mac80211/patches/rtl/068-v6.14.9-wifi-rtw88-Fix-download_firmware_validate-for-RTL881.patch
 new file mode 100644
 index 0000000000..8ff1dc4e3e
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/067-v6.14.9-wifi-rtw88-Fix-download_firmware_validate-for-RTL881.patch
++++ b/package/kernel/mac80211/patches/rtl/068-v6.14.9-wifi-rtw88-Fix-download_firmware_validate-for-RTL881.patch
 @@ -0,0 +1,39 @@
 +From 9e8243025cc06abc975c876dffda052073207ab3 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -1997,11 +1988,11 @@ index 0000000000..8ff1dc4e3e
 + 
 + #define REG_MCU_TST_CFG		0x84
 + #define VAL_FW_TRIGGER		0x1
-diff --git a/package/kernel/mac80211/patches/rtl/068-v6.15-wifi-rtw88-Extend-struct-rtw_pwr_track_tbl-for-RTL88.patch b/package/kernel/mac80211/patches/rtl/068-v6.15-wifi-rtw88-Extend-struct-rtw_pwr_track_tbl-for-RTL88.patch
+diff --git a/package/kernel/mac80211/patches/rtl/069-v6.15-wifi-rtw88-Extend-struct-rtw_pwr_track_tbl-for-RTL88.patch b/package/kernel/mac80211/patches/rtl/069-v6.15-wifi-rtw88-Extend-struct-rtw_pwr_track_tbl-for-RTL88.patch
 new file mode 100644
 index 0000000000..c6ac2818dd
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/068-v6.15-wifi-rtw88-Extend-struct-rtw_pwr_track_tbl-for-RTL88.patch
++++ b/package/kernel/mac80211/patches/rtl/069-v6.15-wifi-rtw88-Extend-struct-rtw_pwr_track_tbl-for-RTL88.patch
 @@ -0,0 +1,46 @@
 +From 62f726848da42554e6d270dfda17ed19bfa3456f Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -2049,11 +2040,11 @@ index 0000000000..c6ac2818dd
 + 	const u8 *pwrtrk_2g_cckb_n;
 + 	const u8 *pwrtrk_2g_cckb_p;
 + 	const u8 *pwrtrk_2g_ccka_n;
-diff --git a/package/kernel/mac80211/patches/rtl/069-v6.15-wifi-rtw88-Extend-rf_base_addr-and-rf_sipi_addr-for-.patch b/package/kernel/mac80211/patches/rtl/069-v6.15-wifi-rtw88-Extend-rf_base_addr-and-rf_sipi_addr-for-.patch
+diff --git a/package/kernel/mac80211/patches/rtl/070-v6.15-wifi-rtw88-Extend-rf_base_addr-and-rf_sipi_addr-for-.patch b/package/kernel/mac80211/patches/rtl/070-v6.15-wifi-rtw88-Extend-rf_base_addr-and-rf_sipi_addr-for-.patch
 new file mode 100644
 index 0000000000..ad80a275f1
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/069-v6.15-wifi-rtw88-Extend-rf_base_addr-and-rf_sipi_addr-for-.patch
++++ b/package/kernel/mac80211/patches/rtl/070-v6.15-wifi-rtw88-Extend-rf_base_addr-and-rf_sipi_addr-for-.patch
 @@ -0,0 +1,32 @@
 +From d80e7d9b6ba38102f92559dbb647330216ea290b Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -2087,11 +2078,11 @@ index 0000000000..ad80a275f1
 + 	const struct rtw_rf_sipi_addr *rf_sipi_read_addr;
 + 	u8 fix_rf_phy_num;
 + 	const struct rtw_ltecoex_addr *ltecoex_addr;
-diff --git a/package/kernel/mac80211/patches/rtl/070-v6.14.9-wifi-rtw88-Extend-rtw_fw_send_ra_info-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/070-v6.14.9-wifi-rtw88-Extend-rtw_fw_send_ra_info-for-RTL8814AU.patch
+diff --git a/package/kernel/mac80211/patches/rtl/071-v6.14.9-wifi-rtw88-Extend-rtw_fw_send_ra_info-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/071-v6.14.9-wifi-rtw88-Extend-rtw_fw_send_ra_info-for-RTL8814AU.patch
 new file mode 100644
 index 0000000000..9366a54cb5
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/070-v6.14.9-wifi-rtw88-Extend-rtw_fw_send_ra_info-for-RTL8814AU.patch
++++ b/package/kernel/mac80211/patches/rtl/071-v6.14.9-wifi-rtw88-Extend-rtw_fw_send_ra_info-for-RTL8814AU.patch
 @@ -0,0 +1,70 @@
 +From 8f0076726b66a70727a1bef5c087c60291e90ad8 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -2163,11 +2154,11 @@ index 0000000000..9366a54cb5
 + };
 + 
 + enum rtw_tx_queue_type {
-diff --git a/package/kernel/mac80211/patches/rtl/071-v6.15-wifi-rtw88-Constify-some-more-structs-and-arrays.patch b/package/kernel/mac80211/patches/rtl/071-v6.15-wifi-rtw88-Constify-some-more-structs-and-arrays.patch
+diff --git a/package/kernel/mac80211/patches/rtl/072-v6.15-wifi-rtw88-Constify-some-more-structs-and-arrays.patch b/package/kernel/mac80211/patches/rtl/072-v6.15-wifi-rtw88-Constify-some-more-structs-and-arrays.patch
 new file mode 100644
 index 0000000000..6d3b4e61f9
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/071-v6.15-wifi-rtw88-Constify-some-more-structs-and-arrays.patch
++++ b/package/kernel/mac80211/patches/rtl/072-v6.15-wifi-rtw88-Constify-some-more-structs-and-arrays.patch
 @@ -0,0 +1,213 @@
 +From e66f3b5c7535bb508e9c561a047b32de4ddc1cda Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -2382,11 +2373,11 @@ index 0000000000..6d3b4e61f9
 + 	.tx_write = rtw_usb_tx_write,
 + 	.tx_kick_off = rtw_usb_tx_kick_off,
 + 	.setup = rtw_usb_setup,
-diff --git a/package/kernel/mac80211/patches/rtl/072-v6.15-wifi-rtw88-Rename-RTW_RATE_SECTION_MAX-to-RTW_RATE_S.patch b/package/kernel/mac80211/patches/rtl/072-v6.15-wifi-rtw88-Rename-RTW_RATE_SECTION_MAX-to-RTW_RATE_S.patch
+diff --git a/package/kernel/mac80211/patches/rtl/073-v6.15-wifi-rtw88-Rename-RTW_RATE_SECTION_MAX-to-RTW_RATE_S.patch b/package/kernel/mac80211/patches/rtl/073-v6.15-wifi-rtw88-Rename-RTW_RATE_SECTION_MAX-to-RTW_RATE_S.patch
 new file mode 100644
 index 0000000000..4a6d512154
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/072-v6.15-wifi-rtw88-Rename-RTW_RATE_SECTION_MAX-to-RTW_RATE_S.patch
++++ b/package/kernel/mac80211/patches/rtl/073-v6.15-wifi-rtw88-Rename-RTW_RATE_SECTION_MAX-to-RTW_RATE_S.patch
 @@ -0,0 +1,227 @@
 +From ad815f3920035a0c5b6ffe45bddc9fb308194b49 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -2615,11 +2606,11 @@ index 0000000000..4a6d512154
 + 				arg = (struct rtw_sar_arg){
 + 					.sar_band = idx,
 + 					.path = j,
-diff --git a/package/kernel/mac80211/patches/rtl/073-v6.15-wifi-rtw88-Extend-TX-power-stuff-for-3-4-spatial-str.patch b/package/kernel/mac80211/patches/rtl/073-v6.15-wifi-rtw88-Extend-TX-power-stuff-for-3-4-spatial-str.patch
+diff --git a/package/kernel/mac80211/patches/rtl/074-v6.15-wifi-rtw88-Extend-TX-power-stuff-for-3-4-spatial-str.patch b/package/kernel/mac80211/patches/rtl/074-v6.15-wifi-rtw88-Extend-TX-power-stuff-for-3-4-spatial-str.patch
 new file mode 100644
 index 0000000000..fc9aa3b971
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/073-v6.15-wifi-rtw88-Extend-TX-power-stuff-for-3-4-spatial-str.patch
++++ b/package/kernel/mac80211/patches/rtl/074-v6.15-wifi-rtw88-Extend-TX-power-stuff-for-3-4-spatial-str.patch
 @@ -0,0 +1,369 @@
 +From 0f98a59596579b34932c06aec7d52c1e835fa1f0 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -2990,11 +2981,11 @@ index 0000000000..fc9aa3b971
 + 			if (hal->rf_path_num == 1 &&
 + 			    (rs == RTW_RATE_SECTION_HT_2S ||
 + 			     rs == RTW_RATE_SECTION_VHT_2S))
-diff --git a/package/kernel/mac80211/patches/rtl/074-v6.14.9-wifi-rtw88-Fix-rtw_update_sta_info-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/074-v6.14.9-wifi-rtw88-Fix-rtw_update_sta_info-for-RTL8814AU.patch
+diff --git a/package/kernel/mac80211/patches/rtl/075-v6.14.9-wifi-rtw88-Fix-rtw_update_sta_info-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/075-v6.14.9-wifi-rtw88-Fix-rtw_update_sta_info-for-RTL8814AU.patch
 new file mode 100644
 index 0000000000..64bc7f8707
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/074-v6.14.9-wifi-rtw88-Fix-rtw_update_sta_info-for-RTL8814AU.patch
++++ b/package/kernel/mac80211/patches/rtl/075-v6.14.9-wifi-rtw88-Fix-rtw_update_sta_info-for-RTL8814AU.patch
 @@ -0,0 +1,61 @@
 +From 9f00e2218e15a2ea3c284567424a100c10b6fb85 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -3057,11 +3048,11 @@ index 0000000000..64bc7f8707
 + 
 + 	rate_id = get_rate_id(wireless_set, bw_mode, tx_num);
 + 
-diff --git a/package/kernel/mac80211/patches/rtl/075-v6.14-wifi-rtw88-Add-support-for-Mercusys-MA30N-and-D-Link.patch b/package/kernel/mac80211/patches/rtl/075-v6.14-wifi-rtw88-Add-support-for-Mercusys-MA30N-and-D-Link.patch
+diff --git a/package/kernel/mac80211/patches/rtl/076-v6.14-wifi-rtw88-Add-support-for-Mercusys-MA30N-and-D-Link.patch b/package/kernel/mac80211/patches/rtl/076-v6.14-wifi-rtw88-Add-support-for-Mercusys-MA30N-and-D-Link.patch
 new file mode 100644
 index 0000000000..e281cf6ece
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/075-v6.14-wifi-rtw88-Add-support-for-Mercusys-MA30N-and-D-Link.patch
++++ b/package/kernel/mac80211/patches/rtl/076-v6.14-wifi-rtw88-Add-support-for-Mercusys-MA30N-and-D-Link.patch
 @@ -0,0 +1,31 @@
 +From 80c4668d024ff7b5427d90b5fad655ce9461c7b1 Mon Sep 17 00:00:00 2001
 +From: Zenm Chen <zenmchen@gmail.com>
@@ -3094,11 +3085,11 @@ index 0000000000..e281cf6ece
 + 	{},
 + };
 + MODULE_DEVICE_TABLE(usb, rtw_8822bu_id_table);
-diff --git a/package/kernel/mac80211/patches/rtl/076-v6.14.9-wifi-rtw88-Fix-rtw_mac_power_switch-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/076-v6.14.9-wifi-rtw88-Fix-rtw_mac_power_switch-for-RTL8814AU.patch
+diff --git a/package/kernel/mac80211/patches/rtl/077-v6.14.9-wifi-rtw88-Fix-rtw_mac_power_switch-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/077-v6.14.9-wifi-rtw88-Fix-rtw_mac_power_switch-for-RTL8814AU.patch
 new file mode 100644
 index 0000000000..092a7677bd
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/076-v6.14.9-wifi-rtw88-Fix-rtw_mac_power_switch-for-RTL8814AU.patch
++++ b/package/kernel/mac80211/patches/rtl/077-v6.14.9-wifi-rtw88-Fix-rtw_mac_power_switch-for-RTL8814AU.patch
 @@ -0,0 +1,27 @@
 +From e66bca16638ee59e997f9d9a3711b3ae587d04d9 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -3127,11 +3118,11 @@ index 0000000000..092a7677bd
 + 		 (rtw_read8(rtwdev, REG_SYS_STATUS1 + 1) & BIT(0)))
 + 		cur_pwr = false;
 + 	else
-diff --git a/package/kernel/mac80211/patches/rtl/077-v6.14.9-wifi-rtw88-Fix-rtw_desc_to_mcsrate-to-handle-MCS16-3.patch b/package/kernel/mac80211/patches/rtl/077-v6.14.9-wifi-rtw88-Fix-rtw_desc_to_mcsrate-to-handle-MCS16-3.patch
+diff --git a/package/kernel/mac80211/patches/rtl/078-v6.14.9-wifi-rtw88-Fix-rtw_desc_to_mcsrate-to-handle-MCS16-3.patch b/package/kernel/mac80211/patches/rtl/078-v6.14.9-wifi-rtw88-Fix-rtw_desc_to_mcsrate-to-handle-MCS16-3.patch
 new file mode 100644
 index 0000000000..c9588ad545
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/077-v6.14.9-wifi-rtw88-Fix-rtw_desc_to_mcsrate-to-handle-MCS16-3.patch
++++ b/package/kernel/mac80211/patches/rtl/078-v6.14.9-wifi-rtw88-Fix-rtw_desc_to_mcsrate-to-handle-MCS16-3.patch
 @@ -0,0 +1,32 @@
 +From 86d04f8f991a0509e318fe886d5a1cf795736c7d Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -3165,11 +3156,11 @@ index 0000000000..c9588ad545
 + 		*mcs = rate - DESC_RATEMCS0;
 + 	}
 + }
-diff --git a/package/kernel/mac80211/patches/rtl/078-v6.14.9-wifi-rtw88-Fix-rtw_init_ht_cap-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/078-v6.14.9-wifi-rtw88-Fix-rtw_init_ht_cap-for-RTL8814AU.patch
+diff --git a/package/kernel/mac80211/patches/rtl/079-v6.14.9-wifi-rtw88-Fix-rtw_init_ht_cap-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/079-v6.14.9-wifi-rtw88-Fix-rtw_init_ht_cap-for-RTL8814AU.patch
 new file mode 100644
 index 0000000000..78014f898b
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/078-v6.14.9-wifi-rtw88-Fix-rtw_init_ht_cap-for-RTL8814AU.patch
++++ b/package/kernel/mac80211/patches/rtl/079-v6.14.9-wifi-rtw88-Fix-rtw_init_ht_cap-for-RTL8814AU.patch
 @@ -0,0 +1,49 @@
 +From c7eea1ba05ca5b0dbf77a27cf2e1e6e2fb3c0043 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -3220,11 +3211,11 @@ index 0000000000..78014f898b
 + }
 + 
 + static void rtw_init_vht_cap(struct rtw_dev *rtwdev,
-diff --git a/package/kernel/mac80211/patches/rtl/079-v6.14.9-wifi-rtw88-Fix-rtw_init_vht_cap-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/079-v6.14.9-wifi-rtw88-Fix-rtw_init_vht_cap-for-RTL8814AU.patch
+diff --git a/package/kernel/mac80211/patches/rtl/080-v6.14.9-wifi-rtw88-Fix-rtw_init_vht_cap-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/080-v6.14.9-wifi-rtw88-Fix-rtw_init_vht_cap-for-RTL8814AU.patch
 new file mode 100644
 index 0000000000..e5f0de87d6
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/079-v6.14.9-wifi-rtw88-Fix-rtw_init_vht_cap-for-RTL8814AU.patch
++++ b/package/kernel/mac80211/patches/rtl/080-v6.14.9-wifi-rtw88-Fix-rtw_init_vht_cap-for-RTL8814AU.patch
 @@ -0,0 +1,58 @@
 +From 6be7544d19fcfcb729495e793bc6181f85bb8949 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -3284,11 +3275,11 @@ index 0000000000..e5f0de87d6
 + 	vht_cap->vht_mcs.rx_mcs_map = cpu_to_le16(mcs_map);
 + 	vht_cap->vht_mcs.tx_mcs_map = cpu_to_le16(mcs_map);
 + 	vht_cap->vht_mcs.rx_highest = highest;
-diff --git a/package/kernel/mac80211/patches/rtl/080-v6.15-wifi-rtw88-Fix-rtw_rx_phy_stat-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/080-v6.15-wifi-rtw88-Fix-rtw_rx_phy_stat-for-RTL8814AU.patch
+diff --git a/package/kernel/mac80211/patches/rtl/081-v6.15-wifi-rtw88-Fix-rtw_rx_phy_stat-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/081-v6.15-wifi-rtw88-Fix-rtw_rx_phy_stat-for-RTL8814AU.patch
 new file mode 100644
 index 0000000000..a1ca98f8b6
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/080-v6.15-wifi-rtw88-Fix-rtw_rx_phy_stat-for-RTL8814AU.patch
++++ b/package/kernel/mac80211/patches/rtl/081-v6.15-wifi-rtw88-Fix-rtw_rx_phy_stat-for-RTL8814AU.patch
 @@ -0,0 +1,54 @@
 +From 053a7aace0207593776c729f229d87f1be464b98 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -3344,11 +3335,11 @@ index 0000000000..a1ca98f8b6
 + 	default:
 + 		rtw_warn(rtwdev, "unknown pkt rate = %d\n", pkt_stat->rate);
 + 		return;
-diff --git a/package/kernel/mac80211/patches/rtl/081-v6.15-wifi-rtw88-Extend-rtw_phy_config_swing_table-for-RTL.patch b/package/kernel/mac80211/patches/rtl/081-v6.15-wifi-rtw88-Extend-rtw_phy_config_swing_table-for-RTL.patch
+diff --git a/package/kernel/mac80211/patches/rtl/082-v6.15-wifi-rtw88-Extend-rtw_phy_config_swing_table-for-RTL.patch b/package/kernel/mac80211/patches/rtl/082-v6.15-wifi-rtw88-Extend-rtw_phy_config_swing_table-for-RTL.patch
 new file mode 100644
 index 0000000000..2ac27f39e7
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/081-v6.15-wifi-rtw88-Extend-rtw_phy_config_swing_table-for-RTL.patch
++++ b/package/kernel/mac80211/patches/rtl/082-v6.15-wifi-rtw88-Extend-rtw_phy_config_swing_table-for-RTL.patch
 @@ -0,0 +1,75 @@
 +From 8b42c46cf6656ef3c2f6d1ec0f113753c6875712 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -3425,11 +3416,11 @@ index 0000000000..2ac27f39e7
 + 	}
 + }
 + EXPORT_SYMBOL(rtw_phy_config_swing_table);
-diff --git a/package/kernel/mac80211/patches/rtl/082-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_phy_info-for-RTL88.patch b/package/kernel/mac80211/patches/rtl/082-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_phy_info-for-RTL88.patch
+diff --git a/package/kernel/mac80211/patches/rtl/083-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_phy_info-for-RTL88.patch b/package/kernel/mac80211/patches/rtl/083-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_phy_info-for-RTL88.patch
 new file mode 100644
 index 0000000000..d34d72a0fb
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/082-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_phy_info-for-RTL88.patch
++++ b/package/kernel/mac80211/patches/rtl/083-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_phy_info-for-RTL88.patch
 @@ -0,0 +1,86 @@
 +From cfebabdd351e9cbafdc99cb198db482208ec5ad9 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -3517,11 +3508,11 @@ index 0000000000..d34d72a0fb
 + 	}
 + 
 + 	seq_puts(m, "[Rx Counter]:\n");
-diff --git a/package/kernel/mac80211/patches/rtl/083-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_tx_pwr_tbl-for-RTL.patch b/package/kernel/mac80211/patches/rtl/083-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_tx_pwr_tbl-for-RTL.patch
+diff --git a/package/kernel/mac80211/patches/rtl/084-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_tx_pwr_tbl-for-RTL.patch b/package/kernel/mac80211/patches/rtl/084-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_tx_pwr_tbl-for-RTL.patch
 new file mode 100644
 index 0000000000..75fff03ed4
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/083-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_tx_pwr_tbl-for-RTL.patch
++++ b/package/kernel/mac80211/patches/rtl/084-v6.15-wifi-rtw88-Extend-rtw_debugfs_get_tx_pwr_tbl-for-RTL.patch
 @@ -0,0 +1,65 @@
 +From c374281f828545b3698cf936b584249c2f9e40c5 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -3588,11 +3579,11 @@ index 0000000000..75fff03ed4
 + 				continue;
 + 
 + 			rtw_get_tx_power_params(rtwdev, path, rate, bw,
-diff --git a/package/kernel/mac80211/patches/rtl/084-v6.15-wifi-rtw88-Add-some-definitions-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/084-v6.15-wifi-rtw88-Add-some-definitions-for-RTL8814AU.patch
+diff --git a/package/kernel/mac80211/patches/rtl/085-v6.15-wifi-rtw88-Add-some-definitions-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/085-v6.15-wifi-rtw88-Add-some-definitions-for-RTL8814AU.patch
 new file mode 100644
 index 0000000000..d14f1eae4e
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/084-v6.15-wifi-rtw88-Add-some-definitions-for-RTL8814AU.patch
++++ b/package/kernel/mac80211/patches/rtl/085-v6.15-wifi-rtw88-Add-some-definitions-for-RTL8814AU.patch
 @@ -0,0 +1,200 @@
 +From 679ec431477cdb68d1cab068c008da0de7f842ef Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -3794,11 +3785,11 @@ index 0000000000..d14f1eae4e
 + #define RF_RCK		0x1d
 + #define RF_MODE_TABLE_ADDR	0x30
 + #define RF_MODE_TABLE_DATA0	0x31
-diff --git a/package/kernel/mac80211/patches/rtl/085-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-1-2.patch b/package/kernel/mac80211/patches/rtl/085-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-1-2.patch
+diff --git a/package/kernel/mac80211/patches/rtl/086-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-1-2.patch b/package/kernel/mac80211/patches/rtl/086-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-1-2.patch
 new file mode 100644
 index 0000000000..6f42855c21
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/085-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-1-2.patch
++++ b/package/kernel/mac80211/patches/rtl/086-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-1-2.patch
 @@ -0,0 +1,12573 @@
 +From f4debfcb1b3c14a28ec157a41e0b98be72e554a0 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -16373,11 +16364,11 @@ index 0000000000..6f42855c21
 ++};
 ++
 ++RTW_DECL_TABLE_RF_RADIO(rtw8814a_rf_c, C);
-diff --git a/package/kernel/mac80211/patches/rtl/086-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-2-2.patch b/package/kernel/mac80211/patches/rtl/086-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-2-2.patch
+diff --git a/package/kernel/mac80211/patches/rtl/087-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-2-2.patch b/package/kernel/mac80211/patches/rtl/087-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-2-2.patch
 new file mode 100644
 index 0000000000..56402a4ad3
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/086-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-2-2.patch
++++ b/package/kernel/mac80211/patches/rtl/087-v6.15-wifi-rtw88-Add-rtw8814a_table.c-part-2-2.patch
 @@ -0,0 +1,11450 @@
 +From e38246889cc9f8497c8d7413b73856ae1634322d Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -27829,11 +27820,11 @@ index 0000000000..56402a4ad3
 ++extern const struct rtw_pwr_seq_cmd * const card_enable_flow_8814a[];
 ++
 ++#endif
-diff --git a/package/kernel/mac80211/patches/rtl/087-v6.15-wifi-rtw88-Add-rtw8814a.-c-h.patch b/package/kernel/mac80211/patches/rtl/087-v6.15-wifi-rtw88-Add-rtw8814a.-c-h.patch
+diff --git a/package/kernel/mac80211/patches/rtl/088-v6.15-wifi-rtw88-Add-rtw8814a.-c-h.patch b/package/kernel/mac80211/patches/rtl/088-v6.15-wifi-rtw88-Add-rtw8814a.-c-h.patch
 new file mode 100644
 index 0000000000..3d8ccd8d28
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/087-v6.15-wifi-rtw88-Add-rtw8814a.-c-h.patch
++++ b/package/kernel/mac80211/patches/rtl/088-v6.15-wifi-rtw88-Add-rtw8814a.-c-h.patch
 @@ -0,0 +1,2343 @@
 +From 1a75457846424b77978d0ba1feb836913ed60637 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -30178,11 +30169,11 @@ index 0000000000..3d8ccd8d28
 ++extern const struct rtw_chip_info rtw8814a_hw_spec;
 ++
 ++#endif
-diff --git a/package/kernel/mac80211/patches/rtl/088-v6.15-wifi-rtw88-Add-rtw8814ae.c.patch b/package/kernel/mac80211/patches/rtl/088-v6.15-wifi-rtw88-Add-rtw8814ae.c.patch
+diff --git a/package/kernel/mac80211/patches/rtl/089-v6.15-wifi-rtw88-Add-rtw8814ae.c.patch b/package/kernel/mac80211/patches/rtl/089-v6.15-wifi-rtw88-Add-rtw8814ae.c.patch
 new file mode 100644
 index 0000000000..0aa9a90360
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/088-v6.15-wifi-rtw88-Add-rtw8814ae.c.patch
++++ b/package/kernel/mac80211/patches/rtl/089-v6.15-wifi-rtw88-Add-rtw8814ae.c.patch
 @@ -0,0 +1,50 @@
 +From dad8e879310211c1e02f09c35f169388bccbfa42 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -30234,11 +30225,11 @@ index 0000000000..0aa9a90360
 ++MODULE_AUTHOR("Bitterblue Smith <rtl8821cerfe2@gmail.com>");
 ++MODULE_DESCRIPTION("Realtek 802.11ac wireless 8814ae driver");
 ++MODULE_LICENSE("Dual BSD/GPL");
-diff --git a/package/kernel/mac80211/patches/rtl/089-v6.15-wifi-rtw88-Add-rtw8814au.c.patch b/package/kernel/mac80211/patches/rtl/089-v6.15-wifi-rtw88-Add-rtw8814au.c.patch
+diff --git a/package/kernel/mac80211/patches/rtl/090-v6.15-wifi-rtw88-Add-rtw8814au.c.patch b/package/kernel/mac80211/patches/rtl/090-v6.15-wifi-rtw88-Add-rtw8814au.c.patch
 new file mode 100644
 index 0000000000..b83174d73e
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/089-v6.15-wifi-rtw88-Add-rtw8814au.c.patch
++++ b/package/kernel/mac80211/patches/rtl/090-v6.15-wifi-rtw88-Add-rtw8814au.c.patch
 @@ -0,0 +1,73 @@
 +From bad060e8a425182809bfc2586a2e7f5ccd1a994d Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -30313,11 +30304,51 @@ index 0000000000..b83174d73e
 ++MODULE_AUTHOR("Bitterblue Smith <rtl8821cerfe2@gmail.com>");
 ++MODULE_DESCRIPTION("Realtek 802.11ac wireless 8814au driver");
 ++MODULE_LICENSE("Dual BSD/GPL");
-diff --git a/package/kernel/mac80211/patches/rtl/090-v6.15wifi-rtw88-Enable-the-new-RTL8814AE-RTL8814AU-driver.patch b/package/kernel/mac80211/patches/rtl/090-v6.15wifi-rtw88-Enable-the-new-RTL8814AE-RTL8814AU-driver.patch
+diff --git a/package/kernel/mac80211/patches/rtl/091-v6.15-wifi-rtw88-Add-__nonstring-annotations-for-untermina.patch b/package/kernel/mac80211/patches/rtl/091-v6.15-wifi-rtw88-Add-__nonstring-annotations-for-untermina.patch
+new file mode 100644
+index 0000000000..4bb3253d50
+--- /dev/null
++++ b/package/kernel/mac80211/patches/rtl/091-v6.15-wifi-rtw88-Add-__nonstring-annotations-for-untermina.patch
+@@ -0,0 +1,34 @@
++From d58ad77d5cc2a6d04db622a898e54d93fc7002a2 Mon Sep 17 00:00:00 2001
++From: Kees Cook <kees@kernel.org>
++Date: Mon, 10 Mar 2025 15:22:58 -0700
++Subject: [PATCH] wifi: rtw88: Add __nonstring annotations for unterminated
++ strings
++
++When a character array without a terminating NUL character has a static
++initializer, GCC 15's -Wunterminated-string-initialization will only
++warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
++with __nonstring to and correctly identify the char array as "not a C
++string" and thereby eliminate the warning.
++
++Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
++Cc: Ping-Ke Shih <pkshih@realtek.com>
++Cc: Johannes Berg <johannes@sipsolutions.net>
++Cc: linux-wireless@vger.kernel.org
++Signed-off-by: Kees Cook <kees@kernel.org>
++Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
++Link: https://patch.msgid.link/20250310222257.work.866-kees@kernel.org
++---
++ drivers/net/wireless/realtek/rtw88/main.h | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++--- a/drivers/net/wireless/realtek/rtw88/main.h
+++++ b/drivers/net/wireless/realtek/rtw88/main.h
++@@ -835,7 +835,7 @@ struct rtw_vif {
++ };
++ 
++ struct rtw_regulatory {
++-	char alpha2[2];
+++	char alpha2[2] __nonstring;
++ 	u8 txpwr_regd_2g;
++ 	u8 txpwr_regd_5g;
++ };
+diff --git a/package/kernel/mac80211/patches/rtl/091-v6.15wifi-rtw88-Enable-the-new-RTL8814AE-RTL8814AU-driver.patch b/package/kernel/mac80211/patches/rtl/091-v6.15wifi-rtw88-Enable-the-new-RTL8814AE-RTL8814AU-driver.patch
 new file mode 100644
 index 0000000000..8446ad3a96
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/090-v6.15wifi-rtw88-Enable-the-new-RTL8814AE-RTL8814AU-driver.patch
++++ b/package/kernel/mac80211/patches/rtl/091-v6.15wifi-rtw88-Enable-the-new-RTL8814AE-RTL8814AU-driver.patch
 @@ -0,0 +1,147 @@
 +From deb3ddeb18652118956fb581a39ac299e1ee5623 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -30466,51 +30497,11 @@ index 0000000000..8446ad3a96
 + RTW89=
 + RTW89_CORE=
 + RTW89_PCI=
-diff --git a/package/kernel/mac80211/patches/rtl/091-v6.15-wifi-rtw88-Add-__nonstring-annotations-for-untermina.patch b/package/kernel/mac80211/patches/rtl/091-v6.15-wifi-rtw88-Add-__nonstring-annotations-for-untermina.patch
-new file mode 100644
-index 0000000000..4bb3253d50
---- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/091-v6.15-wifi-rtw88-Add-__nonstring-annotations-for-untermina.patch
-@@ -0,0 +1,34 @@
-+From d58ad77d5cc2a6d04db622a898e54d93fc7002a2 Mon Sep 17 00:00:00 2001
-+From: Kees Cook <kees@kernel.org>
-+Date: Mon, 10 Mar 2025 15:22:58 -0700
-+Subject: [PATCH] wifi: rtw88: Add __nonstring annotations for unterminated
-+ strings
-+
-+When a character array without a terminating NUL character has a static
-+initializer, GCC 15's -Wunterminated-string-initialization will only
-+warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
-+with __nonstring to and correctly identify the char array as "not a C
-+string" and thereby eliminate the warning.
-+
-+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
-+Cc: Ping-Ke Shih <pkshih@realtek.com>
-+Cc: Johannes Berg <johannes@sipsolutions.net>
-+Cc: linux-wireless@vger.kernel.org
-+Signed-off-by: Kees Cook <kees@kernel.org>
-+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-+Link: https://patch.msgid.link/20250310222257.work.866-kees@kernel.org
-+---
-+ drivers/net/wireless/realtek/rtw88/main.h | 2 +-
-+ 1 file changed, 1 insertion(+), 1 deletion(-)
-+
-+--- a/drivers/net/wireless/realtek/rtw88/main.h
-++++ b/drivers/net/wireless/realtek/rtw88/main.h
-+@@ -835,7 +835,7 @@ struct rtw_vif {
-+ };
-+ 
-+ struct rtw_regulatory {
-+-	char alpha2[2];
-++	char alpha2[2] __nonstring;
-+ 	u8 txpwr_regd_2g;
-+ 	u8 txpwr_regd_5g;
-+ };
-diff --git a/package/kernel/mac80211/patches/rtl/092-v6.16-wifi-rtw88-sdio-Remove-redundant-flush_workqueue-cal.patch b/package/kernel/mac80211/patches/rtl/092-v6.16-wifi-rtw88-sdio-Remove-redundant-flush_workqueue-cal.patch
+diff --git a/package/kernel/mac80211/patches/rtl/093-v6.16-wifi-rtw88-sdio-Remove-redundant-flush_workqueue-cal.patch b/package/kernel/mac80211/patches/rtl/093-v6.16-wifi-rtw88-sdio-Remove-redundant-flush_workqueue-cal.patch
 new file mode 100644
 index 0000000000..9852bdff94
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/092-v6.16-wifi-rtw88-sdio-Remove-redundant-flush_workqueue-cal.patch
++++ b/package/kernel/mac80211/patches/rtl/093-v6.16-wifi-rtw88-sdio-Remove-redundant-flush_workqueue-cal.patch
 @@ -0,0 +1,36 @@
 +From 5c4cf36c538bb2714e43654e365cb77b19c4a93e Mon Sep 17 00:00:00 2001
 +From: Chen Ni <nichen@iscas.ac.cn>
@@ -30548,11 +30539,11 @@ index 0000000000..9852bdff94
 + 	destroy_workqueue(rtwsdio->txwq);
 + 	kfree(rtwsdio->tx_handler_data);
 + 
-diff --git a/package/kernel/mac80211/patches/rtl/093-v6.16-wifi-rtw88-usb-Remove-redundant-flush_workqueue-call.patch b/package/kernel/mac80211/patches/rtl/093-v6.16-wifi-rtw88-usb-Remove-redundant-flush_workqueue-call.patch
+diff --git a/package/kernel/mac80211/patches/rtl/094-v6.16-wifi-rtw88-usb-Remove-redundant-flush_workqueue-call.patch b/package/kernel/mac80211/patches/rtl/094-v6.16-wifi-rtw88-usb-Remove-redundant-flush_workqueue-call.patch
 new file mode 100644
 index 0000000000..41e670fd11
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/093-v6.16-wifi-rtw88-usb-Remove-redundant-flush_workqueue-call.patch
++++ b/package/kernel/mac80211/patches/rtl/094-v6.16-wifi-rtw88-usb-Remove-redundant-flush_workqueue-call.patch
 @@ -0,0 +1,44 @@
 +From 625fbc16524a45488f6eb8561d98b3328efe79cd Mon Sep 17 00:00:00 2001
 +From: Chen Ni <nichen@iscas.ac.cn>
@@ -30598,11 +30589,11 @@ index 0000000000..41e670fd11
 + 	destroy_workqueue(rtwusb->txwq);
 + 	rtw_usb_tx_queue_purge(rtwusb);
 + }
-diff --git a/package/kernel/mac80211/patches/rtl/094-v6.16-wifi-rtw88-usb-Enable-switching-the-RTL8814AU-to-USB.patch b/package/kernel/mac80211/patches/rtl/094-v6.16-wifi-rtw88-usb-Enable-switching-the-RTL8814AU-to-USB.patch
+diff --git a/package/kernel/mac80211/patches/rtl/095-v6.16-wifi-rtw88-usb-Enable-switching-the-RTL8814AU-to-USB.patch b/package/kernel/mac80211/patches/rtl/095-v6.16-wifi-rtw88-usb-Enable-switching-the-RTL8814AU-to-USB.patch
 new file mode 100644
 index 0000000000..edd3cd5e70
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/094-v6.16-wifi-rtw88-usb-Enable-switching-the-RTL8814AU-to-USB.patch
++++ b/package/kernel/mac80211/patches/rtl/095-v6.16-wifi-rtw88-usb-Enable-switching-the-RTL8814AU-to-USB.patch
 @@ -0,0 +1,32 @@
 +From bf1103654df99d50724a022c8b9fca8908a86f50 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -30636,11 +30627,11 @@ index 0000000000..edd3cd5e70
 + }
 + 
 + static bool rtw_usb3_chip_new(u8 chip_id)
-diff --git a/package/kernel/mac80211/patches/rtl/095-v6.16-wifi-rtw88-usb-Enable-RX-aggregation-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/095-v6.16-wifi-rtw88-usb-Enable-RX-aggregation-for-RTL8814AU.patch
+diff --git a/package/kernel/mac80211/patches/rtl/096-v6.16-wifi-rtw88-usb-Enable-RX-aggregation-for-RTL8814AU.patch b/package/kernel/mac80211/patches/rtl/096-v6.16-wifi-rtw88-usb-Enable-RX-aggregation-for-RTL8814AU.patch
 new file mode 100644
 index 0000000000..9709528e70
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/095-v6.16-wifi-rtw88-usb-Enable-RX-aggregation-for-RTL8814AU.patch
++++ b/package/kernel/mac80211/patches/rtl/096-v6.16-wifi-rtw88-usb-Enable-RX-aggregation-for-RTL8814AU.patch
 @@ -0,0 +1,28 @@
 +From dcbb7bb3a364f218411761e2e5ee2f6818d9bdfc Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -30670,11 +30661,11 @@ index 0000000000..9709528e70
 + 		rtw_usb_dynamic_rx_agg_v1(rtwdev, enable);
 + 		break;
 + 	case RTW_CHIP_TYPE_8821A:
-diff --git a/package/kernel/mac80211/patches/rtl/096-v6.16-wifi-rtw88-Set-AMPDU-factor-to-hardware-for-RTL8814A.patch b/package/kernel/mac80211/patches/rtl/096-v6.16-wifi-rtw88-Set-AMPDU-factor-to-hardware-for-RTL8814A.patch
+diff --git a/package/kernel/mac80211/patches/rtl/097-v6.16-wifi-rtw88-Set-AMPDU-factor-to-hardware-for-RTL8814A.patch b/package/kernel/mac80211/patches/rtl/097-v6.16-wifi-rtw88-Set-AMPDU-factor-to-hardware-for-RTL8814A.patch
 new file mode 100644
 index 0000000000..bdac02c8c6
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/096-v6.16-wifi-rtw88-Set-AMPDU-factor-to-hardware-for-RTL8814A.patch
++++ b/package/kernel/mac80211/patches/rtl/097-v6.16-wifi-rtw88-Set-AMPDU-factor-to-hardware-for-RTL8814A.patch
 @@ -0,0 +1,192 @@
 +From 0d2a88690e583168effb03c64fd217a323b2c444 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -30868,11 +30859,11 @@ index 0000000000..bdac02c8c6
 + 	.false_alarm_statistics	= rtw8822c_false_alarm_statistics,
 + 	.dpk_track		= rtw8822c_dpk_track,
 + 	.phy_calibration	= rtw8822c_phy_calibration,
-diff --git a/package/kernel/mac80211/patches/rtl/097-v6.16-wifi-rtw88-Don-t-set-SUPPORTS_AMSDU_IN_AMPDU-for-RTL.patch b/package/kernel/mac80211/patches/rtl/097-v6.16-wifi-rtw88-Don-t-set-SUPPORTS_AMSDU_IN_AMPDU-for-RTL.patch
+diff --git a/package/kernel/mac80211/patches/rtl/098-v6.16-wifi-rtw88-Don-t-set-SUPPORTS_AMSDU_IN_AMPDU-for-RTL.patch b/package/kernel/mac80211/patches/rtl/098-v6.16-wifi-rtw88-Don-t-set-SUPPORTS_AMSDU_IN_AMPDU-for-RTL.patch
 new file mode 100644
 index 0000000000..1b030761d3
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/097-v6.16-wifi-rtw88-Don-t-set-SUPPORTS_AMSDU_IN_AMPDU-for-RTL.patch
++++ b/package/kernel/mac80211/patches/rtl/098-v6.16-wifi-rtw88-Don-t-set-SUPPORTS_AMSDU_IN_AMPDU-for-RTL.patch
 @@ -0,0 +1,169 @@
 +From b8d49bb8d16ae7dde8e05b275d6e3b8bbf27f011 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -31043,11 +31034,11 @@ index 0000000000..1b030761d3
 + 	.usb_tx_agg_desc_num = 3,
 + 	.hw_feature_report = true,
 + 	.c2h_ra_report_size = 7,
-diff --git a/package/kernel/mac80211/patches/rtl/098-v6.16-wifi-rtw88-Fix-the-module-names-printed-in-dmesg.patch b/package/kernel/mac80211/patches/rtl/098-v6.16-wifi-rtw88-Fix-the-module-names-printed-in-dmesg.patch
+diff --git a/package/kernel/mac80211/patches/rtl/099-v6.16-wifi-rtw88-Fix-the-module-names-printed-in-dmesg.patch b/package/kernel/mac80211/patches/rtl/099-v6.16-wifi-rtw88-Fix-the-module-names-printed-in-dmesg.patch
 new file mode 100644
 index 0000000000..5082d77c5e
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/098-v6.16-wifi-rtw88-Fix-the-module-names-printed-in-dmesg.patch
++++ b/package/kernel/mac80211/patches/rtl/099-v6.16-wifi-rtw88-Fix-the-module-names-printed-in-dmesg.patch
 @@ -0,0 +1,230 @@
 +From 581cf3a9cb61daae1009c2380b228f40177046d8 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -31279,11 +31270,11 @@ index 0000000000..5082d77c5e
 + 	.id_table = rtw_8822cu_id_table,
 + 	.probe = rtw8822cu_probe,
 + 	.disconnect = rtw_usb_disconnect,
-diff --git a/package/kernel/mac80211/patches/rtl/099-v6.16-wifi-rtw88-sdio-map-mgmt-frames-to-queue-TX_DESC_QSE.patch b/package/kernel/mac80211/patches/rtl/099-v6.16-wifi-rtw88-sdio-map-mgmt-frames-to-queue-TX_DESC_QSE.patch
+diff --git a/package/kernel/mac80211/patches/rtl/100-v6.16-wifi-rtw88-sdio-map-mgmt-frames-to-queue-TX_DESC_QSE.patch b/package/kernel/mac80211/patches/rtl/100-v6.16-wifi-rtw88-sdio-map-mgmt-frames-to-queue-TX_DESC_QSE.patch
 new file mode 100644
 index 0000000000..ae2d2f5cff
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/099-v6.16-wifi-rtw88-sdio-map-mgmt-frames-to-queue-TX_DESC_QSE.patch
++++ b/package/kernel/mac80211/patches/rtl/100-v6.16-wifi-rtw88-sdio-map-mgmt-frames-to-queue-TX_DESC_QSE.patch
 @@ -0,0 +1,36 @@
 +From b2effcdc237979dcc533d446a792fc54fd0e1213 Mon Sep 17 00:00:00 2001
 +From: Zhen XIN <zhen.xin@nokia-sbell.com>
@@ -31321,11 +31312,11 @@ index 0000000000..ae2d2f5cff
 + 	case RTW_TX_QUEUE_HI0:
 + 		return TX_DESC_QSEL_HIGH;
 + 	default:
-diff --git a/package/kernel/mac80211/patches/rtl/100-v6.16-wifi-rtw88-sdio-call-rtw_sdio_indicate_tx_status-unc.patch b/package/kernel/mac80211/patches/rtl/100-v6.16-wifi-rtw88-sdio-call-rtw_sdio_indicate_tx_status-unc.patch
+diff --git a/package/kernel/mac80211/patches/rtl/101-v6.16-wifi-rtw88-sdio-call-rtw_sdio_indicate_tx_status-unc.patch b/package/kernel/mac80211/patches/rtl/101-v6.16-wifi-rtw88-sdio-call-rtw_sdio_indicate_tx_status-unc.patch
 new file mode 100644
 index 0000000000..aa85137ae2
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/100-v6.16-wifi-rtw88-sdio-call-rtw_sdio_indicate_tx_status-unc.patch
++++ b/package/kernel/mac80211/patches/rtl/101-v6.16-wifi-rtw88-sdio-call-rtw_sdio_indicate_tx_status-unc.patch
 @@ -0,0 +1,37 @@
 +From fc5f5a0ec463ae6a07850428bd3082947e01d276 Mon Sep 17 00:00:00 2001
 +From: Zhen XIN <zhen.xin@nokia-sbell.com>
@@ -31364,11 +31355,11 @@ index 0000000000..aa85137ae2
 + }
 + 
 + static void rtw_sdio_tx_handler(struct work_struct *work)
-diff --git a/package/kernel/mac80211/patches/rtl/101-v6.16-wifi-rtw88-do-not-ignore-hardware-read-error-during-.patch b/package/kernel/mac80211/patches/rtl/101-v6.16-wifi-rtw88-do-not-ignore-hardware-read-error-during-.patch
+diff --git a/package/kernel/mac80211/patches/rtl/102-v6.16-wifi-rtw88-do-not-ignore-hardware-read-error-during-.patch b/package/kernel/mac80211/patches/rtl/102-v6.16-wifi-rtw88-do-not-ignore-hardware-read-error-during-.patch
 new file mode 100644
 index 0000000000..87d72bf88b
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/101-v6.16-wifi-rtw88-do-not-ignore-hardware-read-error-during-.patch
++++ b/package/kernel/mac80211/patches/rtl/102-v6.16-wifi-rtw88-do-not-ignore-hardware-read-error-during-.patch
 @@ -0,0 +1,32 @@
 +From 20d3c19bd8f9b498173c198eadf54580c8caa336 Mon Sep 17 00:00:00 2001
 +From: Dmitry Antipov <dmantipov@yandex.ru>
@@ -31402,11 +31393,11 @@ index 0000000000..87d72bf88b
 + 
 + 	rtw_write8(rtwdev, 0x1b10, 0x0);
 + 	rtw_write32_mask(rtwdev, REG_NCTL0, BIT_SUBPAGE, 0x0000000c);
-diff --git a/package/kernel/mac80211/patches/rtl/102-v6.16-wifi-rtw88-Fix-RX-aggregation-settings-for-RTL8723DS.patch b/package/kernel/mac80211/patches/rtl/102-v6.16-wifi-rtw88-Fix-RX-aggregation-settings-for-RTL8723DS.patch
+diff --git a/package/kernel/mac80211/patches/rtl/103-v6.16-wifi-rtw88-Fix-RX-aggregation-settings-for-RTL8723DS.patch b/package/kernel/mac80211/patches/rtl/103-v6.16-wifi-rtw88-Fix-RX-aggregation-settings-for-RTL8723DS.patch
 new file mode 100644
 index 0000000000..901e471508
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/102-v6.16-wifi-rtw88-Fix-RX-aggregation-settings-for-RTL8723DS.patch
++++ b/package/kernel/mac80211/patches/rtl/103-v6.16-wifi-rtw88-Fix-RX-aggregation-settings-for-RTL8723DS.patch
 @@ -0,0 +1,44 @@
 +From 0ffa1ba81b35ba147c9df6206a61499a156b0128 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -31452,11 +31443,11 @@ index 0000000000..901e471508
 + 	}
 + 
 + 	/* Make the firmware honor the size limit configured below */
-diff --git a/package/kernel/mac80211/patches/rtl/103-v6.16-wifi-rtw88-Handle-RTL8723D-S-with-blank-efuse.patch b/package/kernel/mac80211/patches/rtl/103-v6.16-wifi-rtw88-Handle-RTL8723D-S-with-blank-efuse.patch
+diff --git a/package/kernel/mac80211/patches/rtl/104-v6.16-wifi-rtw88-Handle-RTL8723D-S-with-blank-efuse.patch b/package/kernel/mac80211/patches/rtl/104-v6.16-wifi-rtw88-Handle-RTL8723D-S-with-blank-efuse.patch
 new file mode 100644
 index 0000000000..d994a6aa69
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/103-v6.16-wifi-rtw88-Handle-RTL8723D-S-with-blank-efuse.patch
++++ b/package/kernel/mac80211/patches/rtl/104-v6.16-wifi-rtw88-Handle-RTL8723D-S-with-blank-efuse.patch
 @@ -0,0 +1,198 @@
 +From 2c17afde9ff6713f3e080ed1ea1a4bd7480be9aa Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -31656,11 +31647,11 @@ index 0000000000..d994a6aa69
 + 	return 0;
 + }
 + 
-diff --git a/package/kernel/mac80211/patches/rtl/104-v6.16-wifi-rtw88-rtw8822bu-VID-PID-for-BUFFALO-WI-U2-866DM.patch b/package/kernel/mac80211/patches/rtl/104-v6.16-wifi-rtw88-rtw8822bu-VID-PID-for-BUFFALO-WI-U2-866DM.patch
+diff --git a/package/kernel/mac80211/patches/rtl/105-v6.16-wifi-rtw88-rtw8822bu-VID-PID-for-BUFFALO-WI-U2-866DM.patch b/package/kernel/mac80211/patches/rtl/105-v6.16-wifi-rtw88-rtw8822bu-VID-PID-for-BUFFALO-WI-U2-866DM.patch
 new file mode 100644
 index 0000000000..8321ca8c94
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/104-v6.16-wifi-rtw88-rtw8822bu-VID-PID-for-BUFFALO-WI-U2-866DM.patch
++++ b/package/kernel/mac80211/patches/rtl/105-v6.16-wifi-rtw88-rtw8822bu-VID-PID-for-BUFFALO-WI-U2-866DM.patch
 @@ -0,0 +1,27 @@
 +From b7f0cc647e52296a3d4dd727b6479dcd6d7e364e Mon Sep 17 00:00:00 2001
 +From: Yuuki NAGAO <wf.yn386@gmail.com>
@@ -31689,11 +31680,11 @@ index 0000000000..8321ca8c94
 + 	{},
 + };
 + MODULE_DEVICE_TABLE(usb, rtw_8822bu_id_table);
-diff --git a/package/kernel/mac80211/patches/rtl/105-v6.16-wifi-rtw88-usb-Reduce-control-message-timeout-to-500.patch b/package/kernel/mac80211/patches/rtl/105-v6.16-wifi-rtw88-usb-Reduce-control-message-timeout-to-500.patch
+diff --git a/package/kernel/mac80211/patches/rtl/106-v6.16-wifi-rtw88-usb-Reduce-control-message-timeout-to-500.patch b/package/kernel/mac80211/patches/rtl/106-v6.16-wifi-rtw88-usb-Reduce-control-message-timeout-to-500.patch
 new file mode 100644
 index 0000000000..9ed1162ab8
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/105-v6.16-wifi-rtw88-usb-Reduce-control-message-timeout-to-500.patch
++++ b/package/kernel/mac80211/patches/rtl/106-v6.16-wifi-rtw88-usb-Reduce-control-message-timeout-to-500.patch
 @@ -0,0 +1,52 @@
 +From 490340faddea461319652ce36dbc7c1b4482c35e Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -31747,11 +31738,11 @@ index 0000000000..9ed1162ab8
 + 	if (ret < 0 && ret != -ENODEV && count++ < 4)
 + 		rtw_err(rtwdev, "write register 0x%x failed with %d\n",
 + 			addr, ret);
-diff --git a/package/kernel/mac80211/patches/rtl/106-v6.16-wifi-rtw88-usb-Upload-the-firmware-in-bigger-chunks.patch b/package/kernel/mac80211/patches/rtl/106-v6.16-wifi-rtw88-usb-Upload-the-firmware-in-bigger-chunks.patch
+diff --git a/package/kernel/mac80211/patches/rtl/107-v6.16-wifi-rtw88-usb-Upload-the-firmware-in-bigger-chunks.patch b/package/kernel/mac80211/patches/rtl/107-v6.16-wifi-rtw88-usb-Upload-the-firmware-in-bigger-chunks.patch
 new file mode 100644
 index 0000000000..8031e46556
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/106-v6.16-wifi-rtw88-usb-Upload-the-firmware-in-bigger-chunks.patch
++++ b/package/kernel/mac80211/patches/rtl/107-v6.16-wifi-rtw88-usb-Upload-the-firmware-in-bigger-chunks.patch
 @@ -0,0 +1,214 @@
 +From 80fe0bc1659c0ccc79d082e426fa376be5df9c04 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -31967,11 +31958,11 @@ index 0000000000..8031e46556
 + 
 + 	.write8  = rtw_usb_write8,
 + 	.write16 = rtw_usb_write16,
-diff --git a/package/kernel/mac80211/patches/rtl/107-v6.16-wifi-rtw88-Fix-the-random-error-beacon-valid-message.patch b/package/kernel/mac80211/patches/rtl/107-v6.16-wifi-rtw88-Fix-the-random-error-beacon-valid-message.patch
+diff --git a/package/kernel/mac80211/patches/rtl/108-v6.16-wifi-rtw88-Fix-the-random-error-beacon-valid-message.patch b/package/kernel/mac80211/patches/rtl/108-v6.16-wifi-rtw88-Fix-the-random-error-beacon-valid-message.patch
 new file mode 100644
 index 0000000000..8008b58ff4
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/107-v6.16-wifi-rtw88-Fix-the-random-error-beacon-valid-message.patch
++++ b/package/kernel/mac80211/patches/rtl/108-v6.16-wifi-rtw88-Fix-the-random-error-beacon-valid-message.patch
 @@ -0,0 +1,73 @@
 +From f24d0d8c3cd7e4237f802c4d2f3bd4ac04572948 Mon Sep 17 00:00:00 2001
 +From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
@@ -32046,11 +32037,11 @@ index 0000000000..8008b58ff4
 + 	if (rtw_hci_type(rtwdev) == RTW_HCI_TYPE_PCIE)
 + 		rtw_write8(rtwdev, REG_FWHW_TXQ_CTRL + 2, bckp[1]);
 + 	rtw_write8(rtwdev, REG_CR + 1, bckp[0]);
-diff --git a/package/kernel/mac80211/patches/rtl/108-v6.16-wifi-rtw88-fix-the-para-buffer-size-to-avoid-reading.patch b/package/kernel/mac80211/patches/rtl/108-v6.16-wifi-rtw88-fix-the-para-buffer-size-to-avoid-reading.patch
+diff --git a/package/kernel/mac80211/patches/rtl/109-v6.16-wifi-rtw88-fix-the-para-buffer-size-to-avoid-reading.patch b/package/kernel/mac80211/patches/rtl/109-v6.16-wifi-rtw88-fix-the-para-buffer-size-to-avoid-reading.patch
 new file mode 100644
 index 0000000000..11b73128db
 --- /dev/null
-+++ b/package/kernel/mac80211/patches/rtl/108-v6.16-wifi-rtw88-fix-the-para-buffer-size-to-avoid-reading.patch
++++ b/package/kernel/mac80211/patches/rtl/109-v6.16-wifi-rtw88-fix-the-para-buffer-size-to-avoid-reading.patch
 @@ -0,0 +1,38 @@
 +From 4c2c372de2e108319236203cce6de44d70ae15cd Mon Sep 17 00:00:00 2001
 +From: Alexey Kodanev <aleksei.kodanev@bell-sw.com>
