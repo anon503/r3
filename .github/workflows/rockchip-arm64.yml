@@ -34,6 +34,8 @@ jobs:
                 git apply 001.patch
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/18911.patch
                 git am 18911.patch
+                wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/19080.patch
+                git am 19080.patch
                 git revert --no-commit 3cd2ff31504ddd2aff46397cd4f9ce7aaefa783f
                 wget https://raw.githubusercontent.com/anon540/r3/refs/heads/main/r3/0001-ar.patch
                 wget https://github.com/anon1045/e27xx/commit/66332b9cebe3ef77cf4b4217877e059353bdcca3.patch
