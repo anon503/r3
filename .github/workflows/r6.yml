@@ -24,8 +24,10 @@ jobs:
                 git clone https://github.com/openwrt/openwrt.git
                 cp -rf r3/rk-snapshot openwrt/
                 cp -rf r3/kmod-apk.patch openwrt/
+                cp -rf r3/mf.patch openwrt/
                 cd openwrt
                 git apply kmod-apk.patch
+                git apply mf.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
