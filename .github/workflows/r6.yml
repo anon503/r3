@@ -22,17 +22,9 @@ jobs:
             - name: Build
               run: |
                 git clone https://github.com/openwrt/openwrt.git
-                cp -rf r3/rtw88-v6.16.patch openwrt/
                 cp -rf r3/rk-snapshot openwrt/
                 cp -rf r3/kmod-apk.patch openwrt/
                 cd openwrt
-                wget https://github.com/mj22226/openwrt/commit/e46087b7c1753d1181570f62d1d50485ec23bebf.patch
-                wget https://github.com/mj22226/openwrt/commit/2c5c90ba389005c3b418bacc7b2027509c87018c.patch
-                wget https://github.com/mj22226/openwrt/commit/97dc4af7815806ea2967673435b311c187961f2a.patch
-                git apply e46087b7c1753d1181570f62d1d50485ec23bebf.patch
-                git apply 2c5c90ba389005c3b418bacc7b2027509c87018c.patch
-                git apply 97dc4af7815806ea2967673435b311c187961f2a.patch
-                git apply rtw88-v6.16.patch
                 git apply kmod-apk.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
