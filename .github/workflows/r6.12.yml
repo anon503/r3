@@ -22,7 +22,7 @@ jobs:
             - name: Build
               run: |
                 git clone https://github.com/openwrt/openwrt.git
-                cp -rf r3/mf.patch openwrt/
+                cp -rf r3/ms.patch openwrt/
                 cp -rf r3/rk-snapshot openwrt/
                 cp -rf r3/kmod-apk.patch openwrt/
                 git config --global user.email md@any.ccc
@@ -33,7 +33,7 @@ jobs:
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/18683.patch
                 git am 18683.patch
                 sed -i "10s/=6.6/=6.12/" target/linux/rockchip/Makefile
-                git apply mf.patch
+                git apply ms.patch
                 git apply kmod-apk.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
