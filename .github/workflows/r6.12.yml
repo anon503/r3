@@ -30,8 +30,6 @@ jobs:
                 cd openwrt
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/18911.patch
                 git am 18911.patch
-                wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/18683.patch
-                git am 18683.patch
                 sed -i "10s/=6.6/=6.12/" target/linux/rockchip/Makefile
                 git apply ms.patch
                 git apply kmod-apk.patch
