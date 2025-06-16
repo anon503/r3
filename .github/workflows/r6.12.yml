@@ -25,6 +25,7 @@ jobs:
                 cp -rf r3/ms.patch openwrt/
                 cp -rf r3/rk-snapshot openwrt/
                 cp -rf r3/kmod-apk.patch openwrt/
+                cp -rf r3/rng.patch openwrt/
                 git config --global user.email md@any.ccc
                 git config --global user.name 'M Z'
                 cd openwrt
@@ -33,6 +34,7 @@ jobs:
                 sed -i "10s/=6.6/=6.12/" target/linux/rockchip/Makefile
                 git apply ms.patch
                 git apply kmod-apk.patch
+                git apply rng.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
