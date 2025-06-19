@@ -26,6 +26,7 @@ jobs:
                 cp -rf r3/rk-snapshot openwrt/
                 cp -rf r3/kmod-apk.patch openwrt/
                 cp -rf r3/rng.patch openwrt/
+                cp -rf r3/rk-6.12-config.patch openwrt/
                 git config --global user.email md@any.ccc
                 git config --global user.name 'M Z'
                 cd openwrt
@@ -37,6 +38,7 @@ jobs:
                 git apply ms.patch
                 git apply kmod-apk.patch
                 git apply rng.patch
+                git apply rk-6.12-config.patch
                 wget https://github.com/mj22226/source/commit/b40b67784e2a6186113ba1d5f2dc2763aec25ad6.patch
                 git apply b40b67784e2a6186113ba1d5f2dc2763aec25ad6.patch
                 ./scripts/feeds update -a
