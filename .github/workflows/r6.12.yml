@@ -30,8 +30,8 @@ jobs:
                 git config --global user.email md@any.ccc
                 git config --global user.name 'M Z'
                 cd openwrt
-                wget https://github.com/mj22226/source/commit/ee51c80afe415ef64074a1fc0db38e5deb8cf858.patch
-                git apply ee51c80afe415ef64074a1fc0db38e5deb8cf858.patch
+                wget https://github.com/mj22226/openwrt/commit/073f03ef52ae97a5f6948750b9430a429f268a31.patch
+                git apply 073f03ef52ae97a5f6948750b9430a429f268a31.patch
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/18911.patch
                 git am 18911.patch
                 sed -i "10s/=6.6/=6.12/" target/linux/rockchip/Makefile
@@ -39,8 +39,8 @@ jobs:
                 git apply kmod-apk.patch
                 git apply rng.patch
                 git apply rk-6.12-config.patch
-                wget https://github.com/mj22226/source/commit/b40b67784e2a6186113ba1d5f2dc2763aec25ad6.patch
-                git apply b40b67784e2a6186113ba1d5f2dc2763aec25ad6.patch
+                wget https://github.com/mj22226/openwrt/commit/9a5e0d7128abcf78f6c5e93901a688bab41fb08d.patch
+                git apply 9a5e0d7128abcf78f6c5e93901a688bab41fb08d.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
