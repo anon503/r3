@@ -475,3 +475,4 @@ CONFIG_PACKAGE_kmod-crypto-kpp=m
 # CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_sinovoip_bpi-r2-pro is not set
 # CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_xunlong_orangepi-r1-plus is not set
 # CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_xunlong_orangepi-r1-plus-lts is not set
+CONFIG_PACKAGE_realtek-bluetooth-firmware=y
