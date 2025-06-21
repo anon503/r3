@@ -29,6 +29,7 @@ jobs:
                 cp -rf r3/rk-6.12-config.patch openwrt/
                 cp -rf r3/44.patch openwrt/
                 cp -rf r3/45.patch openwrt/
+                cp -rf r3/46.patch openwrt/
                 git config --global user.email md@any.ccc
                 git config --global user.name 'M Z'
                 cd openwrt
@@ -43,6 +44,7 @@ jobs:
                 git apply rk-6.12-config.patch
                 git apply 44.patch
                 git apply 45.patch
+                git apply 46.patch
                 wget https://github.com/mj22226/openwrt/commit/9a5e0d7128abcf78f6c5e93901a688bab41fb08d.patch
                 git apply 9a5e0d7128abcf78f6c5e93901a688bab41fb08d.patch
                 ./scripts/feeds update -a
