@@ -1,6 +1,8 @@
 name: bpi-r3 v1.2-rc images on arm64
 on:
    workflow_dispatch:
+   schedule:
+    - cron: '01 08 * * *'
 jobs:
     build:
         name: Build BPI-R3 v1.2-rc Images
