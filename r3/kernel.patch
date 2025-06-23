@@ -1,5 +1,5 @@
 From e499234cc81887fc3cac5488ef860f13f46db94d Mon Sep 17 00:00:00 2001
-From: Marty Jones <mj8263788@gmail.com>
+From: i l <il@il.com>
 Date: Mon, 23 Jun 2025 10:35:20 -0400
 Subject: [PATCH 1/2] kernel: Linx 6.6.95-rc1
 
@@ -252,25 +252,6 @@ index 01ecb16aeb..6c6cff13c9 100644
   	  .bInterfaceSubClass	= 1,
   	  .bInterfaceProtocol	= 0,
   	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
-diff --git a/target/linux/rockchip/patches-6.6/130-m4-led.patch b/target/linux/rockchip/patches-6.6/130-m4-led.patch
-index a8a28fb668..8699b5d50c 100644
---- a/target/linux/rockchip/patches-6.6/130-m4-led.patch
-+++ b/target/linux/rockchip/patches-6.6/130-m4-led.patch
-@@ -9,7 +9,7 @@
- +		led-running = &status_led;
- +		led-upgrade = &status_led;
-  	};
--
-+ 
-  	chosen {
- @@ -128,7 +132,7 @@
-  		status_led: led-0 {
-@@ -19,4 +19,4 @@
- +			default-state = "on";
-  		};
-  	};
--
-+ 
 -- 
 2.46.0
 
@@ -1234,25 +1215,6 @@ index 75fd136829..0ab9517d88 100644
   	  .bInterfaceSubClass	= 1,
   	  .bInterfaceProtocol	= 0,
   	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
-diff --git a/target/linux/rockchip/patches-6.12/130-m4-led.patch b/target/linux/rockchip/patches-6.12/130-m4-led.patch
-index a8a28fb668..8699b5d50c 100644
---- a/target/linux/rockchip/patches-6.12/130-m4-led.patch
-+++ b/target/linux/rockchip/patches-6.12/130-m4-led.patch
-@@ -9,7 +9,7 @@
- +		led-running = &status_led;
- +		led-upgrade = &status_led;
-  	};
--
-+ 
-  	chosen {
- @@ -128,7 +132,7 @@
-  		status_led: led-0 {
-@@ -19,4 +19,4 @@
- +			default-state = "on";
-  		};
-  	};
--
-+ 
 -- 
 2.46.0
 
