@@ -60,6 +60,10 @@ jobs:
                 ./scripts/feeds install -a -f
                 wget https://github.com/mj22226/openwrt-arm64/releases/download/rockchip-18.1.7/llvm-bpf-18.1.7.Linux-aarch64.tar.zst
                 tar -xvf llvm-bpf-18.1.7.Linux-aarch64.tar.zst
+                wget https://github.com/mj22226/source/commit/6e7d14ad5011eceb2e240e15ae32189b7c9e6db1.patch
+                wget https://github.com/mj22226/source/commit/8125a79ec80124fa5c29f8cc72d78216d9352abf.patch
+                git apply 6e7d14ad5011eceb2e240e15ae32189b7c9e6db1.patch
+                git apply 8125a79ec80124fa5c29f8cc72d78216d9352abf.patch
                 mv rk-snapshot .config
                 echo 'CONFIG_GOLANG_EXTERNAL_BOOTSTRAP_ROOT="/opt/hostedtoolcache/go/1.23.5/arm64/bin"' >> .config
                 make defconfig
