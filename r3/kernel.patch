@@ -1,9 +1,10 @@
-From e499234cc81887fc3cac5488ef860f13f46db94d Mon Sep 17 00:00:00 2001
-From: i l <il@il.com>
+From 9c04eaa791d6bf8c9364882f78383b2250b02a6f Mon Sep 17 00:00:00 2001
+From: Marty Jones <mj8263788@gmail.com>
 Date: Mon, 23 Jun 2025 10:35:20 -0400
-Subject: [PATCH 1/2] kernel: Linx 6.6.95-rc1
+Subject: [PATCH 1/2] kernel: Linx 6.6.95-rc2
 
 https://lore.kernel.org/all/20250623130626.910356556@linuxfoundation.org
+https://lore.kernel.org/all/20250624121409.093630364@linuxfoundation.org
 
 Signed-off-by: Marty Jones <mj8263788@gmail.com>
 ---
@@ -20,8 +21,7 @@ Signed-off-by: Marty Jones <mj8263788@gmail.com>
  target/linux/generic/kernel-6.6               |  4 +-
  .../pending-6.6/532-jffs2_eofdetect.patch     |  2 +-
  .../810-uvc-add-iPassion-iP2970-support.patch |  2 +-
- .../rockchip/patches-6.6/130-m4-led.patch     |  4 +-
- 14 files changed, 18 insertions(+), 61 deletions(-)
+ 13 files changed, 16 insertions(+), 59 deletions(-)
  delete mode 100644 target/linux/generic/backport-6.6/201-v6.16-mips-Add-std-flag-specified.patch
 
 diff --git a/scripts/projectsmirrors.json b/scripts/projectsmirrors.json
@@ -218,14 +218,14 @@ index e426c008d0..64472ad18f 100644
   static int __init ip_rt_proc_init(void)
   {
 diff --git a/target/linux/generic/kernel-6.6 b/target/linux/generic/kernel-6.6
-index a2e954d002..ed22bee717 100644
+index a2e954d002..32f6c10837 100644
 --- a/target/linux/generic/kernel-6.6
 +++ b/target/linux/generic/kernel-6.6
 @@ -1,2 +1,2 @@
 -LINUX_VERSION-6.6 = .94
 -LINUX_KERNEL_HASH-6.6.94 = 713981ea26b20b476ba4ce880b76b21294576788d5db1c2188b167bcb06ecc56
 +LINUX_VERSION-6.6 = .95
-+LINUX_KERNEL_HASH-6.6.95 = 32d101b64718c62666efcfc9f42f04b0a45f1b916ec23722b8826d4108ec0fa3
++LINUX_KERNEL_HASH-6.6.95 = d3e179995bd53eb2c330842ad7c7924d3a3d5ce277298e73e22fa9349a3dc8bf
 diff --git a/target/linux/generic/pending-6.6/532-jffs2_eofdetect.patch b/target/linux/generic/pending-6.6/532-jffs2_eofdetect.patch
 index 744fbd0e21..88bb14a02a 100644
 --- a/target/linux/generic/pending-6.6/532-jffs2_eofdetect.patch
@@ -256,12 +256,13 @@ index 01ecb16aeb..6c6cff13c9 100644
 2.46.0
 
 
-From 7b852cc4fe8210d284e4b613f81a8fdc85d54334 Mon Sep 17 00:00:00 2001
+From 5a7023f3aea66aefb00c6359b935fd423a08df83 Mon Sep 17 00:00:00 2001
 From: Marty Jones <mj8263788@gmail.com>
 Date: Mon, 23 Jun 2025 11:36:03 -0400
-Subject: [PATCH 2/2] kernel: Linux 6.12.35-rc1
+Subject: [PATCH 2/2] kernel: Linux 6.12.35-rc2
 
 https://lore.kernel.org/all/20250623130642.015559452@linuxfoundation.org
+https://lore.kernel.org/all/20250624121426.466976226@linuxfoundation.org
 
 Signed-off-by: Marty Jones <mj8263788@gmail.com>
 ---
@@ -298,8 +299,7 @@ Signed-off-by: Marty Jones <mj8263788@gmail.com>
  target/linux/generic/kernel-6.12              |  4 +-
  .../pending-6.12/532-jffs2_eofdetect.patch    |  2 +-
  .../810-uvc-add-iPassion-iP2970-support.patch |  2 +-
- .../rockchip/patches-6.12/130-m4-led.patch    |  4 +-
- 34 files changed, 88 insertions(+), 192 deletions(-)
+ 33 files changed, 86 insertions(+), 190 deletions(-)
  delete mode 100644 target/linux/bcm27xx/patches-6.12/950-0961-media-imx335-Use-correct-register-width-for-HNUM.patch
  delete mode 100644 target/linux/bcm27xx/patches-6.12/950-1003-drivers-media-i2c-imx335-Fix-frame-size-enumeration.patch
  delete mode 100644 target/linux/generic/backport-6.12/300-v6.16-mips-Add-std-flag-specified.patch
@@ -1181,14 +1181,14 @@ index a135684460..2bc77873fd 100644
   static int __init ip_rt_proc_init(void)
   {
 diff --git a/target/linux/generic/kernel-6.12 b/target/linux/generic/kernel-6.12
-index dbe7bc8574..19b56264ea 100644
+index dbe7bc8574..5af1d444ca 100644
 --- a/target/linux/generic/kernel-6.12
 +++ b/target/linux/generic/kernel-6.12
 @@ -1,2 +1,2 @@
 -LINUX_VERSION-6.12 = .34
 -LINUX_KERNEL_HASH-6.12.34 = a7f3fe381f67eca4172e9b63efb61a14bd7f9e1278e03603d0ff5a93f270c24d
 +LINUX_VERSION-6.12 = .35
-+LINUX_KERNEL_HASH-6.12.35 = cb1c5337e70c0892985d47c183a190a93ec75765e2497603f35b3b237567e620
++LINUX_KERNEL_HASH-6.12.35 = 9b87da773eeece8620d779cc6d517ed7eff36a850f3371eabc7766a9686deda5
 diff --git a/target/linux/generic/pending-6.12/532-jffs2_eofdetect.patch b/target/linux/generic/pending-6.12/532-jffs2_eofdetect.patch
 index 744fbd0e21..88bb14a02a 100644
 --- a/target/linux/generic/pending-6.12/532-jffs2_eofdetect.patch
