@@ -46,6 +46,7 @@ jobs:
                 git apply 44.patch
                 git apply 45.patch
                 git apply 46.patch
+                git apply pm.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
