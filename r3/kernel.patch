@@ -1,14 +1,14 @@
-From 9c04eaa791d6bf8c9364882f78383b2250b02a6f Mon Sep 17 00:00:00 2001
+From 44f81948ca66ae89b1c318221678bf0ea86c6bd6 Mon Sep 17 00:00:00 2001
 From: Marty Jones <mj8263788@gmail.com>
-Date: Mon, 23 Jun 2025 10:35:20 -0400
-Subject: [PATCH 1/2] kernel: Linx 6.6.95-rc2
+Date: Wed, 25 Jun 2025 23:52:53 -0400
+Subject: [PATCH 1/2] kernel: Linux 6.6.95-rc2
 
 https://lore.kernel.org/all/20250623130626.910356556@linuxfoundation.org
 https://lore.kernel.org/all/20250624121409.093630364@linuxfoundation.org
 
 Signed-off-by: Marty Jones <mj8263788@gmail.com>
 ---
- scripts/projectsmirrors.json                  |  1 +
+ .../900-unaligned_access_hacks.patch          |  2 +-
  ...01-v6.16-mips-Add-std-flag-specified.patch | 44 -------------------
  ...wnand-qcom-cleanup-qcom_nandc-driver.patch |  2 +-
  ...d-qcom-Add-qcom-prefix-to-common-api.patch |  2 +-
@@ -20,22 +20,32 @@ Signed-off-by: Marty Jones <mj8263788@gmail.com>
  .../generic/hack-6.6/902-debloat_proc.patch   |  2 +-
  target/linux/generic/kernel-6.6               |  4 +-
  .../pending-6.6/532-jffs2_eofdetect.patch     |  2 +-
+ ...7xx-propagate-error-from-armada_37xx.patch |  2 +-
+ ...7xx-propagate-error-from-armada_37xx.patch | 36 ---------------
+ ...7xx-propagate-error-from-armada_37xx.patch | 42 ------------------
+ ...7xx-propagate-error-from-armada_37xx.patch | 35 ---------------
+ ...7xx-propagate-error-from-armada_37xx.patch | 31 -------------
  .../810-uvc-add-iPassion-iP2970-support.patch |  2 +-
- 13 files changed, 16 insertions(+), 59 deletions(-)
+ 18 files changed, 17 insertions(+), 205 deletions(-)
  delete mode 100644 target/linux/generic/backport-6.6/201-v6.16-mips-Add-std-flag-specified.patch
+ delete mode 100644 target/linux/mvebu/patches-6.6/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+ delete mode 100644 target/linux/mvebu/patches-6.6/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+ delete mode 100644 target/linux/mvebu/patches-6.6/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+ delete mode 100644 target/linux/mvebu/patches-6.6/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
 
-diff --git a/scripts/projectsmirrors.json b/scripts/projectsmirrors.json
-index 9bc2d7ac10..c10054c170 100644
---- a/scripts/projectsmirrors.json
-+++ b/scripts/projectsmirrors.json
-@@ -63,6 +63,7 @@
- 		"https://mirrors.ustc.edu.cn/gnome/sources"
- 	],
- 	"@OPENWRT": [
-+		"https://github.com/mj22226/linux/releases/download/v6.6/",
- 		"https://sources.cdn.openwrt.org",
- 		"https://sources.openwrt.org",
- 		"https://mirror2.openwrt.org/sources"
+diff --git a/target/linux/ath79/patches-6.6/900-unaligned_access_hacks.patch b/target/linux/ath79/patches-6.6/900-unaligned_access_hacks.patch
+index 92c8cd90d1..9168d5e973 100644
+--- a/target/linux/ath79/patches-6.6/900-unaligned_access_hacks.patch
++++ b/target/linux/ath79/patches-6.6/900-unaligned_access_hacks.patch
+@@ -751,7 +751,7 @@ SVN-Revision: 35130
+  EXPORT_SYMBOL(xfrm_parse_spi);
+ --- a/net/ipv4/tcp_input.c
+ +++ b/net/ipv4/tcp_input.c
+-@@ -4276,14 +4276,16 @@ static bool tcp_parse_aligned_timestamp(
++@@ -4283,14 +4283,16 @@ static bool tcp_parse_aligned_timestamp(
+  {
+  	const __be32 *ptr = (const __be32 *)(th + 1);
+  
 diff --git a/target/linux/generic/backport-6.6/201-v6.16-mips-Add-std-flag-specified.patch b/target/linux/generic/backport-6.6/201-v6.16-mips-Add-std-flag-specified.patch
 deleted file mode 100644
 index ae7bfb1dc5..0000000000
@@ -239,6 +249,187 @@ index 744fbd0e21..88bb14a02a 100644
   			return err;
   	}
   
+diff --git a/target/linux/mvebu/patches-6.6/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.6/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+index 2483dedfae..2d7b6b5176 100644
+--- a/target/linux/mvebu/patches-6.6/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
++++ b/target/linux/mvebu/patches-6.6/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+ 
+ --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+ +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-@@ -432,9 +432,7 @@ static int armada_37xx_gpio_direction_ou
++@@ -433,9 +433,7 @@ static int armada_37xx_gpio_direction_ou
+  	reg = OUTPUT_EN;
+  	armada_37xx_update_reg(&reg, &en_offset);
+  
+diff --git a/target/linux/mvebu/patches-6.6/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.6/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+deleted file mode 100644
+index 4fe9f1b7b8..0000000000
+--- a/target/linux/mvebu/patches-6.6/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
++++ /dev/null
+@@ -1,36 +0,0 @@
+-From 57273ff8bb16f3842c2597b5bbcd49e7fa12edf7 Mon Sep 17 00:00:00 2001
+-From: Gabor Juhos <j4g8y7@gmail.com>
+-Date: Wed, 14 May 2025 21:18:35 +0200
+-Subject: [PATCH 4/7] pinctrl: armada-37xx: propagate error from
+- armada_37xx_gpio_get()
+-
+-The regmap_read() function can fail, so propagate its error up to
+-the stack instead of silently ignoring that.
+-
+-Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+-Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-4-07e9ac1ab737@gmail.com
+-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+----
+- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 5 ++++-
+- 1 file changed, 4 insertions(+), 1 deletion(-)
+-
+---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-@@ -440,11 +440,14 @@ static int armada_37xx_gpio_get(struct g
+- 	struct armada_37xx_pinctrl *info = gpiochip_get_data(chip);
+- 	unsigned int reg = INPUT_VAL;
+- 	unsigned int val, mask;
+-+	int ret;
+- 
+- 	armada_37xx_update_reg(&reg, &offset);
+- 	mask = BIT(offset);
+- 
+--	regmap_read(info->regmap, reg, &val);
+-+	ret = regmap_read(info->regmap, reg, &val);
+-+	if (ret)
+-+		return ret;
+- 
+- 	return (val & mask) != 0;
+- }
+diff --git a/target/linux/mvebu/patches-6.6/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.6/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+deleted file mode 100644
+index 2395a0665f..0000000000
+--- a/target/linux/mvebu/patches-6.6/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
++++ /dev/null
+@@ -1,42 +0,0 @@
+-From bfa0ff804ffa8b1246ade8be08de98c9eb19d16f Mon Sep 17 00:00:00 2001
+-From: Gabor Juhos <j4g8y7@gmail.com>
+-Date: Wed, 14 May 2025 21:18:36 +0200
+-Subject: [PATCH 5/7] pinctrl: armada-37xx: propagate error from
+- armada_37xx_pmx_gpio_set_direction()
+-
+-The armada_37xx_gpio_direction_{in,out}put() functions can fail, so
+-propagate their error values back to the stack instead of silently
+-ignoring those.
+-
+-Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+-Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-5-07e9ac1ab737@gmail.com
+-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+----
+- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 7 ++++---
+- 1 file changed, 4 insertions(+), 3 deletions(-)
+-
+---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-@@ -472,16 +472,17 @@ static int armada_37xx_pmx_gpio_set_dire
+- {
+- 	struct armada_37xx_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+- 	struct gpio_chip *chip = range->gc;
+-+	int ret;
+- 
+- 	dev_dbg(info->dev, "gpio_direction for pin %u as %s-%d to %s\n",
+- 		offset, range->name, offset, input ? "input" : "output");
+- 
+- 	if (input)
+--		armada_37xx_gpio_direction_input(chip, offset);
+-+		ret = armada_37xx_gpio_direction_input(chip, offset);
+- 	else
+--		armada_37xx_gpio_direction_output(chip, offset, 0);
+-+		ret = armada_37xx_gpio_direction_output(chip, offset, 0);
+- 
+--	return 0;
+-+	return ret;
+- }
+- 
+- static int armada_37xx_gpio_request_enable(struct pinctrl_dev *pctldev,
+diff --git a/target/linux/mvebu/patches-6.6/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.6/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+deleted file mode 100644
+index 9aac2e58e1..0000000000
+--- a/target/linux/mvebu/patches-6.6/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
++++ /dev/null
+@@ -1,35 +0,0 @@
+-From 6481c0a83367b0672951ccc876fbae7ee37b594b Mon Sep 17 00:00:00 2001
+-From: Gabor Juhos <j4g8y7@gmail.com>
+-Date: Wed, 14 May 2025 21:18:37 +0200
+-Subject: [PATCH 6/7] pinctrl: armada-37xx: propagate error from
+- armada_37xx_gpio_get_direction()
+-
+-The regmap_read() function can fail, so propagate its error up to
+-the stack instead of silently ignoring that.
+-
+-Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+-Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-6-07e9ac1ab737@gmail.com
+-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+----
+- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 5 ++++-
+- 1 file changed, 4 insertions(+), 1 deletion(-)
+-
+---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-@@ -402,10 +402,13 @@ static int armada_37xx_gpio_get_directio
+- 	struct armada_37xx_pinctrl *info = gpiochip_get_data(chip);
+- 	unsigned int reg = OUTPUT_EN;
+- 	unsigned int val, mask;
+-+	int ret;
+- 
+- 	armada_37xx_update_reg(&reg, &offset);
+- 	mask = BIT(offset);
+--	regmap_read(info->regmap, reg, &val);
+-+	ret = regmap_read(info->regmap, reg, &val);
+-+	if (ret)
+-+		return ret;
+- 
+- 	if (val & mask)
+- 		return GPIO_LINE_DIRECTION_OUT;
+diff --git a/target/linux/mvebu/patches-6.6/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.6/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+deleted file mode 100644
+index 6c14e50b4a..0000000000
+--- a/target/linux/mvebu/patches-6.6/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
++++ /dev/null
+@@ -1,31 +0,0 @@
+-From 4229c28323db141eda69cb99427be75d3edba071 Mon Sep 17 00:00:00 2001
+-From: Gabor Juhos <j4g8y7@gmail.com>
+-Date: Wed, 14 May 2025 21:18:38 +0200
+-Subject: [PATCH 7/7] pinctrl: armada-37xx: propagate error from
+- armada_37xx_pmx_set_by_name()
+-
+-The regmap_update_bits() function can fail, so propagate its error
+-up to the stack instead of silently ignoring that.
+-
+-Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+-Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-7-07e9ac1ab737@gmail.com
+-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+----
+- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 4 +---
+- 1 file changed, 1 insertion(+), 3 deletions(-)
+-
+---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-@@ -358,9 +358,7 @@ static int armada_37xx_pmx_set_by_name(s
+- 
+- 	val = grp->val[func];
+- 
+--	regmap_update_bits(info->regmap, reg, mask, val);
+--
+--	return 0;
+-+	return regmap_update_bits(info->regmap, reg, mask, val);
+- }
+- 
+- static int armada_37xx_pmx_set(struct pinctrl_dev *pctldev,
 diff --git a/target/linux/ramips/patches-6.6/810-uvc-add-iPassion-iP2970-support.patch b/target/linux/ramips/patches-6.6/810-uvc-add-iPassion-iP2970-support.patch
 index 01ecb16aeb..6c6cff13c9 100644
 --- a/target/linux/ramips/patches-6.6/810-uvc-add-iPassion-iP2970-support.patch
@@ -256,9 +447,9 @@ index 01ecb16aeb..6c6cff13c9 100644
 2.46.0
 
 
-From 5a7023f3aea66aefb00c6359b935fd423a08df83 Mon Sep 17 00:00:00 2001
+From 8d32c53536072ffd110609fe4aa699aa84611e0d Mon Sep 17 00:00:00 2001
 From: Marty Jones <mj8263788@gmail.com>
-Date: Mon, 23 Jun 2025 11:36:03 -0400
+Date: Thu, 26 Jun 2025 16:08:28 -0400
 Subject: [PATCH 2/2] kernel: Linux 6.12.35-rc2
 
 https://lore.kernel.org/all/20250623130642.015559452@linuxfoundation.org
@@ -266,56 +457,114 @@ https://lore.kernel.org/all/20250624121426.466976226@linuxfoundation.org
 
 Signed-off-by: Marty Jones <mj8263788@gmail.com>
 ---
- scripts/projectsmirrors.json                  |  1 +
- ...057-MMC-added-alternative-MMC-driver.patch |  6 +--
- ...-net-macb-Also-set-DMA-coherent-mask.patch |  6 +--
- ...nt-to-request-a-particular-dev-fbN-n.patch | 25 +++++------
- ...-add-SD-support-for-Command-Queueing.patch |  6 +--
- ...llocate-a-block-for-SD-extension-reg.patch | 22 +++++-----
- ...rt-SD-extension-register-read-write-.patch | 22 +++++-----
- ...ore-cautious-when-manipulating-Comma.patch |  2 +-
- ...debugfs-entries-for-SD-extension-reg.patch |  6 +--
- ...le-1024-byte-SD-General-Info-lengths.patch |  4 +-
- ...ted-write-counts-for-SD-cards-in-CQ-.patch |  6 +--
- ...ble-write-caching-on-Samsung-2023-mo.patch |  8 ++--
- ...le-cache-on-more-known-bad-Sandisk-c.patch |  2 +-
- ...MC_QUIRK_BROKEN_ERASE-for-Phison-Int.patch |  2 +-
- ...rd-CQ-support-based-on-an-allow-list.patch | 10 ++---
- ...K_KNOWN_WORKING_SD_CQ-on-Raspberry-P.patch |  4 +-
- ...am-DT-property-to-modify-CQE-and-or-.patch |  2 +-
- .../950-0777-drm-v3d-Remove-v3d-cpu_job.patch |  2 +-
- ...pointer-to-NULL-when-the-job-s-fence.patch |  8 ++--
- ...e-a-V3D-tech-revision-to-all-support.patch |  4 +-
- ...-around-VL805-firmware-ASPM-meddling.patch |  2 +-
- ...9-media-imx335-Support-vertical-flip.patch |  4 +-
- ...-Use-correct-register-width-for-HNUM.patch | 24 ----------
- ...2c-imx335-Fix-frame-size-enumeration.patch | 34 --------------
- ...00-v6.16-mips-Add-std-flag-specified.patch | 44 -------------------
- ...wnand-qcom-cleanup-qcom_nandc-driver.patch |  2 +-
- ...d-qcom-Add-qcom-prefix-to-common-api.patch |  2 +-
- ...y-to-free-deferred-skbs-while-waitin.patch |  4 +-
- .../800-GPIO-add-named-gpio-exports.patch     |  2 +-
- .../generic/hack-6.12/902-debloat_proc.patch  |  2 +-
- target/linux/generic/kernel-6.12              |  4 +-
- .../pending-6.12/532-jffs2_eofdetect.patch    |  2 +-
- .../810-uvc-add-iPassion-iP2970-support.patch |  2 +-
- 33 files changed, 86 insertions(+), 190 deletions(-)
+ .../900-unaligned_access_hacks.patch          |  12 +-
+ ...057-MMC-added-alternative-MMC-driver.patch |   6 +-
+ ...-net-macb-Also-set-DMA-coherent-mask.patch |   6 +-
+ ...nt-to-request-a-particular-dev-fbN-n.patch |  25 ++--
+ ...-add-SD-support-for-Command-Queueing.patch |   6 +-
+ ...llocate-a-block-for-SD-extension-reg.patch |  22 ++--
+ ...rt-SD-extension-register-read-write-.patch |  22 ++--
+ ...ore-cautious-when-manipulating-Comma.patch |   2 +-
+ ...debugfs-entries-for-SD-extension-reg.patch |   6 +-
+ ...le-1024-byte-SD-General-Info-lengths.patch |   4 +-
+ ...ted-write-counts-for-SD-cards-in-CQ-.patch |   6 +-
+ ...ble-write-caching-on-Samsung-2023-mo.patch |   8 +-
+ ...le-cache-on-more-known-bad-Sandisk-c.patch |   2 +-
+ ...MC_QUIRK_BROKEN_ERASE-for-Phison-Int.patch |   2 +-
+ ...rd-CQ-support-based-on-an-allow-list.patch |  10 +-
+ ...K_KNOWN_WORKING_SD_CQ-on-Raspberry-P.patch |   4 +-
+ ...am-DT-property-to-modify-CQE-and-or-.patch |   2 +-
+ .../950-0777-drm-v3d-Remove-v3d-cpu_job.patch |   2 +-
+ ...pointer-to-NULL-when-the-job-s-fence.patch |   8 +-
+ ...e-a-V3D-tech-revision-to-all-support.patch |   4 +-
+ ...-around-VL805-firmware-ASPM-meddling.patch |   2 +-
+ ...9-media-imx335-Support-vertical-flip.patch |   4 +-
+ ...-Use-correct-register-width-for-HNUM.patch |  24 ----
+ ...2c-imx335-Fix-frame-size-enumeration.patch |  34 -----
+ ...ernet-cortina-Use-TOE-TSO-on-all-TCP.patch | 122 ------------------
+ ...00-v6.16-mips-Add-std-flag-specified.patch |  44 -------
+ ...wnand-qcom-cleanup-qcom_nandc-driver.patch |   2 +-
+ ...d-qcom-Add-qcom-prefix-to-common-api.patch |   2 +-
+ ...y-to-free-deferred-skbs-while-waitin.patch |   4 +-
+ .../800-GPIO-add-named-gpio-exports.patch     |   2 +-
+ .../generic/hack-6.12/902-debloat_proc.patch  |   2 +-
+ target/linux/generic/kernel-6.12              |   4 +-
+ .../pending-6.12/532-jffs2_eofdetect.patch    |   2 +-
+ ...7xx-propagate-error-from-armada_37xx.patch |   2 +-
+ ...7xx-propagate-error-from-armada_37xx.patch |  36 ------
+ ...7xx-propagate-error-from-armada_37xx.patch |  42 ------
+ ...7xx-propagate-error-from-armada_37xx.patch |  35 -----
+ ...7xx-propagate-error-from-armada_37xx.patch |  31 -----
+ .../810-uvc-add-iPassion-iP2970-support.patch |   2 +-
+ .../1011-net-stmmac-use-GFP_DMA32.patch       |   2 +-
+ 40 files changed, 93 insertions(+), 464 deletions(-)
  delete mode 100644 target/linux/bcm27xx/patches-6.12/950-0961-media-imx335-Use-correct-register-width-for-HNUM.patch
  delete mode 100644 target/linux/bcm27xx/patches-6.12/950-1003-drivers-media-i2c-imx335-Fix-frame-size-enumeration.patch
+ delete mode 100644 target/linux/gemini/patches-6.12/0001-net-ethernet-cortina-Use-TOE-TSO-on-all-TCP.patch
  delete mode 100644 target/linux/generic/backport-6.12/300-v6.16-mips-Add-std-flag-specified.patch
+ delete mode 100644 target/linux/mvebu/patches-6.12/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+ delete mode 100644 target/linux/mvebu/patches-6.12/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+ delete mode 100644 target/linux/mvebu/patches-6.12/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+ delete mode 100644 target/linux/mvebu/patches-6.12/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
 
-diff --git a/scripts/projectsmirrors.json b/scripts/projectsmirrors.json
-index c10054c170..46e7fb48ba 100644
---- a/scripts/projectsmirrors.json
-+++ b/scripts/projectsmirrors.json
-@@ -64,6 +64,7 @@
- 	],
- 	"@OPENWRT": [
- 		"https://github.com/mj22226/linux/releases/download/v6.6/",
-+		"https://github.com/mj22226/linux/releases/download/v6.12/",
- 		"https://sources.cdn.openwrt.org",
- 		"https://sources.openwrt.org",
- 		"https://mirror2.openwrt.org/sources"
+diff --git a/target/linux/ath79/patches-6.12/900-unaligned_access_hacks.patch b/target/linux/ath79/patches-6.12/900-unaligned_access_hacks.patch
+index 224b8097e2..ea51478fd0 100644
+--- a/target/linux/ath79/patches-6.12/900-unaligned_access_hacks.patch
++++ b/target/linux/ath79/patches-6.12/900-unaligned_access_hacks.patch
+@@ -623,7 +623,7 @@ SVN-Revision: 35130
+  
+  /*
+   * Jumbo payload option, as described in RFC 2675 2.
+-@@ -651,8 +651,8 @@ static inline void __ipv6_addr_set_half(
++@@ -642,8 +642,8 @@ static inline void __ipv6_addr_set_half(
+  	}
+  #endif
+  #endif
+@@ -634,7 +634,7 @@ SVN-Revision: 35130
+  }
+  
+  static inline void ipv6_addr_set(struct in6_addr *addr,
+-@@ -711,6 +711,8 @@ static inline bool ipv6_prefix_equal(con
++@@ -702,6 +702,8 @@ static inline bool ipv6_prefix_equal(con
+  	const __be32 *a1 = addr1->s6_addr32;
+  	const __be32 *a2 = addr2->s6_addr32;
+  	unsigned int pdw, pbi;
+@@ -643,7 +643,7 @@ SVN-Revision: 35130
+  
+  	/* check complete u32 in prefix */
+  	pdw = prefixlen >> 5;
+-@@ -719,7 +721,9 @@ static inline bool ipv6_prefix_equal(con
++@@ -710,7 +712,9 @@ static inline bool ipv6_prefix_equal(con
+  
+  	/* check incomplete u32 in prefix */
+  	pbi = prefixlen & 0x1f;
+@@ -654,7 +654,7 @@ SVN-Revision: 35130
+  		return false;
+  
+  	return true;
+-@@ -836,13 +840,13 @@ static inline void ipv6_addr_set_v4mappe
++@@ -827,13 +831,13 @@ static inline void ipv6_addr_set_v4mappe
+   */
+  static inline int __ipv6_addr_diff32(const void *token1, const void *token2, int addrlen)
+  {
+@@ -670,7 +670,7 @@ SVN-Revision: 35130
+  		if (xb)
+  			return i * 32 + 31 - __fls(ntohl(xb));
+  	}
+-@@ -1037,17 +1041,18 @@ static inline u32 ip6_multipath_hash_fie
++@@ -1028,17 +1032,18 @@ static inline u32 ip6_multipath_hash_fie
+  static inline void ip6_flow_hdr(struct ipv6hdr *hdr, unsigned int tclass,
+  				__be32 flowlabel)
+  {
+@@ -750,7 +750,7 @@ SVN-Revision: 35130
+  EXPORT_SYMBOL(xfrm_parse_spi);
+ --- a/net/ipv4/tcp_input.c
+ +++ b/net/ipv4/tcp_input.c
+-@@ -4329,14 +4329,16 @@ static bool tcp_parse_aligned_timestamp(
++@@ -4338,14 +4338,16 @@ static bool tcp_parse_aligned_timestamp(
+  {
+  	const __be32 *ptr = (const __be32 *)(th + 1);
+  
 diff --git a/target/linux/bcm27xx/patches-6.12/950-0057-MMC-added-alternative-MMC-driver.patch b/target/linux/bcm27xx/patches-6.12/950-0057-MMC-added-alternative-MMC-driver.patch
 index 57f8f2f970..8535111890 100644
 --- a/target/linux/bcm27xx/patches-6.12/950-0057-MMC-added-alternative-MMC-driver.patch
@@ -1056,6 +1305,134 @@ index 89701b06c8..0000000000
 - 		return -EINVAL;
 - 
 - 	code = imx335_get_format_code(imx335, fsize->code);
+diff --git a/target/linux/gemini/patches-6.12/0001-net-ethernet-cortina-Use-TOE-TSO-on-all-TCP.patch b/target/linux/gemini/patches-6.12/0001-net-ethernet-cortina-Use-TOE-TSO-on-all-TCP.patch
+deleted file mode 100644
+index b7cf748ffe..0000000000
+--- a/target/linux/gemini/patches-6.12/0001-net-ethernet-cortina-Use-TOE-TSO-on-all-TCP.patch
++++ /dev/null
+@@ -1,122 +0,0 @@
+-From 4d5c3828a8dd0062eeeb56b7d857a76130c3683c Mon Sep 17 00:00:00 2001
+-From: Linus Walleij <linus.walleij@linaro.org>
+-Date: Tue, 8 Apr 2025 11:26:58 +0200
+-Subject: [PATCH 1/2] net: ethernet: cortina: Use TOE/TSO on all TCP
+-
+-It is desireable to push the hardware accelerator to also
+-process non-segmented TCP frames: we pass the skb->len
+-to the "TOE/TSO" offloader and it will handle them.
+-
+-Without this quirk the driver becomes unstable and lock
+-up and and crash.
+-
+-I do not know exactly why, but it is probably due to the
+-TOE (TCP offload engine) feature that is coupled with the
+-segmentation feature - it is not possible to turn one
+-part off and not the other, either both TOE and TSO are
+-active, or neither of them.
+-
+-Not having the TOE part active seems detrimental, as if
+-that hardware feature is not really supposed to be turned
+-off.
+-
+-The datasheet says:
+-
+-  "Based on packet parsing and TCP connection/NAT table
+-   lookup results, the NetEngine puts the packets
+-   belonging to the same TCP connection to the same queue
+-   for the software to process. The NetEngine puts
+-   incoming packets to the buffer or series of buffers
+-   for a jumbo packet. With this hardware acceleration,
+-   IP/TCP header parsing, checksum validation and
+-   connection lookup are offloaded from the software
+-   processing."
+-
+-After numerous tests with the hardware locking up after
+-something between minutes and hours depending on load
+-using iperf3 I have concluded this is necessary to stabilize
+-the hardware.
+-
+-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+-Link: https://patch.msgid.link/20250408-gemini-ethernet-tso-always-v1-1-e669f932359c@linaro.org
+-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+----
+- drivers/net/ethernet/cortina/gemini.c | 37 +++++++++++++++++++++------
+- 1 file changed, 29 insertions(+), 8 deletions(-)
+-
+---- a/drivers/net/ethernet/cortina/gemini.c
+-+++ b/drivers/net/ethernet/cortina/gemini.c
+-@@ -1143,6 +1143,7 @@ static int gmac_map_tx_bufs(struct net_d
+- 	struct gmac_txdesc *txd;
+- 	skb_frag_t *skb_frag;
+- 	dma_addr_t mapping;
+-+	bool tcp = false;
+- 	void *buffer;
+- 	u16 mss;
+- 	int ret;
+-@@ -1150,6 +1151,13 @@ static int gmac_map_tx_bufs(struct net_d
+- 	word1 = skb->len;
+- 	word3 = SOF_BIT;
+- 
+-+	/* Determine if we are doing TCP */
+-+	if (skb->protocol == htons(ETH_P_IP))
+-+		tcp = (ip_hdr(skb)->protocol == IPPROTO_TCP);
+-+	else
+-+		/* IPv6 */
+-+		tcp = (ipv6_hdr(skb)->nexthdr == IPPROTO_TCP);
+-+
+- 	mss = skb_shinfo(skb)->gso_size;
+- 	if (mss) {
+- 		/* This means we are dealing with TCP and skb->len is the
+-@@ -1162,8 +1170,26 @@ static int gmac_map_tx_bufs(struct net_d
+- 			   mss, skb->len);
+- 		word1 |= TSS_MTU_ENABLE_BIT;
+- 		word3 |= mss;
+-+	} else if (tcp) {
+-+		/* Even if we are not using TSO, use the hardware offloader
+-+		 * for transferring the TCP frame: this hardware has partial
+-+		 * TCP awareness (called TOE - TCP Offload Engine) and will
+-+		 * according to the datasheet put packets belonging to the
+-+		 * same TCP connection in the same queue for the TOE/TSO
+-+		 * engine to process. The engine will deal with chopping
+-+		 * up frames that exceed ETH_DATA_LEN which the
+-+		 * checksumming engine cannot handle (see below) into
+-+		 * manageable chunks. It flawlessly deals with quite big
+-+		 * frames and frames containing custom DSA EtherTypes.
+-+		 */
+-+		mss = netdev->mtu + skb_tcp_all_headers(skb);
+-+		mss = min(mss, skb->len);
+-+		netdev_dbg(netdev, "TOE/TSO len %04x mtu %04x mss %04x\n",
+-+			   skb->len, netdev->mtu, mss);
+-+		word1 |= TSS_MTU_ENABLE_BIT;
+-+		word3 |= mss;
+- 	} else if (skb->len >= ETH_FRAME_LEN) {
+--		/* Hardware offloaded checksumming isn't working on frames
+-+		/* Hardware offloaded checksumming isn't working on non-TCP frames
+- 		 * bigger than 1514 bytes. A hypothesis about this is that the
+- 		 * checksum buffer is only 1518 bytes, so when the frames get
+- 		 * bigger they get truncated, or the last few bytes get
+-@@ -1180,21 +1206,16 @@ static int gmac_map_tx_bufs(struct net_d
+- 	}
+- 
+- 	if (skb->ip_summed == CHECKSUM_PARTIAL) {
+--		int tcp = 0;
+--
+- 		/* We do not switch off the checksumming on non TCP/UDP
+- 		 * frames: as is shown from tests, the checksumming engine
+- 		 * is smart enough to see that a frame is not actually TCP
+- 		 * or UDP and then just pass it through without any changes
+- 		 * to the frame.
+- 		 */
+--		if (skb->protocol == htons(ETH_P_IP)) {
+-+		if (skb->protocol == htons(ETH_P_IP))
+- 			word1 |= TSS_IP_CHKSUM_BIT;
+--			tcp = ip_hdr(skb)->protocol == IPPROTO_TCP;
+--		} else { /* IPv6 */
+-+		else
+- 			word1 |= TSS_IPV6_ENABLE_BIT;
+--			tcp = ipv6_hdr(skb)->nexthdr == IPPROTO_TCP;
+--		}
+- 
+- 		word1 |= tcp ? TSS_TCP_CHKSUM_BIT : TSS_UDP_CHKSUM_BIT;
+- 	}
 diff --git a/target/linux/generic/backport-6.12/300-v6.16-mips-Add-std-flag-specified.patch b/target/linux/generic/backport-6.12/300-v6.16-mips-Add-std-flag-specified.patch
 deleted file mode 100644
 index a0d2273837..0000000000
@@ -1202,6 +1579,187 @@ index 744fbd0e21..88bb14a02a 100644
   			return err;
   	}
   
+diff --git a/target/linux/mvebu/patches-6.12/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.12/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+index 2483dedfae..2d7b6b5176 100644
+--- a/target/linux/mvebu/patches-6.12/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
++++ b/target/linux/mvebu/patches-6.12/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+ 
+ --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+ +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-@@ -432,9 +432,7 @@ static int armada_37xx_gpio_direction_ou
++@@ -433,9 +433,7 @@ static int armada_37xx_gpio_direction_ou
+  	reg = OUTPUT_EN;
+  	armada_37xx_update_reg(&reg, &en_offset);
+  
+diff --git a/target/linux/mvebu/patches-6.12/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.12/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+deleted file mode 100644
+index 4fe9f1b7b8..0000000000
+--- a/target/linux/mvebu/patches-6.12/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
++++ /dev/null
+@@ -1,36 +0,0 @@
+-From 57273ff8bb16f3842c2597b5bbcd49e7fa12edf7 Mon Sep 17 00:00:00 2001
+-From: Gabor Juhos <j4g8y7@gmail.com>
+-Date: Wed, 14 May 2025 21:18:35 +0200
+-Subject: [PATCH 4/7] pinctrl: armada-37xx: propagate error from
+- armada_37xx_gpio_get()
+-
+-The regmap_read() function can fail, so propagate its error up to
+-the stack instead of silently ignoring that.
+-
+-Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+-Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-4-07e9ac1ab737@gmail.com
+-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+----
+- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 5 ++++-
+- 1 file changed, 4 insertions(+), 1 deletion(-)
+-
+---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-@@ -440,11 +440,14 @@ static int armada_37xx_gpio_get(struct g
+- 	struct armada_37xx_pinctrl *info = gpiochip_get_data(chip);
+- 	unsigned int reg = INPUT_VAL;
+- 	unsigned int val, mask;
+-+	int ret;
+- 
+- 	armada_37xx_update_reg(&reg, &offset);
+- 	mask = BIT(offset);
+- 
+--	regmap_read(info->regmap, reg, &val);
+-+	ret = regmap_read(info->regmap, reg, &val);
+-+	if (ret)
+-+		return ret;
+- 
+- 	return (val & mask) != 0;
+- }
+diff --git a/target/linux/mvebu/patches-6.12/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.12/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+deleted file mode 100644
+index 2395a0665f..0000000000
+--- a/target/linux/mvebu/patches-6.12/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
++++ /dev/null
+@@ -1,42 +0,0 @@
+-From bfa0ff804ffa8b1246ade8be08de98c9eb19d16f Mon Sep 17 00:00:00 2001
+-From: Gabor Juhos <j4g8y7@gmail.com>
+-Date: Wed, 14 May 2025 21:18:36 +0200
+-Subject: [PATCH 5/7] pinctrl: armada-37xx: propagate error from
+- armada_37xx_pmx_gpio_set_direction()
+-
+-The armada_37xx_gpio_direction_{in,out}put() functions can fail, so
+-propagate their error values back to the stack instead of silently
+-ignoring those.
+-
+-Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+-Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-5-07e9ac1ab737@gmail.com
+-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+----
+- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 7 ++++---
+- 1 file changed, 4 insertions(+), 3 deletions(-)
+-
+---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-@@ -472,16 +472,17 @@ static int armada_37xx_pmx_gpio_set_dire
+- {
+- 	struct armada_37xx_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+- 	struct gpio_chip *chip = range->gc;
+-+	int ret;
+- 
+- 	dev_dbg(info->dev, "gpio_direction for pin %u as %s-%d to %s\n",
+- 		offset, range->name, offset, input ? "input" : "output");
+- 
+- 	if (input)
+--		armada_37xx_gpio_direction_input(chip, offset);
+-+		ret = armada_37xx_gpio_direction_input(chip, offset);
+- 	else
+--		armada_37xx_gpio_direction_output(chip, offset, 0);
+-+		ret = armada_37xx_gpio_direction_output(chip, offset, 0);
+- 
+--	return 0;
+-+	return ret;
+- }
+- 
+- static int armada_37xx_gpio_request_enable(struct pinctrl_dev *pctldev,
+diff --git a/target/linux/mvebu/patches-6.12/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.12/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+deleted file mode 100644
+index 9aac2e58e1..0000000000
+--- a/target/linux/mvebu/patches-6.12/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
++++ /dev/null
+@@ -1,35 +0,0 @@
+-From 6481c0a83367b0672951ccc876fbae7ee37b594b Mon Sep 17 00:00:00 2001
+-From: Gabor Juhos <j4g8y7@gmail.com>
+-Date: Wed, 14 May 2025 21:18:37 +0200
+-Subject: [PATCH 6/7] pinctrl: armada-37xx: propagate error from
+- armada_37xx_gpio_get_direction()
+-
+-The regmap_read() function can fail, so propagate its error up to
+-the stack instead of silently ignoring that.
+-
+-Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+-Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-6-07e9ac1ab737@gmail.com
+-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+----
+- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 5 ++++-
+- 1 file changed, 4 insertions(+), 1 deletion(-)
+-
+---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-@@ -402,10 +402,13 @@ static int armada_37xx_gpio_get_directio
+- 	struct armada_37xx_pinctrl *info = gpiochip_get_data(chip);
+- 	unsigned int reg = OUTPUT_EN;
+- 	unsigned int val, mask;
+-+	int ret;
+- 
+- 	armada_37xx_update_reg(&reg, &offset);
+- 	mask = BIT(offset);
+--	regmap_read(info->regmap, reg, &val);
+-+	ret = regmap_read(info->regmap, reg, &val);
+-+	if (ret)
+-+		return ret;
+- 
+- 	if (val & mask)
+- 		return GPIO_LINE_DIRECTION_OUT;
+diff --git a/target/linux/mvebu/patches-6.12/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.12/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+deleted file mode 100644
+index 6c14e50b4a..0000000000
+--- a/target/linux/mvebu/patches-6.12/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
++++ /dev/null
+@@ -1,31 +0,0 @@
+-From 4229c28323db141eda69cb99427be75d3edba071 Mon Sep 17 00:00:00 2001
+-From: Gabor Juhos <j4g8y7@gmail.com>
+-Date: Wed, 14 May 2025 21:18:38 +0200
+-Subject: [PATCH 7/7] pinctrl: armada-37xx: propagate error from
+- armada_37xx_pmx_set_by_name()
+-
+-The regmap_update_bits() function can fail, so propagate its error
+-up to the stack instead of silently ignoring that.
+-
+-Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+-Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-7-07e9ac1ab737@gmail.com
+-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+----
+- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 4 +---
+- 1 file changed, 1 insertion(+), 3 deletions(-)
+-
+---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+-@@ -358,9 +358,7 @@ static int armada_37xx_pmx_set_by_name(s
+- 
+- 	val = grp->val[func];
+- 
+--	regmap_update_bits(info->regmap, reg, mask, val);
+--
+--	return 0;
+-+	return regmap_update_bits(info->regmap, reg, mask, val);
+- }
+- 
+- static int armada_37xx_pmx_set(struct pinctrl_dev *pctldev,
 diff --git a/target/linux/ramips/patches-6.12/810-uvc-add-iPassion-iP2970-support.patch b/target/linux/ramips/patches-6.12/810-uvc-add-iPassion-iP2970-support.patch
 index 75fd136829..0ab9517d88 100644
 --- a/target/linux/ramips/patches-6.12/810-uvc-add-iPassion-iP2970-support.patch
@@ -1215,6 +1773,19 @@ index 75fd136829..0ab9517d88 100644
   	  .bInterfaceSubClass	= 1,
   	  .bInterfaceProtocol	= 0,
   	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+diff --git a/target/linux/starfive/patches-6.12/1011-net-stmmac-use-GFP_DMA32.patch b/target/linux/starfive/patches-6.12/1011-net-stmmac-use-GFP_DMA32.patch
+index 9aa09b3c95..b40a7e9e58 100644
+--- a/target/linux/starfive/patches-6.12/1011-net-stmmac-use-GFP_DMA32.patch
++++ b/target/linux/starfive/patches-6.12/1011-net-stmmac-use-GFP_DMA32.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Matteo Croce <mcroce@microsoft.com>
+  
+  	if (priv->dma_cap.host_dma_width <= 32)
+  		gfp |= GFP_DMA32;
+-@@ -4795,7 +4795,7 @@ static inline void stmmac_rx_refill(stru
++@@ -4792,7 +4792,7 @@ static inline void stmmac_rx_refill(stru
+  	struct stmmac_rx_queue *rx_q = &priv->dma_conf.rx_queue[queue];
+  	int dirty = stmmac_rx_dirty(priv, queue);
+  	unsigned int entry = rx_q->dirty_rx;
 -- 
 2.46.0
 
