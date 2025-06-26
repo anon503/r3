@@ -29,6 +29,7 @@ jobs:
                 cp -rf r3/44.patch openwrt/
                 cp -rf r3/46.patch openwrt/
                 cp -rf r3/kernel.patch openwrt/
+                cp -rf r3/pm.patch openwrt/
                 git config --global user.email md@any.ccc
                 git config --global user.name 'M Z'
                 cd openwrt
@@ -40,6 +41,7 @@ jobs:
                 git apply rng.patch
                 git apply 44.patch
                 git apply 46.patch
+                git apply pm.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd feeds/luci
