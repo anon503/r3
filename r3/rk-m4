@@ -597,7 +597,7 @@ CONFIG_PACKAGE_ppp-mod-pppoa=y
 CONFIG_PACKAGE_ppp-mod-pppol2tp=y
 CONFIG_PACKAGE_ppp-mod-pptp=y
 CONFIG_PACKAGE_pptpd=y
-CONFIG_PACKAGE_qosify=y
+# CONFIG_PACKAGE_qosify is not set
 CONFIG_PACKAGE_qrencode=y
 CONFIG_PACKAGE_r8152-firmware=y
 CONFIG_PACKAGE_r8169-firmware=y
