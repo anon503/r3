@@ -36,7 +36,6 @@ jobs:
                 git config --global user.email md@any.ccc
                 git config --global user.name 'M Z'
                 cd openwrt
-                git apply kernel.patch
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/18911.patch
                 git am 18911.patch
                 sed -i "10s/=6.6/=6.12/" target/linux/rockchip/Makefile
