@@ -33,7 +33,7 @@ jobs:
                 git config --global user.email md@any.ccc
                 git config --global user.name 'M Z'
                 cd openwrt
-                git apply kernel.patch
+                git revert --no-commit 9add155a20e826d2f63510c4e85b4e52a8c03e73
                 wget https://patch-diff.githubusercontent.com/raw/openwrt/openwrt/pull/18911.patch
                 git am 18911.patch
                 git apply kmod-apk.patch
