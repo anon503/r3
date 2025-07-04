@@ -37,9 +37,11 @@ jobs:
                 cp -rf r3/m4.patch openwrt/
                 cp -rf r3/rk-m4 openwrt/
                 cp -rf r3/m4-2.patch openwrt/
+                cp -rf r3/no-auto.patch openwrt/
                 cd openwrt
                 git apply m4.patch
                 git apply m4-2.patch
+                git apply no-auto.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd  feeds/packages
