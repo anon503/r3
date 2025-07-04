@@ -27,6 +27,7 @@ jobs:
                 cp -rf r3/rk-m4 openwrt/
                 cp -rf r3/m4-2.patch openwrt/
                 cd openwrt
+                git revert --no-commit 6f99ee878857a7961ce48a702ddf78e27c217701
                 git apply m4.patch
                 git apply m4-2.patch
                 ./scripts/feeds update -a
