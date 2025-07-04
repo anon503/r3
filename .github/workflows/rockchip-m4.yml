@@ -25,12 +25,10 @@ jobs:
                 git clone https://github.com/immortalwrt/immortalwrt.git openwrt
                 cp -rf r3/m4.patch openwrt/
                 cp -rf r3/rk-m4 openwrt/
+                cp -rf r3/m4-2.patch openwrt/
                 cd openwrt
-                wget https://raw.githubusercontent.com/anon540/r3/refs/heads/main/r3/0001-ar.patch
-                wget https://raw.githubusercontent.com/anon503/r3/refs/heads/main/r3/01-ip-addr.patch
-                git apply 0001-ar.patch
-                git apply 01-ip-addr.patch
                 git apply m4.patch
+                git apply m4-2.patch
                 ./scripts/feeds update -a
                 ./scripts/feeds install -a
                 cd  feeds/packages
@@ -68,7 +66,7 @@ jobs:
               uses: ClementTsang/delete-tag-and-release@v0.4.0
               with:
                 delete_release: true
-                tag_name: m4-arm64-6.6
+                tag_name: m4-arm64-6.12
               env:
                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: Create release
@@ -76,7 +74,7 @@ jobs:
               with:
                 allowUpdates: true
                 name: NanoPi M4 Firmware Images ${{ env.D }}
-                tag: m4-arm64-6.6
+                tag: m4-arm64-6.12
                 replacesArtifacts: true
                 makeLatest: true
                 token: "${{ secrets.GITHUB_TOKEN }}"
