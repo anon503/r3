@@ -1,1791 +1,984 @@
-From 44f81948ca66ae89b1c318221678bf0ea86c6bd6 Mon Sep 17 00:00:00 2001
+From 140a6ede768bd928625bc5081fdc5370d2fe6ae3 Mon Sep 17 00:00:00 2001
 From: Marty Jones <mj8263788@gmail.com>
-Date: Wed, 25 Jun 2025 23:52:53 -0400
-Subject: [PATCH 1/2] kernel: Linux 6.6.95-rc2
+Date: Sat, 5 Jul 2025 11:06:27 -0400
+Subject: [PATCH 1/2] kernel: Linux 6.6.96-rc1
 
-https://lore.kernel.org/all/20250623130626.910356556@linuxfoundation.org
-https://lore.kernel.org/all/20250624121409.093630364@linuxfoundation.org
+https://lore.kernel.org/all/20250703143941.182414597@linuxfoundation.org
 
 Signed-off-by: Marty Jones <mj8263788@gmail.com>
 ---
- .../900-unaligned_access_hacks.patch          |  2 +-
- ...01-v6.16-mips-Add-std-flag-specified.patch | 44 -------------------
- ...wnand-qcom-cleanup-qcom_nandc-driver.patch |  2 +-
- ...d-qcom-Add-qcom-prefix-to-common-api.patch |  2 +-
- ...klog-NAPI-to-clean-up-the-defer_list.patch |  2 +-
- ...-create-a-dummy-net_device-allocator.patch |  2 +-
- ...-a-separate-timeout-parameter-for-wa.patch |  4 +-
- ...-mhi_power_down_keep_dev-API-to-supp.patch |  6 +--
- .../800-GPIO-add-named-gpio-exports.patch     |  2 +-
- .../generic/hack-6.6/902-debloat_proc.patch   |  2 +-
+ ...t7530-Enable-Rx-sptag-for-EN7581-SoC.patch |  2 +-
  target/linux/generic/kernel-6.6               |  4 +-
- .../pending-6.6/532-jffs2_eofdetect.patch     |  2 +-
- ...7xx-propagate-error-from-armada_37xx.patch |  2 +-
- ...7xx-propagate-error-from-armada_37xx.patch | 36 ---------------
- ...7xx-propagate-error-from-armada_37xx.patch | 42 ------------------
- ...7xx-propagate-error-from-armada_37xx.patch | 35 ---------------
- ...7xx-propagate-error-from-armada_37xx.patch | 31 -------------
- .../810-uvc-add-iPassion-iP2970-support.patch |  2 +-
- 18 files changed, 17 insertions(+), 205 deletions(-)
- delete mode 100644 target/linux/generic/backport-6.6/201-v6.16-mips-Add-std-flag-specified.patch
- delete mode 100644 target/linux/mvebu/patches-6.6/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
- delete mode 100644 target/linux/mvebu/patches-6.6/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
- delete mode 100644 target/linux/mvebu/patches-6.6/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
- delete mode 100644 target/linux/mvebu/patches-6.6/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+ ...50-Revert-ipv6-save-dontfrag-in-cork.patch | 72 -------------------
+ 3 files changed, 3 insertions(+), 75 deletions(-)
+ delete mode 100644 target/linux/generic/pending-6.6/650-Revert-ipv6-save-dontfrag-in-cork.patch
 
-diff --git a/target/linux/ath79/patches-6.6/900-unaligned_access_hacks.patch b/target/linux/ath79/patches-6.6/900-unaligned_access_hacks.patch
-index 92c8cd90d1..9168d5e973 100644
---- a/target/linux/ath79/patches-6.6/900-unaligned_access_hacks.patch
-+++ b/target/linux/ath79/patches-6.6/900-unaligned_access_hacks.patch
-@@ -751,7 +751,7 @@ SVN-Revision: 35130
-  EXPORT_SYMBOL(xfrm_parse_spi);
- --- a/net/ipv4/tcp_input.c
- +++ b/net/ipv4/tcp_input.c
--@@ -4276,14 +4276,16 @@ static bool tcp_parse_aligned_timestamp(
-+@@ -4283,14 +4283,16 @@ static bool tcp_parse_aligned_timestamp(
-  {
-  	const __be32 *ptr = (const __be32 *)(th + 1);
-  
-diff --git a/target/linux/generic/backport-6.6/201-v6.16-mips-Add-std-flag-specified.patch b/target/linux/generic/backport-6.6/201-v6.16-mips-Add-std-flag-specified.patch
-deleted file mode 100644
-index ae7bfb1dc5..0000000000
---- a/target/linux/generic/backport-6.6/201-v6.16-mips-Add-std-flag-specified.patch
-+++ /dev/null
-@@ -1,44 +0,0 @@
--From 0f4ae7c6ecb89bfda026d210dcf8216fb67d2333 Mon Sep 17 00:00:00 2001
--From: Khem Raj <raj.khem@gmail.com>
--Date: Sat, 29 Mar 2025 08:39:03 -0700
--Subject: mips: Add -std= flag specified in KBUILD_CFLAGS to vdso CFLAGS
--
--GCC 15 changed the default C standard dialect from gnu17 to gnu23,
--which should not have impacted the kernel because it explicitly requests
--the gnu11 standard in the main Makefile. However, mips/vdso code uses
--its own CFLAGS without a '-std=' value, which break with this dialect
--change because of the kernel's own definitions of bool, false, and true
--conflicting with the C23 reserved keywords.
--
--  include/linux/stddef.h:11:9: error: cannot use keyword 'false' as enumeration constant
--     11 |         false   = 0,
--        |         ^~~~~
--  include/linux/stddef.h:11:9: note: 'false' is a keyword with '-std=c23' onwards
--  include/linux/types.h:35:33: error: 'bool' cannot be defined via 'typedef'
--     35 | typedef _Bool                   bool;
--        |                                 ^~~~
--  include/linux/types.h:35:33: note: 'bool' is a keyword with '-std=c23' onwards
--
--Add -std as specified in KBUILD_CFLAGS to the decompressor and purgatory
--CFLAGS to eliminate these errors and make the C standard version of these
--areas match the rest of the kernel.
--
--Signed-off-by: Khem Raj <raj.khem@gmail.com>
--Cc: stable@vger.kernel.org
--Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-----
-- arch/mips/vdso/Makefile | 1 +
-- 1 file changed, 1 insertion(+)
--
--(limited to 'arch/mips/vdso')
--
----- a/arch/mips/vdso/Makefile
--+++ b/arch/mips/vdso/Makefile
--@@ -30,6 +30,7 @@ endif
-- # offsets.
-- cflags-vdso := $(ccflags-vdso) \
-- 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
--+	$(filter -std=%,$(KBUILD_CFLAGS)) \
-- 	-O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
-- 	-mrelax-pic-calls $(call cc-option, -mexplicit-relocs) \
-- 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
-diff --git a/target/linux/generic/backport-6.6/413-01-v6.14-mtd-rawnand-qcom-cleanup-qcom_nandc-driver.patch b/target/linux/generic/backport-6.6/413-01-v6.14-mtd-rawnand-qcom-cleanup-qcom_nandc-driver.patch
-index 8c5457a507..95b66071ad 100644
---- a/target/linux/generic/backport-6.6/413-01-v6.14-mtd-rawnand-qcom-cleanup-qcom_nandc-driver.patch
-+++ b/target/linux/generic/backport-6.6/413-01-v6.14-mtd-rawnand-qcom-cleanup-qcom_nandc-driver.patch
-@@ -902,7 +902,7 @@ Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
- +		write_reg_dma(nandc, &nandc->regs->cmd1, NAND_DEV_CMD1, 1, NAND_BAM_NEXT_SGL);
-  	}
-  
-- 	nandc->buf_count = len;
-+ 	nandc->buf_count = 512;
- @@ -2926,9 +2877,10 @@ static int qcom_param_page_type_exec(str
-  		      nandc->buf_count, 0);
-  
-diff --git a/target/linux/generic/backport-6.6/413-02-v6.14-mtd-rawnand-qcom-Add-qcom-prefix-to-common-api.patch b/target/linux/generic/backport-6.6/413-02-v6.14-mtd-rawnand-qcom-Add-qcom-prefix-to-common-api.patch
-index 078a56cf16..f634e0442a 100644
---- a/target/linux/generic/backport-6.6/413-02-v6.14-mtd-rawnand-qcom-Add-qcom-prefix-to-common-api.patch
-+++ b/target/linux/generic/backport-6.6/413-02-v6.14-mtd-rawnand-qcom-Add-qcom-prefix-to-common-api.patch
-@@ -844,7 +844,7 @@ Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
- +		qcom_write_reg_dma(nandc, &nandc->regs->cmd1, NAND_DEV_CMD1, 1, NAND_BAM_NEXT_SGL);
-  	}
-  
-- 	nandc->buf_count = len;
-+ 	nandc->buf_count = 512;
- @@ -2873,17 +2873,17 @@ static int qcom_param_page_type_exec(str
-  
-  	config_nand_single_cw_page_read(chip, false, 0);
-diff --git a/target/linux/generic/backport-6.6/602-v6.10-net-Use-backlog-NAPI-to-clean-up-the-defer_list.patch b/target/linux/generic/backport-6.6/602-v6.10-net-Use-backlog-NAPI-to-clean-up-the-defer_list.patch
-index d38231684d..b721a16f18 100644
---- a/target/linux/generic/backport-6.6/602-v6.10-net-Use-backlog-NAPI-to-clean-up-the-defer_list.patch
-+++ b/target/linux/generic/backport-6.6/602-v6.10-net-Use-backlog-NAPI-to-clean-up-the-defer_list.patch
-@@ -36,7 +36,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+diff --git a/target/linux/airoha/patches-6.6/048-06-v6.15-net-dsa-mt7530-Enable-Rx-sptag-for-EN7581-SoC.patch b/target/linux/airoha/patches-6.6/048-06-v6.15-net-dsa-mt7530-Enable-Rx-sptag-for-EN7581-SoC.patch
+index fdf12c250c..27956d553a 100644
+--- a/target/linux/airoha/patches-6.6/048-06-v6.15-net-dsa-mt7530-Enable-Rx-sptag-for-EN7581-SoC.patch
++++ b/target/linux/airoha/patches-6.6/048-06-v6.15-net-dsa-mt7530-Enable-Rx-sptag-for-EN7581-SoC.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
  
- --- a/include/linux/netdevice.h
- +++ b/include/linux/netdevice.h
--@@ -3308,6 +3308,7 @@ static inline void dev_xmit_recursion_de
-+@@ -3309,6 +3309,7 @@ static inline void dev_xmit_recursion_de
-  	__this_cpu_dec(softnet_data.xmit.recursion);
-  }
+ --- a/drivers/net/dsa/mt7530.c
+ +++ b/drivers/net/dsa/mt7530.c
+-@@ -2585,6 +2585,11 @@ mt7531_setup_common(struct dsa_switch *d
++@@ -2588,6 +2588,11 @@ mt7531_setup_common(struct dsa_switch *d
+  	/* Allow mirroring frames received on the local port (monitor port). */
+  	mt7530_set(priv, MT753X_AGC, LOCAL_EN);
   
-diff --git a/target/linux/generic/backport-6.6/700-v6.10-net-create-a-dummy-net_device-allocator.patch b/target/linux/generic/backport-6.6/700-v6.10-net-create-a-dummy-net_device-allocator.patch
-index 9e0bd14acf..efc6412177 100644
---- a/target/linux/generic/backport-6.6/700-v6.10-net-create-a-dummy-net_device-allocator.patch
-+++ b/target/linux/generic/backport-6.6/700-v6.10-net-create-a-dummy-net_device-allocator.patch
-@@ -37,7 +37,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
- 
- --- a/include/linux/netdevice.h
- +++ b/include/linux/netdevice.h
--@@ -4580,6 +4580,9 @@ static inline void netif_addr_unlock_bh(
-+@@ -4581,6 +4581,9 @@ static inline void netif_addr_unlock_bh(
-  
-  void ether_setup(struct net_device *dev);
-  
-diff --git a/target/linux/generic/backport-6.6/850-v6.8-bus-mhi-host-Add-a-separate-timeout-parameter-for-wa.patch b/target/linux/generic/backport-6.6/850-v6.8-bus-mhi-host-Add-a-separate-timeout-parameter-for-wa.patch
-index 94d9bcd93d..4aad22248a 100644
---- a/target/linux/generic/backport-6.6/850-v6.8-bus-mhi-host-Add-a-separate-timeout-parameter-for-wa.patch
-+++ b/target/linux/generic/backport-6.6/850-v6.8-bus-mhi-host-Add-a-separate-timeout-parameter-for-wa.patch
-@@ -109,7 +109,7 @@ Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-  			if (ret)
-  				dev_err(dev, "Device failed to enter READY state\n");
-  		}
--@@ -1125,7 +1130,8 @@ int mhi_async_power_up(struct mhi_contro
-+@@ -1141,7 +1146,8 @@ int mhi_async_power_up(struct mhi_contro
-  	if (state == MHI_STATE_SYS_ERR) {
-  		mhi_set_mhi_state(mhi_cntrl, MHI_STATE_RESET);
-  		ret = mhi_poll_reg_field(mhi_cntrl, mhi_cntrl->regs, MHICTRL,
-@@ -119,7 +119,7 @@ Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-  		if (ret) {
-  			dev_info(dev, "Failed to reset MHI due to syserr state\n");
-  			goto error_exit;
--@@ -1216,14 +1222,18 @@ EXPORT_SYMBOL_GPL(mhi_power_down);
-+@@ -1232,14 +1238,18 @@ EXPORT_SYMBOL_GPL(mhi_power_down);
-  int mhi_sync_power_up(struct mhi_controller *mhi_cntrl)
-  {
-  	int ret = mhi_async_power_up(mhi_cntrl);
-diff --git a/target/linux/generic/backport-6.6/853-v6.10-bus-mhi-host-Add-mhi_power_down_keep_dev-API-to-supp.patch b/target/linux/generic/backport-6.6/853-v6.10-bus-mhi-host-Add-mhi_power_down_keep_dev-API-to-supp.patch
-index 75c87e378b..0c952bcfd6 100644
---- a/target/linux/generic/backport-6.6/853-v6.10-bus-mhi-host-Add-mhi_power_down_keep_dev-API-to-supp.patch
-+++ b/target/linux/generic/backport-6.6/853-v6.10-bus-mhi-host-Add-mhi_power_down_keep_dev-API-to-supp.patch
-@@ -115,7 +115,7 @@ Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-  
-  	mutex_lock(&mhi_cntrl->pm_mutex);
-  
--@@ -820,7 +829,10 @@ void mhi_pm_st_worker(struct work_struct
-+@@ -836,7 +845,10 @@ void mhi_pm_st_worker(struct work_struct
-  			mhi_pm_sys_error_transition(mhi_cntrl);
-  			break;
-  		case DEV_ST_TRANSITION_DISABLE:
-@@ -127,7 +127,7 @@ Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-  			break;
-  		default:
-  			break;
--@@ -1174,7 +1186,8 @@ error_exit:
-+@@ -1190,7 +1202,8 @@ error_exit:
-  }
-  EXPORT_SYMBOL_GPL(mhi_async_power_up);
-  
-@@ -137,7 +137,7 @@ Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-  {
-  	enum mhi_pm_state cur_state, transition_state;
-  	struct device *dev = &mhi_cntrl->mhi_dev->dev;
--@@ -1210,15 +1223,32 @@ void mhi_power_down(struct mhi_controlle
-+@@ -1226,15 +1239,32 @@ void mhi_power_down(struct mhi_controlle
-  	write_unlock_irq(&mhi_cntrl->pm_lock);
-  	mutex_unlock(&mhi_cntrl->pm_mutex);
-  
-diff --git a/target/linux/generic/hack-6.6/800-GPIO-add-named-gpio-exports.patch b/target/linux/generic/hack-6.6/800-GPIO-add-named-gpio-exports.patch
-index e6dcdfd92b..9c3696e76a 100644
---- a/target/linux/generic/hack-6.6/800-GPIO-add-named-gpio-exports.patch
-+++ b/target/linux/generic/hack-6.6/800-GPIO-add-named-gpio-exports.patch
-@@ -15,7 +15,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
-  
-  #include "gpiolib.h"
-  #include "gpiolib-of.h"
--@@ -1129,3 +1131,73 @@ void of_gpiochip_remove(struct gpio_chip
-+@@ -1138,3 +1140,73 @@ void of_gpiochip_remove(struct gpio_chip
-  {
-  	of_node_put(dev_of_node(&chip->gpiodev->dev));
-  }
-diff --git a/target/linux/generic/hack-6.6/902-debloat_proc.patch b/target/linux/generic/hack-6.6/902-debloat_proc.patch
-index e426c008d0..64472ad18f 100644
---- a/target/linux/generic/hack-6.6/902-debloat_proc.patch
-+++ b/target/linux/generic/hack-6.6/902-debloat_proc.patch
-@@ -396,7 +396,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
-  }
- --- a/net/ipv4/route.c
- +++ b/net/ipv4/route.c
--@@ -381,6 +381,9 @@ static struct pernet_operations ip_rt_pr
-+@@ -385,6 +385,9 @@ static struct pernet_operations ip_rt_pr
-  
-  static int __init ip_rt_proc_init(void)
-  {
 diff --git a/target/linux/generic/kernel-6.6 b/target/linux/generic/kernel-6.6
-index a2e954d002..32f6c10837 100644
+index d2d952e254..2d3b1b418c 100644
 --- a/target/linux/generic/kernel-6.6
 +++ b/target/linux/generic/kernel-6.6
 @@ -1,2 +1,2 @@
--LINUX_VERSION-6.6 = .94
--LINUX_KERNEL_HASH-6.6.94 = 713981ea26b20b476ba4ce880b76b21294576788d5db1c2188b167bcb06ecc56
-+LINUX_VERSION-6.6 = .95
-+LINUX_KERNEL_HASH-6.6.95 = 18640ae9a2c952f8f8868324378df1a9e138ad29e6b93a9c38155764ea67ea85
-diff --git a/target/linux/generic/pending-6.6/532-jffs2_eofdetect.patch b/target/linux/generic/pending-6.6/532-jffs2_eofdetect.patch
-index 744fbd0e21..88bb14a02a 100644
---- a/target/linux/generic/pending-6.6/532-jffs2_eofdetect.patch
-+++ b/target/linux/generic/pending-6.6/532-jffs2_eofdetect.patch
-@@ -45,7 +45,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
-  
-  		if (ret < 0)
-  			goto out;
--@@ -567,6 +573,17 @@ full_scan:
-+@@ -569,6 +575,17 @@ full_scan:
-  			return err;
-  	}
-  
-diff --git a/target/linux/mvebu/patches-6.6/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.6/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-index 2483dedfae..2d7b6b5176 100644
---- a/target/linux/mvebu/patches-6.6/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-+++ b/target/linux/mvebu/patches-6.6/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-@@ -18,7 +18,7 @@ Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
- 
- --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
- +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--@@ -432,9 +432,7 @@ static int armada_37xx_gpio_direction_ou
-+@@ -433,9 +433,7 @@ static int armada_37xx_gpio_direction_ou
-  	reg = OUTPUT_EN;
-  	armada_37xx_update_reg(&reg, &en_offset);
-  
-diff --git a/target/linux/mvebu/patches-6.6/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.6/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+-LINUX_VERSION-6.6 = .95
+-LINUX_KERNEL_HASH-6.6.95 = 18640ae9a2c952f8f8868324378df1a9e138ad29e6b93a9c38155764ea67ea85
++LINUX_VERSION-6.6 = .96
++LINUX_KERNEL_HASH-6.6.96 = c9c72c2deac705167bd9a4aae4105a1c7d2565c41ec769262818cbb8cc491730
+diff --git a/target/linux/generic/pending-6.6/650-Revert-ipv6-save-dontfrag-in-cork.patch b/target/linux/generic/pending-6.6/650-Revert-ipv6-save-dontfrag-in-cork.patch
 deleted file mode 100644
-index 4fe9f1b7b8..0000000000
---- a/target/linux/mvebu/patches-6.6/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+index 18ef72ef58..0000000000
+--- a/target/linux/generic/pending-6.6/650-Revert-ipv6-save-dontfrag-in-cork.patch
 +++ /dev/null
-@@ -1,36 +0,0 @@
--From 57273ff8bb16f3842c2597b5bbcd49e7fa12edf7 Mon Sep 17 00:00:00 2001
--From: Gabor Juhos <j4g8y7@gmail.com>
--Date: Wed, 14 May 2025 21:18:35 +0200
--Subject: [PATCH 4/7] pinctrl: armada-37xx: propagate error from
-- armada_37xx_gpio_get()
+@@ -1,72 +0,0 @@
+-From 988e05f0c036c9c64f211b8b91a4a33c34db216a Mon Sep 17 00:00:00 2001
+-From: Hauke Mehrtens <hauke@hauke-m.de>
+-Date: Sat, 21 Jun 2025 19:08:30 +0200
+-Subject: [PATCH] Revert "ipv6: save dontfrag in cork"
 -
--The regmap_read() function can fail, so propagate its error up to
--the stack instead of silently ignoring that.
+-This reverts commit 8ebf2709fe4dcd0a1b7b95bf61e529ddcd3cdf51.
 -
--Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
--Reviewed-by: Andrew Lunn <andrew@lunn.ch>
--Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
--Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-4-07e9ac1ab737@gmail.com
--Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+-This change breaks IPv6 UDP packet fragmentation.
+-See discussion: https://lore.kernel.org/stable/aFGl-mb--GOMY8ZQ@karahi.gladserv.com/
+-
+-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
 ----
-- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 5 ++++-
-- 1 file changed, 4 insertions(+), 1 deletion(-)
+- include/linux/ipv6.h  | 1 -
+- net/ipv6/ip6_output.c | 9 ++++-----
+- 2 files changed, 4 insertions(+), 6 deletions(-)
 -
----- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--@@ -440,11 +440,14 @@ static int armada_37xx_gpio_get(struct g
-- 	struct armada_37xx_pinctrl *info = gpiochip_get_data(chip);
-- 	unsigned int reg = INPUT_VAL;
-- 	unsigned int val, mask;
--+	int ret;
+---- a/include/linux/ipv6.h
+-+++ b/include/linux/ipv6.h
+-@@ -199,7 +199,6 @@ struct inet6_cork {
+- 	struct ipv6_txoptions *opt;
+- 	u8 hop_limit;
+- 	u8 tclass;
+--	u8 dontfrag:1;
+- };
 - 
-- 	armada_37xx_update_reg(&reg, &offset);
-- 	mask = BIT(offset);
-- 
---	regmap_read(info->regmap, reg, &val);
--+	ret = regmap_read(info->regmap, reg, &val);
--+	if (ret)
--+		return ret;
-- 
-- 	return (val & mask) != 0;
-- }
-diff --git a/target/linux/mvebu/patches-6.6/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.6/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-deleted file mode 100644
-index 2395a0665f..0000000000
---- a/target/linux/mvebu/patches-6.6/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-+++ /dev/null
-@@ -1,42 +0,0 @@
--From bfa0ff804ffa8b1246ade8be08de98c9eb19d16f Mon Sep 17 00:00:00 2001
--From: Gabor Juhos <j4g8y7@gmail.com>
--Date: Wed, 14 May 2025 21:18:36 +0200
--Subject: [PATCH 5/7] pinctrl: armada-37xx: propagate error from
-- armada_37xx_pmx_gpio_set_direction()
--
--The armada_37xx_gpio_direction_{in,out}put() functions can fail, so
--propagate their error values back to the stack instead of silently
--ignoring those.
--
--Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
--Reviewed-by: Andrew Lunn <andrew@lunn.ch>
--Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
--Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-5-07e9ac1ab737@gmail.com
--Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-----
-- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 7 ++++---
-- 1 file changed, 4 insertions(+), 3 deletions(-)
--
----- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--@@ -472,16 +472,17 @@ static int armada_37xx_pmx_gpio_set_dire
+- /* struct ipv6_pinfo - ipv6 private area */
+---- a/net/ipv6/ip6_output.c
+-+++ b/net/ipv6/ip6_output.c
+-@@ -1452,7 +1452,6 @@ static int ip6_setup_cork(struct sock *s
+- 	}
+- 	v6_cork->hop_limit = ipc6->hlimit;
+- 	v6_cork->tclass = ipc6->tclass;
+--	v6_cork->dontfrag = ipc6->dontfrag;
+- 	if (rt->dst.flags & DST_XFRM_TUNNEL)
+- 		mtu = np->pmtudisc >= IPV6_PMTUDISC_PROBE ?
+- 		      READ_ONCE(rt->dst.dev->mtu) : dst_mtu(&rt->dst);
+-@@ -1486,7 +1485,7 @@ static int __ip6_append_data(struct sock
+- 			     int getfrag(void *from, char *to, int offset,
+- 					 int len, int odd, struct sk_buff *skb),
+- 			     void *from, size_t length, int transhdrlen,
+--			     unsigned int flags)
+-+			     unsigned int flags, struct ipcm6_cookie *ipc6)
 - {
-- 	struct armada_37xx_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
-- 	struct gpio_chip *chip = range->gc;
--+	int ret;
+- 	struct sk_buff *skb, *skb_prev = NULL;
+- 	struct inet_cork *cork = &cork_full->base;
+-@@ -1542,7 +1541,7 @@ static int __ip6_append_data(struct sock
+- 	if (headersize + transhdrlen > mtu)
+- 		goto emsgsize;
 - 
-- 	dev_dbg(info->dev, "gpio_direction for pin %u as %s-%d to %s\n",
-- 		offset, range->name, offset, input ? "input" : "output");
+--	if (cork->length + length > mtu - headersize && v6_cork->dontfrag &&
+-+	if (cork->length + length > mtu - headersize && ipc6->dontfrag &&
+- 	    (sk->sk_protocol == IPPROTO_UDP ||
+- 	     sk->sk_protocol == IPPROTO_ICMPV6 ||
+- 	     sk->sk_protocol == IPPROTO_RAW)) {
+-@@ -1914,7 +1913,7 @@ int ip6_append_data(struct sock *sk,
 - 
-- 	if (input)
---		armada_37xx_gpio_direction_input(chip, offset);
--+		ret = armada_37xx_gpio_direction_input(chip, offset);
-- 	else
---		armada_37xx_gpio_direction_output(chip, offset, 0);
--+		ret = armada_37xx_gpio_direction_output(chip, offset, 0);
-- 
---	return 0;
--+	return ret;
+- 	return __ip6_append_data(sk, &sk->sk_write_queue, &inet->cork,
+- 				 &np->cork, sk_page_frag(sk), getfrag,
+--				 from, length, transhdrlen, flags);
+-+				 from, length, transhdrlen, flags, ipc6);
 - }
+- EXPORT_SYMBOL_GPL(ip6_append_data);
 - 
-- static int armada_37xx_gpio_request_enable(struct pinctrl_dev *pctldev,
-diff --git a/target/linux/mvebu/patches-6.6/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.6/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-deleted file mode 100644
-index 9aac2e58e1..0000000000
---- a/target/linux/mvebu/patches-6.6/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-+++ /dev/null
-@@ -1,35 +0,0 @@
--From 6481c0a83367b0672951ccc876fbae7ee37b594b Mon Sep 17 00:00:00 2001
--From: Gabor Juhos <j4g8y7@gmail.com>
--Date: Wed, 14 May 2025 21:18:37 +0200
--Subject: [PATCH 6/7] pinctrl: armada-37xx: propagate error from
-- armada_37xx_gpio_get_direction()
--
--The regmap_read() function can fail, so propagate its error up to
--the stack instead of silently ignoring that.
--
--Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
--Reviewed-by: Andrew Lunn <andrew@lunn.ch>
--Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
--Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-6-07e9ac1ab737@gmail.com
--Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-----
-- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 5 ++++-
-- 1 file changed, 4 insertions(+), 1 deletion(-)
--
----- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--@@ -402,10 +402,13 @@ static int armada_37xx_gpio_get_directio
-- 	struct armada_37xx_pinctrl *info = gpiochip_get_data(chip);
-- 	unsigned int reg = OUTPUT_EN;
-- 	unsigned int val, mask;
--+	int ret;
-- 
-- 	armada_37xx_update_reg(&reg, &offset);
-- 	mask = BIT(offset);
---	regmap_read(info->regmap, reg, &val);
--+	ret = regmap_read(info->regmap, reg, &val);
--+	if (ret)
--+		return ret;
-- 
-- 	if (val & mask)
-- 		return GPIO_LINE_DIRECTION_OUT;
-diff --git a/target/linux/mvebu/patches-6.6/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.6/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-deleted file mode 100644
-index 6c14e50b4a..0000000000
---- a/target/linux/mvebu/patches-6.6/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-+++ /dev/null
-@@ -1,31 +0,0 @@
--From 4229c28323db141eda69cb99427be75d3edba071 Mon Sep 17 00:00:00 2001
--From: Gabor Juhos <j4g8y7@gmail.com>
--Date: Wed, 14 May 2025 21:18:38 +0200
--Subject: [PATCH 7/7] pinctrl: armada-37xx: propagate error from
-- armada_37xx_pmx_set_by_name()
--
--The regmap_update_bits() function can fail, so propagate its error
--up to the stack instead of silently ignoring that.
--
--Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
--Reviewed-by: Andrew Lunn <andrew@lunn.ch>
--Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
--Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-7-07e9ac1ab737@gmail.com
--Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-----
-- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 4 +---
-- 1 file changed, 1 insertion(+), 3 deletions(-)
--
----- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--@@ -358,9 +358,7 @@ static int armada_37xx_pmx_set_by_name(s
-- 
-- 	val = grp->val[func];
-- 
---	regmap_update_bits(info->regmap, reg, mask, val);
---
---	return 0;
--+	return regmap_update_bits(info->regmap, reg, mask, val);
-- }
-- 
-- static int armada_37xx_pmx_set(struct pinctrl_dev *pctldev,
-diff --git a/target/linux/ramips/patches-6.6/810-uvc-add-iPassion-iP2970-support.patch b/target/linux/ramips/patches-6.6/810-uvc-add-iPassion-iP2970-support.patch
-index 01ecb16aeb..6c6cff13c9 100644
---- a/target/linux/ramips/patches-6.6/810-uvc-add-iPassion-iP2970-support.patch
-+++ b/target/linux/ramips/patches-6.6/810-uvc-add-iPassion-iP2970-support.patch
-@@ -13,7 +13,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
- 
- --- a/drivers/media/usb/uvc/uvc_driver.c
- +++ b/drivers/media/usb/uvc/uvc_driver.c
--@@ -3296,6 +3296,18 @@ static const struct usb_device_id uvc_id
-+@@ -3307,6 +3307,18 @@ static const struct usb_device_id uvc_id
-  	  .bInterfaceSubClass	= 1,
-  	  .bInterfaceProtocol	= 0,
-  	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+-@@ -2119,7 +2118,7 @@ struct sk_buff *ip6_make_skb(struct sock
+- 	err = __ip6_append_data(sk, &queue, cork, &v6_cork,
+- 				&current->task_frag, getfrag, from,
+- 				length + exthdrlen, transhdrlen + exthdrlen,
+--				flags);
+-+				flags, ipc6);
+- 	if (err) {
+- 		__ip6_flush_pending_frames(sk, &queue, cork, &v6_cork);
+- 		return ERR_PTR(err);
 -- 
-2.46.0
+2.48.1
 
 
-From 8d32c53536072ffd110609fe4aa699aa84611e0d Mon Sep 17 00:00:00 2001
-From: Marty Jones <mj8263788@gmail.com>
-Date: Thu, 26 Jun 2025 16:08:28 -0400
-Subject: [PATCH 2/2] kernel: Linux 6.12.35-rc2
+From 0b197a63e8897f3288fbdfcd7861d2fc65743a10 Mon Sep 17 00:00:00 2001
+From: Marty <mj8263788@gmail.com>
+Date: Thu, 3 Jul 2025 14:47:47 -0400
+Subject: [PATCH 2/2] kernel: Linux 6.12.36-rc1
 
-https://lore.kernel.org/all/20250623130642.015559452@linuxfoundation.org
-https://lore.kernel.org/all/20250624121426.466976226@linuxfoundation.org
+https://lore.kernel.org/all/20250703143955.956569535@linuxfoundation.org
 
-Signed-off-by: Marty Jones <mj8263788@gmail.com>
+Signed-off-by: Marty <mj8263788@gmail.com>
 ---
- .../900-unaligned_access_hacks.patch          |  12 +-
- ...057-MMC-added-alternative-MMC-driver.patch |   6 +-
- ...-net-macb-Also-set-DMA-coherent-mask.patch |   6 +-
- ...nt-to-request-a-particular-dev-fbN-n.patch |  25 ++--
- ...-add-SD-support-for-Command-Queueing.patch |   6 +-
- ...llocate-a-block-for-SD-extension-reg.patch |  22 ++--
- ...rt-SD-extension-register-read-write-.patch |  22 ++--
- ...ore-cautious-when-manipulating-Comma.patch |   2 +-
- ...debugfs-entries-for-SD-extension-reg.patch |   6 +-
- ...le-1024-byte-SD-General-Info-lengths.patch |   4 +-
- ...ted-write-counts-for-SD-cards-in-CQ-.patch |   6 +-
- ...ble-write-caching-on-Samsung-2023-mo.patch |   8 +-
- ...le-cache-on-more-known-bad-Sandisk-c.patch |   2 +-
- ...MC_QUIRK_BROKEN_ERASE-for-Phison-Int.patch |   2 +-
- ...rd-CQ-support-based-on-an-allow-list.patch |  10 +-
- ...K_KNOWN_WORKING_SD_CQ-on-Raspberry-P.patch |   4 +-
- ...am-DT-property-to-modify-CQE-and-or-.patch |   2 +-
- .../950-0777-drm-v3d-Remove-v3d-cpu_job.patch |   2 +-
- ...pointer-to-NULL-when-the-job-s-fence.patch |   8 +-
- ...e-a-V3D-tech-revision-to-all-support.patch |   4 +-
- ...-around-VL805-firmware-ASPM-meddling.patch |   2 +-
- ...9-media-imx335-Support-vertical-flip.patch |   4 +-
- ...-Use-correct-register-width-for-HNUM.patch |  24 ----
- ...2c-imx335-Fix-frame-size-enumeration.patch |  34 -----
- ...ernet-cortina-Use-TOE-TSO-on-all-TCP.patch | 122 ------------------
- ...00-v6.16-mips-Add-std-flag-specified.patch |  44 -------
- ...wnand-qcom-cleanup-qcom_nandc-driver.patch |   2 +-
- ...d-qcom-Add-qcom-prefix-to-common-api.patch |   2 +-
- ...y-to-free-deferred-skbs-while-waitin.patch |   4 +-
- .../800-GPIO-add-named-gpio-exports.patch     |   2 +-
- .../generic/hack-6.12/902-debloat_proc.patch  |   2 +-
+ ...-for-all-the-downstream-rpi-sound-ca.patch |   2 +-
+ ...ginal-workaround-for-RTL8125-broken-.patch |   2 +-
+ ...TSO-on-selected-chip-versions-per-de.patch |   4 +-
+ ...plement-additional-ethtool-stats-ops.patch |   2 +-
+ ...169-don-t-take-RTNL-lock-in-rtl_task.patch |   6 +-
+ ...-custom-flag-with-disable_work-et-al.patch |  16 +-
+ ...9-remove-rtl_dash_loop_wait_high-low.patch |   6 +-
+ ...v6.13-r8169-add-support-for-RTL8125D.patch | 143 ------------------
+ ...read-duplex-and-gbit-master-from-PHY.patch |   8 +-
+ ...change-order-of-calls-in-C22-read_st.patch |   2 +-
+ ...clear-1000Base-T-link-partner-advert.patch |   2 +-
+ ...merge-the-drivers-for-internal-NBase.patch | 136 -----------------
+ ...hy-realtek-add-RTL8125D-internal-PHY.patch |  29 ----
  target/linux/generic/kernel-6.12              |   4 +-
- .../pending-6.12/532-jffs2_eofdetect.patch    |   2 +-
- ...7xx-propagate-error-from-armada_37xx.patch |   2 +-
- ...7xx-propagate-error-from-armada_37xx.patch |  36 ------
- ...7xx-propagate-error-from-armada_37xx.patch |  42 ------
- ...7xx-propagate-error-from-armada_37xx.patch |  35 -----
- ...7xx-propagate-error-from-armada_37xx.patch |  31 -----
- .../810-uvc-add-iPassion-iP2970-support.patch |   2 +-
+ ..._F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch |   2 +-
+ ...nk-up-workaround-for-newer-platforms.patch |  12 +-
+ ...reset-toggle-in-_core_reset-function.patch |   6 +-
+ .../330-snand-mtk-bmt-support.patch           |   6 +-
+ ...ers-spi-mem-Add-spi-calibration-hook.patch |   4 +-
+ ...and-Add-calibration-support-for-spin.patch |   2 +-
+ ...960-asus-hack-u-boot-ignore-mtdparts.patch |   4 +-
+ ...or-support-mtd-name-from-device-tree.patch |   4 +-
  .../1011-net-stmmac-use-GFP_DMA32.patch       |   2 +-
- 40 files changed, 93 insertions(+), 464 deletions(-)
- delete mode 100644 target/linux/bcm27xx/patches-6.12/950-0961-media-imx335-Use-correct-register-width-for-HNUM.patch
- delete mode 100644 target/linux/bcm27xx/patches-6.12/950-1003-drivers-media-i2c-imx335-Fix-frame-size-enumeration.patch
- delete mode 100644 target/linux/gemini/patches-6.12/0001-net-ethernet-cortina-Use-TOE-TSO-on-all-TCP.patch
- delete mode 100644 target/linux/generic/backport-6.12/300-v6.16-mips-Add-std-flag-specified.patch
- delete mode 100644 target/linux/mvebu/patches-6.12/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
- delete mode 100644 target/linux/mvebu/patches-6.12/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
- delete mode 100644 target/linux/mvebu/patches-6.12/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
- delete mode 100644 target/linux/mvebu/patches-6.12/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
+ 23 files changed, 48 insertions(+), 356 deletions(-)
+ delete mode 100644 target/linux/generic/backport-6.12/780-09-v6.13-r8169-add-support-for-RTL8125D.patch
+ delete mode 100644 target/linux/generic/backport-6.12/781-04-v6.13-net-phy-realtek-merge-the-drivers-for-internal-NBase.patch
+ delete mode 100644 target/linux/generic/backport-6.12/781-05-v6.13-net-phy-realtek-add-RTL8125D-internal-PHY.patch
 
-diff --git a/target/linux/ath79/patches-6.12/900-unaligned_access_hacks.patch b/target/linux/ath79/patches-6.12/900-unaligned_access_hacks.patch
-index 224b8097e2..ea51478fd0 100644
---- a/target/linux/ath79/patches-6.12/900-unaligned_access_hacks.patch
-+++ b/target/linux/ath79/patches-6.12/900-unaligned_access_hacks.patch
-@@ -623,7 +623,7 @@ SVN-Revision: 35130
-  
-  /*
-   * Jumbo payload option, as described in RFC 2675 2.
--@@ -651,8 +651,8 @@ static inline void __ipv6_addr_set_half(
-+@@ -642,8 +642,8 @@ static inline void __ipv6_addr_set_half(
-  	}
-  #endif
-  #endif
-@@ -634,7 +634,7 @@ SVN-Revision: 35130
-  }
-  
-  static inline void ipv6_addr_set(struct in6_addr *addr,
--@@ -711,6 +711,8 @@ static inline bool ipv6_prefix_equal(con
-+@@ -702,6 +702,8 @@ static inline bool ipv6_prefix_equal(con
-  	const __be32 *a1 = addr1->s6_addr32;
-  	const __be32 *a2 = addr2->s6_addr32;
-  	unsigned int pdw, pbi;
-@@ -643,7 +643,7 @@ SVN-Revision: 35130
-  
-  	/* check complete u32 in prefix */
-  	pdw = prefixlen >> 5;
--@@ -719,7 +721,9 @@ static inline bool ipv6_prefix_equal(con
-+@@ -710,7 +712,9 @@ static inline bool ipv6_prefix_equal(con
-  
-  	/* check incomplete u32 in prefix */
-  	pbi = prefixlen & 0x1f;
-@@ -654,7 +654,7 @@ SVN-Revision: 35130
-  		return false;
-  
-  	return true;
--@@ -836,13 +840,13 @@ static inline void ipv6_addr_set_v4mappe
-+@@ -827,13 +831,13 @@ static inline void ipv6_addr_set_v4mappe
-   */
-  static inline int __ipv6_addr_diff32(const void *token1, const void *token2, int addrlen)
-  {
-@@ -670,7 +670,7 @@ SVN-Revision: 35130
-  		if (xb)
-  			return i * 32 + 31 - __fls(ntohl(xb));
-  	}
--@@ -1037,17 +1041,18 @@ static inline u32 ip6_multipath_hash_fie
-+@@ -1028,17 +1032,18 @@ static inline u32 ip6_multipath_hash_fie
-  static inline void ip6_flow_hdr(struct ipv6hdr *hdr, unsigned int tclass,
-  				__be32 flowlabel)
-  {
-@@ -750,7 +750,7 @@ SVN-Revision: 35130
-  EXPORT_SYMBOL(xfrm_parse_spi);
- --- a/net/ipv4/tcp_input.c
- +++ b/net/ipv4/tcp_input.c
--@@ -4329,14 +4329,16 @@ static bool tcp_parse_aligned_timestamp(
-+@@ -4338,14 +4338,16 @@ static bool tcp_parse_aligned_timestamp(
-  {
-  	const __be32 *ptr = (const __be32 *)(th + 1);
-  
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0057-MMC-added-alternative-MMC-driver.patch b/target/linux/bcm27xx/patches-6.12/950-0057-MMC-added-alternative-MMC-driver.patch
-index 57f8f2f970..8535111890 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0057-MMC-added-alternative-MMC-driver.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0057-MMC-added-alternative-MMC-driver.patch
-@@ -344,7 +344,7 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
-  }
- --- a/drivers/mmc/core/quirks.h
- +++ b/drivers/mmc/core/quirks.h
--@@ -143,6 +143,14 @@ static const struct mmc_fixup __maybe_un
-+@@ -153,6 +153,14 @@ static const struct mmc_fixup __maybe_un
-  	MMC_FIXUP(CID_NAME_ANY, CID_MANFID_SANDISK_SD, 0x5344, add_quirk_sd,
-  		  MMC_QUIRK_BROKEN_SD_DISCARD),
-  
-@@ -2011,10 +2011,10 @@ Signed-off-by: Phil Elwell <phil@raspberrypi.com>
-  		sdhci_dumpregs(host);
- --- a/include/linux/mmc/card.h
- +++ b/include/linux/mmc/card.h
--@@ -295,6 +295,7 @@ struct mmc_card {
-- #define MMC_QUIRK_BROKEN_SD_CACHE	(1<<15)	/* Disable broken SD cache support */
-+@@ -296,6 +296,7 @@ struct mmc_card {
-  #define MMC_QUIRK_BROKEN_CACHE_FLUSH	(1<<16)	/* Don't flush cache until the write has occurred */
-  #define MMC_QUIRK_BROKEN_SD_POWEROFF_NOTIFY	(1<<17) /* Disable broken SD poweroff notify support */
-+ #define MMC_QUIRK_NO_UHS_DDR50_TUNING	(1<<18) /* Disable DDR50 tuning */
- +#define MMC_QUIRK_ERASE_BROKEN	(1<<31)		/* Skip erase */
-  
-  	bool			written_flag;	/* Indicates eMMC has been written since power on */
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0347-net-macb-Also-set-DMA-coherent-mask.patch b/target/linux/bcm27xx/patches-6.12/950-0347-net-macb-Also-set-DMA-coherent-mask.patch
-index 6b4058b725..d275ee438a 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0347-net-macb-Also-set-DMA-coherent-mask.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0347-net-macb-Also-set-DMA-coherent-mask.patch
-@@ -367,7 +367,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	spin_lock_init(&bp->lock);
-  	spin_lock_init(&bp->stats_lock);
-  
--@@ -5165,6 +5284,21 @@ static int macb_probe(struct platform_de
-+@@ -5169,6 +5288,21 @@ static int macb_probe(struct platform_de
-  	else
-  		bp->phy_interface = interface;
-  
-@@ -389,7 +389,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	/* IP specific init */
-  	err = init(pdev);
-  	if (err)
--@@ -5239,6 +5373,19 @@ static void macb_remove(struct platform_
-+@@ -5243,6 +5377,19 @@ static void macb_remove(struct platform_
-  	}
-  }
-  
-@@ -409,7 +409,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  static int __maybe_unused macb_suspend(struct device *dev)
-  {
-  	struct net_device *netdev = dev_get_drvdata(dev);
--@@ -5492,6 +5639,7 @@ static const struct dev_pm_ops macb_pm_o
-+@@ -5496,6 +5643,7 @@ static const struct dev_pm_ops macb_pm_o
-  static struct platform_driver macb_driver = {
-  	.probe		= macb_probe,
-  	.remove_new	= macb_remove,
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0392-fbdev-Allow-client-to-request-a-particular-dev-fbN-n.patch b/target/linux/bcm27xx/patches-6.12/950-0392-fbdev-Allow-client-to-request-a-particular-dev-fbN-n.patch
-index 12b86534ce..1abd62fc94 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0392-fbdev-Allow-client-to-request-a-particular-dev-fbN-n.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0392-fbdev-Allow-client-to-request-a-particular-dev-fbN-n.patch
-@@ -22,33 +22,30 @@ Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-  #define for_each_registered_fb(i)		\
-  	for (i = 0; i < FB_MAX; i++)		\
-  		if (!registered_fb[i]) {} else
--@@ -398,10 +399,12 @@ static int do_register_framebuffer(struc
-+@@ -399,9 +400,11 @@ static int do_register_framebuffer(struc
-+ 	if (num_registered_fb == FB_MAX)
-  		return -ENXIO;
-  
-- 	num_registered_fb++;
- -	for (i = 0 ; i < FB_MAX; i++)
- -		if (!registered_fb[i])
- -			break;
---	fb_info->node = i;
- +	if (!fb_info->custom_fb_num || fb_info->node >= FB_MAX || registered_fb[fb_info->node]) {
- +		for (i = min_dynamic_fb ; i < FB_MAX; i++)
- +			if (!registered_fb[i])
- +				break;
--+		fb_info->node = i;
- +	}
-+ 
-+ 	if (!fb_info->modelist.prev || !fb_info->modelist.next)
-+ 		INIT_LIST_HEAD(&fb_info->modelist);
-+@@ -411,7 +414,6 @@ static int do_register_framebuffer(struc
-+ 	if (err < 0)
-+ 		return err;
-+ 
-+-	fb_info->node = i;
-  	refcount_set(&fb_info->count, 1);
-  	mutex_init(&fb_info->lock);
-  	mutex_init(&fb_info->mm_lock);
--@@ -436,7 +439,7 @@ static int do_register_framebuffer(struc
-- 
-- 	fb_var_to_videomode(&mode, &fb_info->var);
-- 	fb_add_videomode(&mode, &fb_info->modelist);
---	registered_fb[i] = fb_info;
--+	registered_fb[fb_info->node] = fb_info;
-- 
-- #ifdef CONFIG_GUMSTIX_AM200EPD
-- 	{
--@@ -497,6 +500,12 @@ static void do_unregister_framebuffer(st
-+@@ -503,6 +505,12 @@ static void do_unregister_framebuffer(st
-  	put_fb_info(fb_info);
-  }
-  
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0427-drivers-mmc-add-SD-support-for-Command-Queueing.patch b/target/linux/bcm27xx/patches-6.12/950-0427-drivers-mmc-add-SD-support-for-Command-Queueing.patch
-index 99aa00e319..550264ef6f 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0427-drivers-mmc-add-SD-support-for-Command-Queueing.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0427-drivers-mmc-add-SD-support-for-Command-Queueing.patch
-@@ -91,7 +91,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	cmd.flags       &= ~MMC_RSP_CRC; /* Ignore CRC */
- --- a/drivers/mmc/core/sd.c
- +++ b/drivers/mmc/core/sd.c
--@@ -1011,8 +1011,8 @@ static bool mmc_sd_card_using_v18(struct
-+@@ -1027,8 +1027,8 @@ static bool mmc_sd_card_using_v18(struct
-  	       (SD_MODE_UHS_SDR50 | SD_MODE_UHS_SDR104 | SD_MODE_UHS_DDR50);
-  }
-  
-@@ -102,7 +102,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  {
-  	struct mmc_host *host = card->host;
-  	struct mmc_request mrq = {};
--@@ -1170,8 +1170,14 @@ static int sd_parse_ext_reg_perf(struct
-+@@ -1186,8 +1186,14 @@ static int sd_parse_ext_reg_perf(struct
-  		card->ext_perf.feature_support |= SD_EXT_PERF_CACHE;
-  
-  	/* Command queue support indicated via queue depth bits (0 to 4). */
-@@ -118,7 +118,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  
-  	card->ext_perf.fno = fno;
-  	card->ext_perf.page = page;
--@@ -1558,13 +1564,41 @@ cont:
-+@@ -1574,13 +1580,41 @@ cont:
-  			goto free_card;
-  	}
-  
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0428-drivers-mmc-preallocate-a-block-for-SD-extension-reg.patch b/target/linux/bcm27xx/patches-6.12/950-0428-drivers-mmc-preallocate-a-block-for-SD-extension-reg.patch
-index 554606f83f..0cf6030c76 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0428-drivers-mmc-preallocate-a-block-for-SD-extension-reg.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0428-drivers-mmc-preallocate-a-block-for-SD-extension-reg.patch
-@@ -30,7 +30,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	kfree(card);
- --- a/drivers/mmc/core/sd.c
- +++ b/drivers/mmc/core/sd.c
--@@ -1021,9 +1021,8 @@ int sd_write_ext_reg(struct mmc_card *ca
-+@@ -1037,9 +1037,8 @@ int sd_write_ext_reg(struct mmc_card *ca
-  	struct scatterlist sg;
-  	u8 *reg_buf;
-  
-@@ -42,7 +42,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  
-  	mrq.cmd = &cmd;
-  	mrq.data = &data;
--@@ -1055,8 +1054,6 @@ int sd_write_ext_reg(struct mmc_card *ca
-+@@ -1071,8 +1070,6 @@ int sd_write_ext_reg(struct mmc_card *ca
-  	mmc_set_data_timeout(&data, card);
-  	mmc_wait_for_req(host, &mrq);
-  
-@@ -51,7 +51,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	/*
-  	 * Note that, the SD card is allowed to signal busy on DAT0 up to 1s
-  	 * after the CMD49. Although, let's leave this to be managed by the
--@@ -1097,9 +1094,7 @@ static int sd_parse_ext_reg_power(struct
-+@@ -1113,9 +1110,7 @@ static int sd_parse_ext_reg_power(struct
-  	int err;
-  	u8 *reg_buf;
-  
-@@ -62,7 +62,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  
-  	/* Read the extension register for power management function. */
-  	err = sd_read_ext_reg(card, fno, page, offset, 512, reg_buf);
--@@ -1129,7 +1124,6 @@ static int sd_parse_ext_reg_power(struct
-+@@ -1145,7 +1140,6 @@ static int sd_parse_ext_reg_power(struct
-  	card->ext_power.offset = offset;
-  
-  out:
-@@ -70,7 +70,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	return err;
-  }
-  
--@@ -1139,9 +1133,7 @@ static int sd_parse_ext_reg_perf(struct
-+@@ -1155,9 +1149,7 @@ static int sd_parse_ext_reg_perf(struct
-  	int err;
-  	u8 *reg_buf;
-  
-@@ -81,7 +81,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  
-  	err = sd_read_ext_reg(card, fno, page, offset, 512, reg_buf);
-  	if (err) {
--@@ -1184,7 +1176,6 @@ static int sd_parse_ext_reg_perf(struct
-+@@ -1200,7 +1192,6 @@ static int sd_parse_ext_reg_perf(struct
-  	card->ext_perf.offset = offset;
-  
-  out:
-@@ -89,7 +89,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	return err;
-  }
-  
--@@ -1255,6 +1246,12 @@ static int sd_read_ext_regs(struct mmc_c
-+@@ -1271,6 +1262,12 @@ static int sd_read_ext_regs(struct mmc_c
-  	if (!gen_info_buf)
-  		return -ENOMEM;
-  
-@@ -102,7 +102,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	/*
-  	 * Read 512 bytes of general info, which is found at function number 0,
-  	 * at page 0 and with no offset.
--@@ -1321,9 +1318,7 @@ static int sd_flush_cache(struct mmc_hos
-+@@ -1337,9 +1334,7 @@ static int sd_flush_cache(struct mmc_hos
-  	if (!sd_cache_enabled(host))
-  		return 0;
-  
-@@ -113,7 +113,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  
-  	/*
-  	 * Set Flush Cache at bit 0 in the performance enhancement register at
--@@ -1359,21 +1354,15 @@ static int sd_flush_cache(struct mmc_hos
-+@@ -1375,21 +1370,15 @@ static int sd_flush_cache(struct mmc_hos
-  	if (reg_buf[0] & BIT(0))
-  		err = -ETIMEDOUT;
-  out:
-@@ -135,7 +135,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	/*
-  	 * Set Cache Enable at bit 0 in the performance enhancement register at
-  	 * 260 bytes offset.
--@@ -1392,7 +1381,6 @@ static int sd_enable_cache(struct mmc_ca
-+@@ -1408,7 +1397,6 @@ static int sd_enable_cache(struct mmc_ca
-  		card->ext_perf.feature_enabled |= SD_EXT_PERF_CACHE;
-  
-  out:
-@@ -145,7 +145,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  
- --- a/include/linux/mmc/card.h
- +++ b/include/linux/mmc/card.h
--@@ -320,6 +320,7 @@ struct mmc_card {
-+@@ -321,6 +321,7 @@ struct mmc_card {
-  	struct sd_switch_caps	sw_caps;	/* switch (CMD6) caps */
-  	struct sd_ext_reg	ext_power;	/* SD extension reg for PM */
-  	struct sd_ext_reg	ext_perf;	/* SD extension reg for PERF */
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0432-drivers-mmc-export-SD-extension-register-read-write-.patch b/target/linux/bcm27xx/patches-6.12/950-0432-drivers-mmc-export-SD-extension-register-read-write-.patch
-index 0f0a18e47f..b513205512 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0432-drivers-mmc-export-SD-extension-register-read-write-.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0432-drivers-mmc-export-SD-extension-register-read-write-.patch
-@@ -16,7 +16,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+diff --git a/target/linux/bcm27xx/patches-6.12/950-0073-ASoC-Add-support-for-all-the-downstream-rpi-sound-ca.patch b/target/linux/bcm27xx/patches-6.12/950-0073-ASoC-Add-support-for-all-the-downstream-rpi-sound-ca.patch
+index 1a508a1125..2da70b23d8 100644
+--- a/target/linux/bcm27xx/patches-6.12/950-0073-ASoC-Add-support-for-all-the-downstream-rpi-sound-ca.patch
++++ b/target/linux/bcm27xx/patches-6.12/950-0073-ASoC-Add-support-for-all-the-downstream-rpi-sound-ca.patch
+@@ -18626,7 +18626,7 @@ Signed-off-by: j-schambacher <joerg@hifiberry.com>
+  	 * For devices with more than one control interface, we assume the
+ --- a/sound/usb/quirks.c
+ +++ b/sound/usb/quirks.c
+-@@ -2358,6 +2358,8 @@ static const struct usb_audio_quirk_flag
++@@ -2360,6 +2360,8 @@ static const struct usb_audio_quirk_flag
+  		   QUIRK_FLAG_ALIGN_TRANSFER),
+  	DEVICE_FLG(0x534d, 0x2109, /* MacroSilicon MS2109 */
+  		   QUIRK_FLAG_ALIGN_TRANSFER),
+diff --git a/target/linux/generic/backport-6.12/780-01-v6.13-r8169-remove-original-workaround-for-RTL8125-broken-.patch b/target/linux/generic/backport-6.12/780-01-v6.13-r8169-remove-original-workaround-for-RTL8125-broken-.patch
+index 080dae31e6..ed79d3914e 100644
+--- a/target/linux/generic/backport-6.12/780-01-v6.13-r8169-remove-original-workaround-for-RTL8125-broken-.patch
++++ b/target/linux/generic/backport-6.12/780-01-v6.13-r8169-remove-original-workaround-for-RTL8125-broken-.patch
+@@ -19,7 +19,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
  
- --- a/drivers/mmc/core/sd.c
- +++ b/drivers/mmc/core/sd.c
--@@ -1011,83 +1011,6 @@ static bool mmc_sd_card_using_v18(struct
-+@@ -1027,83 +1027,6 @@ static bool mmc_sd_card_using_v18(struct
-  	       (SD_MODE_UHS_SDR50 | SD_MODE_UHS_SDR104 | SD_MODE_UHS_DDR50);
-  }
-  
-@@ -100,7 +100,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  static int sd_parse_ext_reg_power(struct mmc_card *card, u8 fno, u8 page,
-  				  u16 offset)
-  {
--@@ -1097,7 +1020,7 @@ static int sd_parse_ext_reg_power(struct
-+@@ -1113,7 +1036,7 @@ static int sd_parse_ext_reg_power(struct
-  	reg_buf = card->ext_reg_buf;
-  
-  	/* Read the extension register for power management function. */
-@@ -109,7 +109,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	if (err) {
-  		pr_warn("%s: error %d reading PM func of ext reg\n",
-  			mmc_hostname(card->host), err);
--@@ -1135,7 +1058,7 @@ static int sd_parse_ext_reg_perf(struct
-+@@ -1151,7 +1074,7 @@ static int sd_parse_ext_reg_perf(struct
-  
-  	reg_buf = card->ext_reg_buf;
-  
-@@ -118,7 +118,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	if (err) {
-  		pr_warn("%s: error %d reading PERF func of ext reg\n",
-  			mmc_hostname(card->host), err);
--@@ -1230,7 +1153,7 @@ static int sd_parse_ext_reg(struct mmc_c
-+@@ -1246,7 +1169,7 @@ static int sd_parse_ext_reg(struct mmc_c
-  	return 0;
-  }
-  
-@@ -127,7 +127,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  {
-  	int err, i;
-  	u8 num_ext, *gen_info_buf;
--@@ -1256,7 +1179,7 @@ static int sd_read_ext_regs(struct mmc_c
-+@@ -1272,7 +1195,7 @@ static int sd_read_ext_regs(struct mmc_c
-  	 * Read 512 bytes of general info, which is found at function number 0,
-  	 * at page 0 and with no offset.
-  	 */
-@@ -136,7 +136,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	if (err) {
-  		pr_err("%s: error %d reading general info of SD ext reg\n",
-  			mmc_hostname(card->host), err);
--@@ -1328,7 +1251,7 @@ static int sd_flush_cache(struct mmc_hos
-+@@ -1344,7 +1267,7 @@ static int sd_flush_cache(struct mmc_hos
-  	page = card->ext_perf.page;
-  	offset = card->ext_perf.offset + 261;
-  
-@@ -145,7 +145,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	if (err) {
-  		pr_warn("%s: error %d writing Cache Flush bit\n",
-  			mmc_hostname(host), err);
--@@ -1344,7 +1267,7 @@ static int sd_flush_cache(struct mmc_hos
-+@@ -1360,7 +1283,7 @@ static int sd_flush_cache(struct mmc_hos
-  	 * Read the Flush Cache bit. The card shall reset it, to confirm that
-  	 * it's has completed the flushing of the cache.
-  	 */
-@@ -154,7 +154,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	if (err) {
-  		pr_warn("%s: error %d reading Cache Flush bit\n",
-  			mmc_hostname(host), err);
--@@ -1367,7 +1290,7 @@ static int sd_enable_cache(struct mmc_ca
-+@@ -1383,7 +1306,7 @@ static int sd_enable_cache(struct mmc_ca
-  	 * Set Cache Enable at bit 0 in the performance enhancement register at
-  	 * 260 bytes offset.
-  	 */
-@@ -163,7 +163,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  			       card->ext_perf.offset + 260, BIT(0));
-  	if (err) {
-  		pr_warn("%s: error %d writing Cache Enable bit\n",
--@@ -1540,7 +1463,7 @@ retry:
-+@@ -1556,7 +1479,7 @@ retry:
-  cont:
-  	if (!oldcard) {
-  		/* Read/parse the extension registers. */
-@@ -172,7 +172,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  		if (err)
-  			goto free_card;
-  	}
--@@ -1667,7 +1590,7 @@ static int sd_busy_poweroff_notify_cb(vo
-+@@ -1683,7 +1606,7 @@ static int sd_busy_poweroff_notify_cb(vo
-  	 * one byte offset and is one byte long. The Power Off Notification
-  	 * Ready is bit 0.
-  	 */
-@@ -181,7 +181,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  			      card->ext_power.offset + 1, 1, data->reg_buf);
-  	if (err) {
-  		pr_warn("%s: error %d reading status reg of PM func\n",
--@@ -1693,7 +1616,7 @@ static int sd_poweroff_notify(struct mmc
-+@@ -1709,7 +1632,7 @@ static int sd_poweroff_notify(struct mmc
-  	 * Set the Power Off Notification bit in the power management settings
-  	 * register at 2 bytes offset.
-  	 */
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0433-drivers-mmc-be-more-cautious-when-manipulating-Comma.patch b/target/linux/bcm27xx/patches-6.12/950-0433-drivers-mmc-be-more-cautious-when-manipulating-Comma.patch
-index f9ae83fd9f..29a1d329a0 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0433-drivers-mmc-be-more-cautious-when-manipulating-Comma.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0433-drivers-mmc-be-more-cautious-when-manipulating-Comma.patch
-@@ -17,7 +17,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+ --- a/drivers/net/ethernet/realtek/r8169_main.c
+ +++ b/drivers/net/ethernet/realtek/r8169_main.c
+-@@ -4804,11 +4804,7 @@ static void r8169_phylink_handler(struct
++@@ -4813,11 +4813,7 @@ static void r8169_phylink_handler(struct
+  	if (netif_carrier_ok(ndev)) {
+  		rtl_link_chg_patch(tp);
+  		pm_request_resume(d);
+diff --git a/target/linux/generic/backport-6.12/780-02-v6.13-r8169-enable-SG-TSO-on-selected-chip-versions-per-de.patch b/target/linux/generic/backport-6.12/780-02-v6.13-r8169-enable-SG-TSO-on-selected-chip-versions-per-de.patch
+index f7d2d23c2a..67823d4363 100644
+--- a/target/linux/generic/backport-6.12/780-02-v6.13-r8169-enable-SG-TSO-on-selected-chip-versions-per-de.patch
++++ b/target/linux/generic/backport-6.12/780-02-v6.13-r8169-enable-SG-TSO-on-selected-chip-versions-per-de.patch
+@@ -20,7 +20,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
  
- --- a/drivers/mmc/core/sd.c
- +++ b/drivers/mmc/core/sd.c
--@@ -1084,8 +1084,12 @@ static int sd_parse_ext_reg_perf(struct
-+@@ -1100,8 +1100,12 @@ static int sd_parse_ext_reg_perf(struct
-  	if ((reg_buf[4] & BIT(0)) && !mmc_card_broken_sd_cache(card))
-  		card->ext_perf.feature_support |= SD_EXT_PERF_CACHE;
+ --- a/drivers/net/ethernet/realtek/r8169_main.c
+ +++ b/drivers/net/ethernet/realtek/r8169_main.c
+-@@ -5517,11 +5517,6 @@ static int rtl_init_one(struct pci_dev *
++@@ -5526,11 +5526,6 @@ static int rtl_init_one(struct pci_dev *
   
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0434-drivers-mmc-add-debugfs-entries-for-SD-extension-reg.patch b/target/linux/bcm27xx/patches-6.12/950-0434-drivers-mmc-add-debugfs-entries-for-SD-extension-reg.patch
-index a4c5f419d4..eafdd01140 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0434-drivers-mmc-add-debugfs-entries-for-SD-extension-reg.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0434-drivers-mmc-add-debugfs-entries-for-SD-extension-reg.patch
-@@ -26,7 +26,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  				pr_info("%s: Host Software Queue enabled\n",
- --- a/drivers/mmc/core/sd.c
- +++ b/drivers/mmc/core/sd.c
--@@ -710,7 +710,8 @@ MMC_DEV_ATTR(oemid, "0x%04x\n", card->ci
-+@@ -726,7 +726,8 @@ MMC_DEV_ATTR(oemid, "0x%04x\n", card->ci
-  MMC_DEV_ATTR(serial, "0x%08x\n", card->cid.serial);
-  MMC_DEV_ATTR(ocr, "0x%08x\n", card->ocr);
-  MMC_DEV_ATTR(rca, "0x%04x\n", card->rca);
-@@ -36,7 +36,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	dev->features |= dev->hw_features;
   
-  static ssize_t mmc_dsr_show(struct device *dev, struct device_attribute *attr,
-  			    char *buf)
--@@ -772,6 +773,8 @@ static struct attribute *sd_std_attrs[]
-+@@ -788,6 +789,8 @@ static struct attribute *sd_std_attrs[]
-  	&dev_attr_ocr.attr,
-  	&dev_attr_rca.attr,
-  	&dev_attr_dsr.attr,
-@@ -45,7 +45,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	NULL,
+@@ -32,7 +32,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
+  	if (rtl_chip_supports_csum_v2(tp)) {
+  		dev->hw_features |= NETIF_F_SG | NETIF_F_TSO | NETIF_F_TSO6;
+  		netif_set_tso_max_size(dev, RTL_GSO_MAX_SIZE_V2);
+-@@ -5532,6 +5527,17 @@ static int rtl_init_one(struct pci_dev *
++@@ -5541,6 +5536,17 @@ static int rtl_init_one(struct pci_dev *
+  		netif_set_tso_max_segs(dev, RTL_GSO_MAX_SEGS_V1);
+  	}
+  
+diff --git a/target/linux/generic/backport-6.12/780-03-v6.13-r8169-implement-additional-ethtool-stats-ops.patch b/target/linux/generic/backport-6.12/780-03-v6.13-r8169-implement-additional-ethtool-stats-ops.patch
+index cef8e1e471..8ecb5c794c 100644
+--- a/target/linux/generic/backport-6.12/780-03-v6.13-r8169-implement-additional-ethtool-stats-ops.patch
++++ b/target/linux/generic/backport-6.12/780-03-v6.13-r8169-implement-additional-ethtool-stats-ops.patch
+@@ -118,7 +118,7 @@ Signed-off-by: Jakub Kicinski <kuba@kernel.org>
   };
   
--@@ -1507,8 +1510,8 @@ cont:
-+@@ -1523,8 +1526,8 @@ cont:
-  			host->cqe_enabled = true;
-  
-  			if (card->ext_csd.cmdq_en) {
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0435-drivers-mmc-handle-1024-byte-SD-General-Info-lengths.patch b/target/linux/bcm27xx/patches-6.12/950-0435-drivers-mmc-handle-1024-byte-SD-General-Info-lengths.patch
-index 180dc5b08c..0755d4e590 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0435-drivers-mmc-handle-1024-byte-SD-General-Info-lengths.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0435-drivers-mmc-handle-1024-byte-SD-General-Info-lengths.patch
-@@ -13,7 +13,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
- 
- --- a/drivers/mmc/core/sd.c
- +++ b/drivers/mmc/core/sd.c
--@@ -1172,7 +1172,7 @@ static int mmc_sd_read_ext_regs(struct m
-+@@ -1188,7 +1188,7 @@ static int mmc_sd_read_ext_regs(struct m
-  	if (!(card->scr.cmds & SD_SCR_CMD48_SUPPORT))
-  		return 0;
-  
-@@ -22,7 +22,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	if (!gen_info_buf)
-  		return -ENOMEM;
-  
--@@ -1203,14 +1203,23 @@ static int mmc_sd_read_ext_regs(struct m
-+@@ -1219,14 +1219,23 @@ static int mmc_sd_read_ext_regs(struct m
-  	num_ext = gen_info_buf[4];
-  
-  	/*
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0440-mmc-restrict-posted-write-counts-for-SD-cards-in-CQ-.patch b/target/linux/bcm27xx/patches-6.12/950-0440-mmc-restrict-posted-write-counts-for-SD-cards-in-CQ-.patch
-index 881921cd07..b67764f162 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0440-mmc-restrict-posted-write-counts-for-SD-cards-in-CQ-.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0440-mmc-restrict-posted-write-counts-for-SD-cards-in-CQ-.patch
-@@ -145,7 +145,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  	bool			busy;
- --- a/drivers/mmc/core/sd.c
- +++ b/drivers/mmc/core/sd.c
--@@ -1099,6 +1099,15 @@ static int sd_parse_ext_reg_perf(struct
-+@@ -1115,6 +1115,15 @@ static int sd_parse_ext_reg_perf(struct
-  		pr_debug("%s: Command Queue supported depth %u\n",
-  			 mmc_hostname(card->host),
-  			 card->ext_csd.cmdq_depth);
-@@ -161,7 +161,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  static enum mac_version rtl8169_get_mac_version(u16 xid, bool gmii)
+-@@ -3920,6 +3999,9 @@ static void rtl_hw_start_8125(struct rtl
++@@ -3929,6 +4008,9 @@ static void rtl_hw_start_8125(struct rtl
+  		break;
   	}
   
-  	card->ext_perf.fno = fno;
--@@ -1362,6 +1371,7 @@ retry:
-+@@ -1378,6 +1387,7 @@ retry:
-  
-  		card->ocr = ocr;
-  		card->type = MMC_TYPE_SD;
-@@ -171,7 +171,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  
- --- a/include/linux/mmc/card.h
- +++ b/include/linux/mmc/card.h
--@@ -343,6 +343,8 @@ struct mmc_card {
-+@@ -344,6 +344,8 @@ struct mmc_card {
-  	unsigned int    nr_parts;
-  
-  	struct workqueue_struct *complete_wq;	/* Private workqueue */
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0442-drivers-mmc-disable-write-caching-on-Samsung-2023-mo.patch b/target/linux/bcm27xx/patches-6.12/950-0442-drivers-mmc-disable-write-caching-on-Samsung-2023-mo.patch
-index 5dbd79f5c0..bcfc4d7dc8 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0442-drivers-mmc-disable-write-caching-on-Samsung-2023-mo.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0442-drivers-mmc-disable-write-caching-on-Samsung-2023-mo.patch
-@@ -26,13 +26,13 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  #define CID_MANFID_SAMSUNG      0x15
- +#define CID_MANFID_SAMSUNG_SD	0x1b
-  #define CID_MANFID_APACER       0x27
-+ #define CID_MANFID_SWISSBIT     0x5D
-  #define CID_MANFID_KINGSTON     0x70
-- #define CID_MANFID_HYNIX	0x90
- --- a/drivers/mmc/core/quirks.h
- +++ b/drivers/mmc/core/quirks.h
--@@ -34,6 +34,14 @@ static const struct mmc_fixup __maybe_un
-- 		   MMC_QUIRK_BROKEN_SD_CACHE | MMC_QUIRK_BROKEN_SD_POWEROFF_NOTIFY,
-- 		   EXT_CSD_REV_ANY),
-+@@ -44,6 +44,14 @@ static const struct mmc_fixup __maybe_un
-+ 		   0, -1ull, SDIO_ANY_ID, SDIO_ANY_ID, add_quirk_sd,
-+ 		   MMC_QUIRK_NO_UHS_DDR50_TUNING, EXT_CSD_REV_ANY),
-  
- +	/*
- +	 * Samsung Pro Plus/EVO Plus/Pro Ultimate SD cards (2023) claim to cache
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0443-mmc-quirks-disable-cache-on-more-known-bad-Sandisk-c.patch b/target/linux/bcm27xx/patches-6.12/950-0443-mmc-quirks-disable-cache-on-more-known-bad-Sandisk-c.patch
-index 2c21469203..d345868bf1 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0443-mmc-quirks-disable-cache-on-more-known-bad-Sandisk-c.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0443-mmc-quirks-disable-cache-on-more-known-bad-Sandisk-c.patch
-@@ -14,7 +14,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+diff --git a/target/linux/generic/backport-6.12/780-04-v6.13-r8169-don-t-take-RTNL-lock-in-rtl_task.patch b/target/linux/generic/backport-6.12/780-04-v6.13-r8169-don-t-take-RTNL-lock-in-rtl_task.patch
+index ef360d062a..dd42817b99 100644
+--- a/target/linux/generic/backport-6.12/780-04-v6.13-r8169-don-t-take-RTNL-lock-in-rtl_task.patch
++++ b/target/linux/generic/backport-6.12/780-04-v6.13-r8169-don-t-take-RTNL-lock-in-rtl_task.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Andrew Lunn <andrew@lunn.ch>
  
- --- a/drivers/mmc/core/quirks.h
- +++ b/drivers/mmc/core/quirks.h
--@@ -42,6 +42,18 @@ static const struct mmc_fixup __maybe_un
-+@@ -52,6 +52,18 @@ static const struct mmc_fixup __maybe_un
-  		   0, -1ull, SDIO_ANY_ID, SDIO_ANY_ID, add_quirk_sd,
-  		   MMC_QUIRK_BROKEN_SD_CACHE, EXT_CSD_REV_ANY),
+ --- a/drivers/net/ethernet/realtek/r8169_main.c
+ +++ b/drivers/net/ethernet/realtek/r8169_main.c
+-@@ -4827,10 +4827,8 @@ static void rtl_task(struct work_struct
++@@ -4836,10 +4836,8 @@ static void rtl_task(struct work_struct
+  		container_of(work, struct rtl8169_private, wk.work);
+  	int ret;
   
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0445-mmc-quirks-add-MMC_QUIRK_BROKEN_ERASE-for-Phison-Int.patch b/target/linux/bcm27xx/patches-6.12/950-0445-mmc-quirks-add-MMC_QUIRK_BROKEN_ERASE-for-Phison-Int.patch
-index a2688e8ff9..2939ea0636 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0445-mmc-quirks-add-MMC_QUIRK_BROKEN_ERASE-for-Phison-Int.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0445-mmc-quirks-add-MMC_QUIRK_BROKEN_ERASE-for-Phison-Int.patch
-@@ -15,7 +15,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
- 
- --- a/drivers/mmc/core/quirks.h
- +++ b/drivers/mmc/core/quirks.h
--@@ -171,6 +171,15 @@ static const struct mmc_fixup __maybe_un
-+@@ -181,6 +181,15 @@ static const struct mmc_fixup __maybe_un
-  	MMC_FIXUP("SD32G", 0x41, 0x3432, add_quirk, MMC_QUIRK_ERASE_BROKEN),
-  	MMC_FIXUP("SD64G", 0x41, 0x3432, add_quirk, MMC_QUIRK_ERASE_BROKEN),
+@@ -30,7 +30,7 @@ Signed-off-by: Andrew Lunn <andrew@lunn.ch>
   
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0750-mmc-sd-filter-card-CQ-support-based-on-an-allow-list.patch b/target/linux/bcm27xx/patches-6.12/950-0750-mmc-sd-filter-card-CQ-support-based-on-an-allow-list.patch
-index 2c21e7ca4e..d32cde6548 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0750-mmc-sd-filter-card-CQ-support-based-on-an-allow-list.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0750-mmc-sd-filter-card-CQ-support-based-on-an-allow-list.patch
-@@ -22,8 +22,8 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  	if (test_and_clear_bit(RTL_FLAG_TASK_TX_TIMEOUT, tp->wk.flags)) {
+  		/* if chip isn't accessible, reset bus to revive it */
+-@@ -4839,7 +4837,7 @@ static void rtl_task(struct work_struct
++@@ -4848,7 +4846,7 @@ static void rtl_task(struct work_struct
+  			if (ret < 0) {
+  				netdev_err(tp->dev, "Can't reset secondary PCI bus, detach NIC\n");
+  				netif_device_detach(tp->dev);
+@@ -39,7 +39,7 @@ Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+  			}
+  		}
+  
+-@@ -4858,8 +4856,6 @@ reset:
++@@ -4867,8 +4865,6 @@ reset:
+  	} else if (test_and_clear_bit(RTL_FLAG_TASK_RESET_NO_QUEUE_WAKE, tp->wk.flags)) {
+  		rtl_reset_work(tp);
+  	}
+diff --git a/target/linux/generic/backport-6.12/780-05-v6.13-replace-custom-flag-with-disable_work-et-al.patch b/target/linux/generic/backport-6.12/780-05-v6.13-replace-custom-flag-with-disable_work-et-al.patch
+index 304515fe81..ae4bc15e30 100644
+--- a/target/linux/generic/backport-6.12/780-05-v6.13-replace-custom-flag-with-disable_work-et-al.patch
++++ b/target/linux/generic/backport-6.12/780-05-v6.13-replace-custom-flag-with-disable_work-et-al.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Andrew Lunn <andrew@lunn.ch>
  
- --- a/drivers/mmc/core/card.h
- +++ b/drivers/mmc/core/card.h
--@@ -295,4 +295,9 @@ static inline int mmc_card_broken_sd_pow
-- 	return c->quirks & MMC_QUIRK_BROKEN_SD_POWEROFF_NOTIFY;
-+@@ -301,4 +301,9 @@ static inline int mmc_card_no_uhs_ddr50_
-+ 	return c->quirks & MMC_QUIRK_NO_UHS_DDR50_TUNING;
+ --- a/drivers/net/ethernet/realtek/r8169_main.c
+ +++ b/drivers/net/ethernet/realtek/r8169_main.c
+-@@ -617,7 +617,6 @@ struct rtl8169_tc_offsets {
++@@ -619,7 +619,6 @@ struct rtl8169_tc_offsets {
+  };
+  
+  enum rtl_flag {
+@@ -25,7 +25,7 @@ Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+  	RTL_FLAG_TASK_RESET_PENDING,
+  	RTL_FLAG_TASK_RESET_NO_QUEUE_WAKE,
+  	RTL_FLAG_TASK_TX_TIMEOUT,
+-@@ -2502,11 +2501,9 @@ u16 rtl8168h_2_get_adc_bias_ioffset(stru
++@@ -2505,11 +2504,9 @@ u16 rtl8168h_2_get_adc_bias_ioffset(stru
+  
+  static void rtl_schedule_task(struct rtl8169_private *tp, enum rtl_flag flag)
+  {
+@@ -39,7 +39,7 @@ Signed-off-by: Andrew Lunn <andrew@lunn.ch>
   }
   
- +static inline int mmc_card_working_sd_cq(const struct mmc_card *c)
-@@ -34,7 +34,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  #endif
- --- a/drivers/mmc/core/sd.c
- +++ b/drivers/mmc/core/sd.c
--@@ -1501,6 +1501,10 @@ cont:
-+@@ -1517,6 +1517,10 @@ cont:
-  			goto free_card;
-  	}
+  static void rtl8169_init_phy(struct rtl8169_private *tp)
+-@@ -4827,9 +4824,6 @@ static void rtl_task(struct work_struct
++@@ -4836,9 +4833,6 @@ static void rtl_task(struct work_struct
+  		container_of(work, struct rtl8169_private, wk.work);
+  	int ret;
   
-@@ -47,10 +47,10 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  		/*
- --- a/include/linux/mmc/card.h
- +++ b/include/linux/mmc/card.h
--@@ -295,6 +295,7 @@ struct mmc_card {
-- #define MMC_QUIRK_BROKEN_SD_CACHE	(1<<15)	/* Disable broken SD cache support */
-+@@ -296,6 +296,7 @@ struct mmc_card {
-  #define MMC_QUIRK_BROKEN_CACHE_FLUSH	(1<<16)	/* Don't flush cache until the write has occurred */
-  #define MMC_QUIRK_BROKEN_SD_POWEROFF_NOTIFY	(1<<17) /* Disable broken SD poweroff notify support */
-+ #define MMC_QUIRK_NO_UHS_DDR50_TUNING	(1<<18) /* Disable DDR50 tuning */
- +#define MMC_QUIRK_WORKING_SD_CQ	(1<<30)		/* SD card has known-good CQ implementation */
-  #define MMC_QUIRK_ERASE_BROKEN	(1<<31)		/* Skip erase */
+@@ -49,7 +49,7 @@ Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+  	if (test_and_clear_bit(RTL_FLAG_TASK_TX_TIMEOUT, tp->wk.flags)) {
+  		/* if chip isn't accessible, reset bus to revive it */
+  		if (RTL_R32(tp, TxConfig) == ~0) {
+-@@ -4913,6 +4907,7 @@ static int r8169_phy_connect(struct rtl8
++@@ -4922,6 +4916,7 @@ static int r8169_phy_connect(struct rtl8
   
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0751-mmc-set-MMC_QUIRK_KNOWN_WORKING_SD_CQ-on-Raspberry-P.patch b/target/linux/bcm27xx/patches-6.12/950-0751-mmc-set-MMC_QUIRK_KNOWN_WORKING_SD_CQ-on-Raspberry-P.patch
-index 54ad128ea1..3514ff82d8 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0751-mmc-set-MMC_QUIRK_KNOWN_WORKING_SD_CQ-on-Raspberry-P.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0751-mmc-set-MMC_QUIRK_KNOWN_WORKING_SD_CQ-on-Raspberry-P.patch
-@@ -16,7 +16,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+  static void rtl8169_down(struct rtl8169_private *tp)
+  {
+@@ -57,7 +57,7 @@ Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+  	/* Clear all task flags */
+  	bitmap_zero(tp->wk.flags, RTL_FLAG_MAX);
+  
+-@@ -4941,7 +4936,7 @@ static void rtl8169_up(struct rtl8169_pr
++@@ -4950,7 +4945,7 @@ static void rtl8169_up(struct rtl8169_pr
+  	phy_resume(tp->phydev);
+  	rtl8169_init_phy(tp);
+  	napi_enable(&tp->napi);
+@@ -66,7 +66,7 @@ Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+  	rtl_reset_work(tp);
+  
+  	phy_start(tp->phydev);
+-@@ -4958,8 +4953,6 @@ static int rtl8169_close(struct net_devi
++@@ -4967,8 +4962,6 @@ static int rtl8169_close(struct net_devi
+  	rtl8169_down(tp);
+  	rtl8169_rx_clear(tp);
+  
+@@ -75,7 +75,7 @@ Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+  	free_irq(tp->irq, tp);
+  
+  	phy_disconnect(tp->phydev);
+-@@ -5192,7 +5185,7 @@ static void rtl_remove_one(struct pci_de
++@@ -5201,7 +5194,7 @@ static void rtl_remove_one(struct pci_de
+  	if (pci_dev_run_wake(pdev))
+  		pm_runtime_get_noresume(&pdev->dev);
+  
+@@ -84,7 +84,7 @@ Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+  
+  	if (IS_ENABLED(CONFIG_R8169_LEDS))
+  		r8169_remove_leds(tp->leds);
+-@@ -5570,6 +5563,7 @@ static int rtl_init_one(struct pci_dev *
++@@ -5579,6 +5572,7 @@ static int rtl_init_one(struct pci_dev *
+  	tp->irq = pci_irq_vector(pdev, 0);
+  
+  	INIT_WORK(&tp->wk.work, rtl_task);
+diff --git a/target/linux/generic/backport-6.12/780-07-v6.13-r8169-remove-rtl_dash_loop_wait_high-low.patch b/target/linux/generic/backport-6.12/780-07-v6.13-r8169-remove-rtl_dash_loop_wait_high-low.patch
+index 1e3c47f089..bc8f979c20 100644
+--- a/target/linux/generic/backport-6.12/780-07-v6.13-r8169-remove-rtl_dash_loop_wait_high-low.patch
++++ b/target/linux/generic/backport-6.12/780-07-v6.13-r8169-remove-rtl_dash_loop_wait_high-low.patch
+@@ -15,7 +15,7 @@ Signed-off-by: Andrew Lunn <andrew@lunn.ch>
  
- --- a/drivers/mmc/core/card.h
- +++ b/drivers/mmc/core/card.h
--@@ -93,6 +93,7 @@ struct mmc_fixup {
-+@@ -94,6 +94,7 @@ struct mmc_fixup {
-  #define CID_MANFID_KINGSTON     0x70
-  #define CID_MANFID_HYNIX	0x90
-  #define CID_MANFID_KINGSTON_SD	0x9F
-@@ -26,7 +26,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  #define END_FIXUP { NULL }
- --- a/drivers/mmc/core/quirks.h
- +++ b/drivers/mmc/core/quirks.h
--@@ -66,6 +66,12 @@ static const struct mmc_fixup __maybe_un
-+@@ -76,6 +76,12 @@ static const struct mmc_fixup __maybe_un
-  		   0, -1ull, SDIO_ANY_ID, SDIO_ANY_ID, add_quirk_sd,
-  		   MMC_QUIRK_BROKEN_SD_CACHE, EXT_CSD_REV_ANY),
+ --- a/drivers/net/ethernet/realtek/r8169_main.c
+ +++ b/drivers/net/ethernet/realtek/r8169_main.c
+-@@ -1345,40 +1345,19 @@ static void rtl8168ep_stop_cmac(struct r
++@@ -1348,40 +1348,19 @@ static void rtl8168ep_stop_cmac(struct r
+  	RTL_W8(tp, IBCR0, RTL_R8(tp, IBCR0) & ~0x01);
+  }
   
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0752-mmc-use-downstream-DT-property-to-modify-CQE-and-or-.patch b/target/linux/bcm27xx/patches-6.12/950-0752-mmc-use-downstream-DT-property-to-modify-CQE-and-or-.patch
-index d6ab612840..0cf3c9934e 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0752-mmc-use-downstream-DT-property-to-modify-CQE-and-or-.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0752-mmc-use-downstream-DT-property-to-modify-CQE-and-or-.patch
-@@ -49,7 +49,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
-  		if (host->caps & MMC_CAP_NONREMOVABLE)
- --- a/drivers/mmc/core/sd.c
- +++ b/drivers/mmc/core/sd.c
--@@ -1501,8 +1501,8 @@ cont:
-+@@ -1517,8 +1517,8 @@ cont:
-  			goto free_card;
-  	}
+@@ -60,7 +60,7 @@ Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+  }
   
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0777-drm-v3d-Remove-v3d-cpu_job.patch b/target/linux/bcm27xx/patches-6.12/950-0777-drm-v3d-Remove-v3d-cpu_job.patch
-index 677018625f..8ecf113d8e 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0777-drm-v3d-Remove-v3d-cpu_job.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0777-drm-v3d-Remove-v3d-cpu_job.patch
-@@ -35,7 +35,7 @@ Link: https://patchwork.freedesktop.org/patch/msgid/20250113154741.67520-2-mcana
+  static void rtl8168_driver_start(struct rtl8169_private *tp)
+-@@ -1392,7 +1371,8 @@ static void rtl8168_driver_start(struct
++@@ -1395,7 +1374,8 @@ static void rtl8168_driver_start(struct
+  static void rtl8168dp_driver_stop(struct rtl8169_private *tp)
+  {
+  	r8168dp_oob_notify(tp, OOB_CMD_DRIVER_STOP);
+@@ -70,7 +70,7 @@ Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+  }
   
- --- a/drivers/gpu/drm/v3d/v3d_sched.c
- +++ b/drivers/gpu/drm/v3d/v3d_sched.c
--@@ -673,8 +673,6 @@ v3d_cpu_job_run(struct drm_sched_job *sc
-+@@ -677,8 +677,6 @@ v3d_cpu_job_run(struct drm_sched_job *sc
-  	struct v3d_cpu_job *job = to_cpu_job(sched_job);
-  	struct v3d_dev *v3d = job->base.v3d;
-  
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0859-drm-v3d-Set-job-pointer-to-NULL-when-the-job-s-fence.patch b/target/linux/bcm27xx/patches-6.12/950-0859-drm-v3d-Set-job-pointer-to-NULL-when-the-job-s-fence.patch
-index a6254fe927..069cb5628e 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0859-drm-v3d-Set-job-pointer-to-NULL-when-the-job-s-fence.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0859-drm-v3d-Set-job-pointer-to-NULL-when-the-job-s-fence.patch
-@@ -33,7 +33,7 @@ Signed-off-by: Maíra Canal <mcanal@igalia.com>
- 
- --- a/drivers/gpu/drm/v3d/v3d_sched.c
- +++ b/drivers/gpu/drm/v3d/v3d_sched.c
--@@ -226,8 +226,12 @@ static struct dma_fence *v3d_bin_job_run
-+@@ -230,8 +230,12 @@ static struct dma_fence *v3d_bin_job_run
-  	struct dma_fence *fence;
-  	unsigned long irqflags;
-  
-@@ -47,7 +47,7 @@ Signed-off-by: Maíra Canal <mcanal@igalia.com>
-  
-  	/* Lock required around bin_job update vs
-  	 * v3d_overflow_mem_work().
--@@ -281,8 +285,10 @@ static struct dma_fence *v3d_render_job_
-+@@ -285,8 +289,10 @@ static struct dma_fence *v3d_render_job_
-  	struct drm_device *dev = &v3d->drm;
-  	struct dma_fence *fence;
-  
-@@ -59,7 +59,7 @@ Signed-off-by: Maíra Canal <mcanal@igalia.com>
-  
-  	v3d->render_job = job;
-  
--@@ -327,8 +333,10 @@ v3d_tfu_job_run(struct drm_sched_job *sc
-+@@ -331,8 +337,10 @@ v3d_tfu_job_run(struct drm_sched_job *sc
-  	struct drm_device *dev = &v3d->drm;
-  	struct dma_fence *fence;
-  
-@@ -71,7 +71,7 @@ Signed-off-by: Maíra Canal <mcanal@igalia.com>
-  
-  	v3d->tfu_job = job;
-  
--@@ -373,8 +381,10 @@ v3d_csd_job_run(struct drm_sched_job *sc
-+@@ -377,8 +385,10 @@ v3d_csd_job_run(struct drm_sched_job *sc
-  	struct dma_fence *fence;
-  	int i, csd_cfg0_reg;
-  
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0860-drm-v3d-Associate-a-V3D-tech-revision-to-all-support.patch b/target/linux/bcm27xx/patches-6.12/950-0860-drm-v3d-Associate-a-V3D-tech-revision-to-all-support.patch
-index d4ddf5a608..4ab4ac72ab 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0860-drm-v3d-Associate-a-V3D-tech-revision-to-all-support.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0860-drm-v3d-Associate-a-V3D-tech-revision-to-all-support.patch
-@@ -444,7 +444,7 @@ Signed-off-by: Maíra Canal <mcanal@igalia.com>
-  	}
- --- a/drivers/gpu/drm/v3d/v3d_sched.c
- +++ b/drivers/gpu/drm/v3d/v3d_sched.c
--@@ -357,11 +357,11 @@ v3d_tfu_job_run(struct drm_sched_job *sc
-+@@ -361,11 +361,11 @@ v3d_tfu_job_run(struct drm_sched_job *sc
-  	V3D_WRITE(V3D_TFU_ICA(v3d->ver), job->args.ica);
-  	V3D_WRITE(V3D_TFU_IUA(v3d->ver), job->args.iua);
-  	V3D_WRITE(V3D_TFU_IOA(v3d->ver), job->args.ioa);
-@@ -458,7 +458,7 @@ Signed-off-by: Maíra Canal <mcanal@igalia.com>
-  		V3D_WRITE(V3D_TFU_COEF1(v3d->ver), job->args.coef[1]);
-  		V3D_WRITE(V3D_TFU_COEF2(v3d->ver), job->args.coef[2]);
-  		V3D_WRITE(V3D_TFU_COEF3(v3d->ver), job->args.coef[3]);
--@@ -412,7 +412,7 @@ v3d_csd_job_run(struct drm_sched_job *sc
-+@@ -416,7 +416,7 @@ v3d_csd_job_run(struct drm_sched_job *sc
-  	 *
-  	 * XXX: Set the CFG7 register
-  	 */
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0949-PCI-quirks-work-around-VL805-firmware-ASPM-meddling.patch b/target/linux/bcm27xx/patches-6.12/950-0949-PCI-quirks-work-around-VL805-firmware-ASPM-meddling.patch
-index 2388aeb69e..e0c0cc105f 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0949-PCI-quirks-work-around-VL805-firmware-ASPM-meddling.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0949-PCI-quirks-work-around-VL805-firmware-ASPM-meddling.patch
-@@ -18,7 +18,7 @@ Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
- 
- --- a/drivers/pci/quirks.c
- +++ b/drivers/pci/quirks.c
--@@ -6232,6 +6232,22 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_I
-+@@ -6255,6 +6255,22 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_I
-  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56b1, aspm_l1_acceptable_latency);
-  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c0, aspm_l1_acceptable_latency);
-  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency);
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0959-media-imx335-Support-vertical-flip.patch b/target/linux/bcm27xx/patches-6.12/950-0959-media-imx335-Support-vertical-flip.patch
-index 8d5815ecd5..e1f0b61f72 100644
---- a/target/linux/bcm27xx/patches-6.12/950-0959-media-imx335-Support-vertical-flip.patch
-+++ b/target/linux/bcm27xx/patches-6.12/950-0959-media-imx335-Support-vertical-flip.patch
-@@ -153,7 +153,7 @@ Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-  	case V4L2_CID_TEST_PATTERN:
-  		ret = imx335_update_test_pattern(imx335, ctrl->val);
-  
--@@ -1175,7 +1235,7 @@ static int imx335_init_controls(struct i
-+@@ -1176,7 +1236,7 @@ static int imx335_init_controls(struct i
-  		return ret;
-  
-  	/* v4l2_fwnode_device_properties can add two more controls */
-@@ -162,7 +162,7 @@ Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-  	if (ret)
-  		return ret;
-  
--@@ -1210,6 +1270,13 @@ static int imx335_init_controls(struct i
-+@@ -1211,6 +1271,13 @@ static int imx335_init_controls(struct i
-  
-  	v4l2_ctrl_cluster(2, &imx335->exp_ctrl);
-  
-diff --git a/target/linux/bcm27xx/patches-6.12/950-0961-media-imx335-Use-correct-register-width-for-HNUM.patch b/target/linux/bcm27xx/patches-6.12/950-0961-media-imx335-Use-correct-register-width-for-HNUM.patch
+  static void rtl8168ep_driver_stop(struct rtl8169_private *tp)
+-@@ -1400,7 +1380,8 @@ static void rtl8168ep_driver_stop(struct
++@@ -1403,7 +1383,8 @@ static void rtl8168ep_driver_stop(struct
+  	rtl8168ep_stop_cmac(tp);
+  	r8168ep_ocp_write(tp, 0x01, 0x180, OOB_CMD_DRIVER_STOP);
+  	r8168ep_ocp_write(tp, 0x01, 0x30, r8168ep_ocp_read(tp, 0x30) | 0x01);
+diff --git a/target/linux/generic/backport-6.12/780-09-v6.13-r8169-add-support-for-RTL8125D.patch b/target/linux/generic/backport-6.12/780-09-v6.13-r8169-add-support-for-RTL8125D.patch
 deleted file mode 100644
-index 6c432e524c..0000000000
---- a/target/linux/bcm27xx/patches-6.12/950-0961-media-imx335-Use-correct-register-width-for-HNUM.patch
+index 627c2befdd..0000000000
+--- a/target/linux/generic/backport-6.12/780-09-v6.13-r8169-add-support-for-RTL8125D.patch
 +++ /dev/null
-@@ -1,24 +0,0 @@
--From a8e38e0532fd0b25fcaebf771ddd14f4e04283fa Mon Sep 17 00:00:00 2001
--From: Umang Jain <umang.jain@ideasonboard.com>
--Date: Thu, 8 Aug 2024 22:11:04 +0530
--Subject: [PATCH] media: imx335: Use correct register width for HNUM
+@@ -1,143 +0,0 @@
+-From f75d1fbe7809bc5ed134204b920fd9e2fc5db1df Mon Sep 17 00:00:00 2001
+-From: Heiner Kallweit <hkallweit1@gmail.com>
+-Date: Thu, 24 Oct 2024 22:42:33 +0200
+-Subject: [PATCH] r8169: add support for RTL8125D
 -
--CCI_REG_HNUM should be using CCI_REG16_LE() instead of CCI_REG8()
--as HNUM spans from 0x302e[0:7] to 0x302f[0:3].
+-This adds support for new chip version RTL8125D, which can be found on
+-boards like Gigabyte X870E AORUS ELITE WIFI7. Firmware rtl8125d-1.fw
+-for this chip version is available in linux-firmware already.
 -
--Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
-----
-- drivers/media/i2c/imx335.c | 2 +-
-- 1 file changed, 1 insertion(+), 1 deletion(-)
--
----- a/drivers/media/i2c/imx335.c
--+++ b/drivers/media/i2c/imx335.c
--@@ -31,7 +31,7 @@
-- #define IMX335_REG_CPWAIT_TIME		CCI_REG8(0x300d)
-- #define IMX335_REG_WINMODE		CCI_REG8(0x3018)
-- #define IMX335_REG_HTRIMMING_START	CCI_REG16_LE(0x302c)
---#define IMX335_REG_HNUM			CCI_REG8(0x302e)
--+#define IMX335_REG_HNUM			CCI_REG16_LE(0x302e)
-- 
-- /* Lines per frame */
-- #define IMX335_REG_VMAX			CCI_REG24_LE(0x3030)
-diff --git a/target/linux/bcm27xx/patches-6.12/950-1003-drivers-media-i2c-imx335-Fix-frame-size-enumeration.patch b/target/linux/bcm27xx/patches-6.12/950-1003-drivers-media-i2c-imx335-Fix-frame-size-enumeration.patch
-deleted file mode 100644
-index 89701b06c8..0000000000
---- a/target/linux/bcm27xx/patches-6.12/950-1003-drivers-media-i2c-imx335-Fix-frame-size-enumeration.patch
-+++ /dev/null
-@@ -1,34 +0,0 @@
--From 3dd2c2c507c271d411fab2e82a2b3b7e0b6d3f16 Mon Sep 17 00:00:00 2001
--From: Kieran Bingham <kieran.bingham@ideasonboard.com>
--Date: Mon, 28 Apr 2025 17:07:20 +0100
--Subject: [PATCH] drivers: media: i2c: imx335: Fix frame size enumeration
--
--In commit cfa49ff0558a ("media: i2c: imx335: Support 2592x1940 10-bit
--mode") the IMX335 driver was extended to support multiple output modes.
--
--This incorrectly extended the frame size enumeration to check against
--the supported mbus_codes array instead of the supported mode/frame
--array. This has the unwanted side effect of reporting the currently
--supported frame size 2592x1944 three times.
--
--Fix the check accordingly to report a frame size for each supported
--size, which is presently only a single entry.
--
--Fixes: cfa49ff0558a ("media: i2c: imx335: Support 2592x1940 10-bit mode")
--Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-----
-- drivers/media/i2c/imx335.c | 3 ++-
-- 1 file changed, 2 insertions(+), 1 deletion(-)
--
----- a/drivers/media/i2c/imx335.c
--+++ b/drivers/media/i2c/imx335.c
--@@ -720,7 +720,8 @@ static int imx335_enum_frame_size(struct
-- 	struct imx335 *imx335 = to_imx335(sd);
-- 	u32 code;
-- 
---	if (fsize->index > ARRAY_SIZE(imx335_mbus_codes))
--+	/* Only a single supported_mode available. */
--+	if (fsize->index > 0)
-- 		return -EINVAL;
-- 
-- 	code = imx335_get_format_code(imx335, fsize->code);
-diff --git a/target/linux/gemini/patches-6.12/0001-net-ethernet-cortina-Use-TOE-TSO-on-all-TCP.patch b/target/linux/gemini/patches-6.12/0001-net-ethernet-cortina-Use-TOE-TSO-on-all-TCP.patch
-deleted file mode 100644
-index b7cf748ffe..0000000000
---- a/target/linux/gemini/patches-6.12/0001-net-ethernet-cortina-Use-TOE-TSO-on-all-TCP.patch
-+++ /dev/null
-@@ -1,122 +0,0 @@
--From 4d5c3828a8dd0062eeeb56b7d857a76130c3683c Mon Sep 17 00:00:00 2001
--From: Linus Walleij <linus.walleij@linaro.org>
--Date: Tue, 8 Apr 2025 11:26:58 +0200
--Subject: [PATCH 1/2] net: ethernet: cortina: Use TOE/TSO on all TCP
--
--It is desireable to push the hardware accelerator to also
--process non-segmented TCP frames: we pass the skb->len
--to the "TOE/TSO" offloader and it will handle them.
--
--Without this quirk the driver becomes unstable and lock
--up and and crash.
--
--I do not know exactly why, but it is probably due to the
--TOE (TCP offload engine) feature that is coupled with the
--segmentation feature - it is not possible to turn one
--part off and not the other, either both TOE and TSO are
--active, or neither of them.
--
--Not having the TOE part active seems detrimental, as if
--that hardware feature is not really supposed to be turned
--off.
--
--The datasheet says:
--
--  "Based on packet parsing and TCP connection/NAT table
--   lookup results, the NetEngine puts the packets
--   belonging to the same TCP connection to the same queue
--   for the software to process. The NetEngine puts
--   incoming packets to the buffer or series of buffers
--   for a jumbo packet. With this hardware acceleration,
--   IP/TCP header parsing, checksum validation and
--   connection lookup are offloaded from the software
--   processing."
--
--After numerous tests with the hardware locking up after
--something between minutes and hours depending on load
--using iperf3 I have concluded this is necessary to stabilize
--the hardware.
--
--Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
--Link: https://patch.msgid.link/20250408-gemini-ethernet-tso-always-v1-1-e669f932359c@linaro.org
+-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+-Reviewed-by: Simon Horman <horms@kernel.org>
+-Link: https://patch.msgid.link/d0306912-e88e-4c25-8b5d-545ae8834c0c@gmail.com
 -Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 ----
-- drivers/net/ethernet/cortina/gemini.c | 37 +++++++++++++++++++++------
-- 1 file changed, 29 insertions(+), 8 deletions(-)
+- drivers/net/ethernet/realtek/r8169.h          |  1 +
+- drivers/net/ethernet/realtek/r8169_main.c     | 23 +++++++++++++------
+- .../net/ethernet/realtek/r8169_phy_config.c   | 10 ++++++++
+- 3 files changed, 27 insertions(+), 7 deletions(-)
 -
----- a/drivers/net/ethernet/cortina/gemini.c
--+++ b/drivers/net/ethernet/cortina/gemini.c
--@@ -1143,6 +1143,7 @@ static int gmac_map_tx_bufs(struct net_d
-- 	struct gmac_txdesc *txd;
-- 	skb_frag_t *skb_frag;
-- 	dma_addr_t mapping;
--+	bool tcp = false;
-- 	void *buffer;
-- 	u16 mss;
-- 	int ret;
--@@ -1150,6 +1151,13 @@ static int gmac_map_tx_bufs(struct net_d
-- 	word1 = skb->len;
-- 	word3 = SOF_BIT;
+---- a/drivers/net/ethernet/realtek/r8169.h
+-+++ b/drivers/net/ethernet/realtek/r8169.h
+-@@ -68,6 +68,7 @@ enum mac_version {
+- 	/* support for RTL_GIGA_MAC_VER_60 has been removed */
+- 	RTL_GIGA_MAC_VER_61,
+- 	RTL_GIGA_MAC_VER_63,
+-+	RTL_GIGA_MAC_VER_64,
+- 	RTL_GIGA_MAC_VER_65,
+- 	RTL_GIGA_MAC_VER_66,
+- 	RTL_GIGA_MAC_NONE
+---- a/drivers/net/ethernet/realtek/r8169_main.c
+-+++ b/drivers/net/ethernet/realtek/r8169_main.c
+-@@ -55,6 +55,7 @@
+- #define FIRMWARE_8107E_2	"rtl_nic/rtl8107e-2.fw"
+- #define FIRMWARE_8125A_3	"rtl_nic/rtl8125a-3.fw"
+- #define FIRMWARE_8125B_2	"rtl_nic/rtl8125b-2.fw"
+-+#define FIRMWARE_8125D_1	"rtl_nic/rtl8125d-1.fw"
+- #define FIRMWARE_8126A_2	"rtl_nic/rtl8126a-2.fw"
+- #define FIRMWARE_8126A_3	"rtl_nic/rtl8126a-3.fw"
 - 
--+	/* Determine if we are doing TCP */
--+	if (skb->protocol == htons(ETH_P_IP))
--+		tcp = (ip_hdr(skb)->protocol == IPPROTO_TCP);
--+	else
--+		/* IPv6 */
--+		tcp = (ipv6_hdr(skb)->nexthdr == IPPROTO_TCP);
+-@@ -138,6 +139,7 @@ static const struct {
+- 	[RTL_GIGA_MAC_VER_61] = {"RTL8125A",		FIRMWARE_8125A_3},
+- 	/* reserve 62 for CFG_METHOD_4 in the vendor driver */
+- 	[RTL_GIGA_MAC_VER_63] = {"RTL8125B",		FIRMWARE_8125B_2},
+-+	[RTL_GIGA_MAC_VER_64] = {"RTL8125D",		FIRMWARE_8125D_1},
+- 	[RTL_GIGA_MAC_VER_65] = {"RTL8126A",		FIRMWARE_8126A_2},
+- 	[RTL_GIGA_MAC_VER_66] = {"RTL8126A",		FIRMWARE_8126A_3},
+- };
+-@@ -706,6 +708,7 @@ MODULE_FIRMWARE(FIRMWARE_8168FP_3);
+- MODULE_FIRMWARE(FIRMWARE_8107E_2);
+- MODULE_FIRMWARE(FIRMWARE_8125A_3);
+- MODULE_FIRMWARE(FIRMWARE_8125B_2);
+-+MODULE_FIRMWARE(FIRMWARE_8125D_1);
+- MODULE_FIRMWARE(FIRMWARE_8126A_2);
+- MODULE_FIRMWARE(FIRMWARE_8126A_3);
+- 
+-@@ -2078,10 +2081,7 @@ static void rtl_set_eee_txidle_timer(str
+- 		tp->tx_lpi_timer = timer_val;
+- 		r8168_mac_ocp_write(tp, 0xe048, timer_val);
+- 		break;
+--	case RTL_GIGA_MAC_VER_61:
+--	case RTL_GIGA_MAC_VER_63:
+--	case RTL_GIGA_MAC_VER_65:
+--	case RTL_GIGA_MAC_VER_66:
+-+	case RTL_GIGA_MAC_VER_61 ... RTL_GIGA_MAC_VER_66:
+- 		tp->tx_lpi_timer = timer_val;
+- 		RTL_W16(tp, EEE_TXIDLE_TIMER_8125, timer_val);
+- 		break;
+-@@ -2292,6 +2292,9 @@ static enum mac_version rtl8169_get_mac_
+- 		{ 0x7cf, 0x64a,	RTL_GIGA_MAC_VER_66 },
+- 		{ 0x7cf, 0x649,	RTL_GIGA_MAC_VER_65 },
+- 
+-+		/* 8125D family. */
+-+		{ 0x7cf, 0x688,	RTL_GIGA_MAC_VER_64 },
 -+
-- 	mss = skb_shinfo(skb)->gso_size;
-- 	if (mss) {
-- 		/* This means we are dealing with TCP and skb->len is the
--@@ -1162,8 +1170,26 @@ static int gmac_map_tx_bufs(struct net_d
-- 			   mss, skb->len);
-- 		word1 |= TSS_MTU_ENABLE_BIT;
-- 		word3 |= mss;
--+	} else if (tcp) {
--+		/* Even if we are not using TSO, use the hardware offloader
--+		 * for transferring the TCP frame: this hardware has partial
--+		 * TCP awareness (called TOE - TCP Offload Engine) and will
--+		 * according to the datasheet put packets belonging to the
--+		 * same TCP connection in the same queue for the TOE/TSO
--+		 * engine to process. The engine will deal with chopping
--+		 * up frames that exceed ETH_DATA_LEN which the
--+		 * checksumming engine cannot handle (see below) into
--+		 * manageable chunks. It flawlessly deals with quite big
--+		 * frames and frames containing custom DSA EtherTypes.
--+		 */
--+		mss = netdev->mtu + skb_tcp_all_headers(skb);
--+		mss = min(mss, skb->len);
--+		netdev_dbg(netdev, "TOE/TSO len %04x mtu %04x mss %04x\n",
--+			   skb->len, netdev->mtu, mss);
--+		word1 |= TSS_MTU_ENABLE_BIT;
--+		word3 |= mss;
-- 	} else if (skb->len >= ETH_FRAME_LEN) {
---		/* Hardware offloaded checksumming isn't working on frames
--+		/* Hardware offloaded checksumming isn't working on non-TCP frames
-- 		 * bigger than 1514 bytes. A hypothesis about this is that the
-- 		 * checksum buffer is only 1518 bytes, so when the frames get
-- 		 * bigger they get truncated, or the last few bytes get
--@@ -1180,21 +1206,16 @@ static int gmac_map_tx_bufs(struct net_d
-- 	}
+- 		/* 8125B family. */
+- 		{ 0x7cf, 0x641,	RTL_GIGA_MAC_VER_63 },
 - 
-- 	if (skb->ip_summed == CHECKSUM_PARTIAL) {
---		int tcp = 0;
---
-- 		/* We do not switch off the checksumming on non TCP/UDP
-- 		 * frames: as is shown from tests, the checksumming engine
-- 		 * is smart enough to see that a frame is not actually TCP
-- 		 * or UDP and then just pass it through without any changes
-- 		 * to the frame.
-- 		 */
---		if (skb->protocol == htons(ETH_P_IP)) {
--+		if (skb->protocol == htons(ETH_P_IP))
-- 			word1 |= TSS_IP_CHKSUM_BIT;
---			tcp = ip_hdr(skb)->protocol == IPPROTO_TCP;
---		} else { /* IPv6 */
--+		else
-- 			word1 |= TSS_IPV6_ENABLE_BIT;
---			tcp = ipv6_hdr(skb)->nexthdr == IPPROTO_TCP;
---		}
+-@@ -2557,9 +2560,7 @@ static void rtl_init_rxcfg(struct rtl816
+- 	case RTL_GIGA_MAC_VER_61:
+- 		RTL_W32(tp, RxConfig, RX_FETCH_DFLT_8125 | RX_DMA_BURST);
+- 		break;
+--	case RTL_GIGA_MAC_VER_63:
+--	case RTL_GIGA_MAC_VER_65:
+--	case RTL_GIGA_MAC_VER_66:
+-+	case RTL_GIGA_MAC_VER_63 ... RTL_GIGA_MAC_VER_66:
+- 		RTL_W32(tp, RxConfig, RX_FETCH_DFLT_8125 | RX_DMA_BURST |
+- 			RX_PAUSE_SLOT_ON);
+- 		break;
+-@@ -3897,6 +3898,12 @@ static void rtl_hw_start_8125b(struct rt
+- 	rtl_hw_start_8125_common(tp);
+- }
 - 
-- 		word1 |= tcp ? TSS_TCP_CHKSUM_BIT : TSS_UDP_CHKSUM_BIT;
-- 	}
-diff --git a/target/linux/generic/backport-6.12/300-v6.16-mips-Add-std-flag-specified.patch b/target/linux/generic/backport-6.12/300-v6.16-mips-Add-std-flag-specified.patch
+-+static void rtl_hw_start_8125d(struct rtl8169_private *tp)
+-+{
+-+	rtl_set_def_aspm_entry_latency(tp);
+-+	rtl_hw_start_8125_common(tp);
+-+}
+-+
+- static void rtl_hw_start_8126a(struct rtl8169_private *tp)
+- {
+- 	rtl_disable_zrxdc_timeout(tp);
+-@@ -3946,6 +3953,7 @@ static void rtl_hw_config(struct rtl8169
+- 		[RTL_GIGA_MAC_VER_53] = rtl_hw_start_8117,
+- 		[RTL_GIGA_MAC_VER_61] = rtl_hw_start_8125a_2,
+- 		[RTL_GIGA_MAC_VER_63] = rtl_hw_start_8125b,
+-+		[RTL_GIGA_MAC_VER_64] = rtl_hw_start_8125d,
+- 		[RTL_GIGA_MAC_VER_65] = rtl_hw_start_8126a,
+- 		[RTL_GIGA_MAC_VER_66] = rtl_hw_start_8126a,
+- 	};
+-@@ -3963,6 +3971,7 @@ static void rtl_hw_start_8125(struct rtl
+- 	/* disable interrupt coalescing */
+- 	switch (tp->mac_version) {
+- 	case RTL_GIGA_MAC_VER_61:
+-+	case RTL_GIGA_MAC_VER_64:
+- 		for (i = 0xa00; i < 0xb00; i += 4)
+- 			RTL_W32(tp, i, 0);
+- 		break;
+---- a/drivers/net/ethernet/realtek/r8169_phy_config.c
+-+++ b/drivers/net/ethernet/realtek/r8169_phy_config.c
+-@@ -1103,6 +1103,15 @@ static void rtl8125b_hw_phy_config(struc
+- 	rtl8125b_config_eee_phy(phydev);
+- }
+- 
+-+static void rtl8125d_hw_phy_config(struct rtl8169_private *tp,
+-+				   struct phy_device *phydev)
+-+{
+-+	r8169_apply_firmware(tp);
+-+	rtl8125_legacy_force_mode(phydev);
+-+	rtl8168g_disable_aldps(phydev);
+-+	rtl8125b_config_eee_phy(phydev);
+-+}
+-+
+- static void rtl8126a_hw_phy_config(struct rtl8169_private *tp,
+- 				   struct phy_device *phydev)
+- {
+-@@ -1159,6 +1168,7 @@ void r8169_hw_phy_config(struct rtl8169_
+- 		[RTL_GIGA_MAC_VER_53] = rtl8117_hw_phy_config,
+- 		[RTL_GIGA_MAC_VER_61] = rtl8125a_2_hw_phy_config,
+- 		[RTL_GIGA_MAC_VER_63] = rtl8125b_hw_phy_config,
+-+		[RTL_GIGA_MAC_VER_64] = rtl8125d_hw_phy_config,
+- 		[RTL_GIGA_MAC_VER_65] = rtl8126a_hw_phy_config,
+- 		[RTL_GIGA_MAC_VER_66] = rtl8126a_hw_phy_config,
+- 	};
+diff --git a/target/linux/generic/backport-6.12/781-01-v6.13-net-phy-realtek-read-duplex-and-gbit-master-from-PHY.patch b/target/linux/generic/backport-6.12/781-01-v6.13-net-phy-realtek-read-duplex-and-gbit-master-from-PHY.patch
+index 2a1726ac80..31b8aabf7a 100644
+--- a/target/linux/generic/backport-6.12/781-01-v6.13-net-phy-realtek-read-duplex-and-gbit-master-from-PHY.patch
++++ b/target/linux/generic/backport-6.12/781-01-v6.13-net-phy-realtek-read-duplex-and-gbit-master-from-PHY.patch
+@@ -40,7 +40,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  
+  #define RTL_GENERIC_PHYID			0x001cc800
+  #define RTL_8211FVD_PHYID			0x001cc878
+-@@ -660,9 +663,18 @@ static int rtl8366rb_config_init(struct
++@@ -661,9 +664,18 @@ static int rtl8366rb_config_init(struct
+  }
+  
+  /* get actual speed to cover the downshift case */
+@@ -61,7 +61,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  	case 0x0000:
+  		phydev->speed = SPEED_10;
+  		break;
+-@@ -684,6 +696,19 @@ static void rtlgen_decode_speed(struct p
++@@ -685,6 +697,19 @@ static void rtlgen_decode_speed(struct p
+  	default:
+  		break;
+  	}
+@@ -81,7 +81,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  }
+  
+  static int rtlgen_read_status(struct phy_device *phydev)
+-@@ -701,7 +726,7 @@ static int rtlgen_read_status(struct phy
++@@ -702,7 +727,7 @@ static int rtlgen_read_status(struct phy
+  	if (val < 0)
+  		return val;
+  
+@@ -90,7 +90,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+  
+  	return 0;
+  }
+-@@ -1007,11 +1032,11 @@ static int rtl822x_c45_read_status(struc
++@@ -1008,11 +1033,11 @@ static int rtl822x_c45_read_status(struc
+  		return 0;
+  
+  	/* Read actual speed from vendor register. */
+diff --git a/target/linux/generic/backport-6.12/781-02-v6.13-net-phy-realtek-change-order-of-calls-in-C22-read_st.patch b/target/linux/generic/backport-6.12/781-02-v6.13-net-phy-realtek-change-order-of-calls-in-C22-read_st.patch
+index 4341adb878..2e5d7bb3b4 100644
+--- a/target/linux/generic/backport-6.12/781-02-v6.13-net-phy-realtek-change-order-of-calls-in-C22-read_st.patch
++++ b/target/linux/generic/backport-6.12/781-02-v6.13-net-phy-realtek-change-order-of-calls-in-C22-read_st.patch
+@@ -18,7 +18,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+ 
+ --- a/drivers/net/phy/realtek.c
+ +++ b/drivers/net/phy/realtek.c
+-@@ -949,17 +949,25 @@ static void rtl822xb_update_interface(st
++@@ -950,17 +950,25 @@ static void rtl822xb_update_interface(st
+  
+  static int rtl822x_read_status(struct phy_device *phydev)
+  {
+diff --git a/target/linux/generic/backport-6.12/781-03-v6.13-net-phy-realtek-clear-1000Base-T-link-partner-advert.patch b/target/linux/generic/backport-6.12/781-03-v6.13-net-phy-realtek-clear-1000Base-T-link-partner-advert.patch
+index 60cd125a22..f7d8a5aa16 100644
+--- a/target/linux/generic/backport-6.12/781-03-v6.13-net-phy-realtek-clear-1000Base-T-link-partner-advert.patch
++++ b/target/linux/generic/backport-6.12/781-03-v6.13-net-phy-realtek-clear-1000Base-T-link-partner-advert.patch
+@@ -17,7 +17,7 @@ Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+ 
+ --- a/drivers/net/phy/realtek.c
+ +++ b/drivers/net/phy/realtek.c
+-@@ -1026,6 +1026,10 @@ static int rtl822x_c45_read_status(struc
++@@ -1027,6 +1027,10 @@ static int rtl822x_c45_read_status(struc
+  	if (ret < 0)
+  		return ret;
+  
+diff --git a/target/linux/generic/backport-6.12/781-04-v6.13-net-phy-realtek-merge-the-drivers-for-internal-NBase.patch b/target/linux/generic/backport-6.12/781-04-v6.13-net-phy-realtek-merge-the-drivers-for-internal-NBase.patch
 deleted file mode 100644
-index a0d2273837..0000000000
---- a/target/linux/generic/backport-6.12/300-v6.16-mips-Add-std-flag-specified.patch
+index 771f60df91..0000000000
+--- a/target/linux/generic/backport-6.12/781-04-v6.13-net-phy-realtek-merge-the-drivers-for-internal-NBase.patch
 +++ /dev/null
-@@ -1,44 +0,0 @@
--From 0f4ae7c6ecb89bfda026d210dcf8216fb67d2333 Mon Sep 17 00:00:00 2001
--From: Khem Raj <raj.khem@gmail.com>
--Date: Sat, 29 Mar 2025 08:39:03 -0700
--Subject: mips: Add -std= flag specified in KBUILD_CFLAGS to vdso CFLAGS
+@@ -1,136 +0,0 @@
+-From f87a17ed3b51fba4dfdd8f8b643b5423a85fc551 Mon Sep 17 00:00:00 2001
+-From: Heiner Kallweit <hkallweit1@gmail.com>
+-Date: Tue, 15 Oct 2024 07:47:14 +0200
+-Subject: [PATCH] net: phy: realtek: merge the drivers for internal NBase-T
+- PHY's
 -
--GCC 15 changed the default C standard dialect from gnu17 to gnu23,
--which should not have impacted the kernel because it explicitly requests
--the gnu11 standard in the main Makefile. However, mips/vdso code uses
--its own CFLAGS without a '-std=' value, which break with this dialect
--change because of the kernel's own definitions of bool, false, and true
--conflicting with the C23 reserved keywords.
+-The Realtek RTL8125/RTL8126 NBase-T MAC/PHY chips have internal PHY's
+-which are register-compatible, at least for the registers we use here.
+-So let's use just one PHY driver to support all of them.
+-These internal PHY's exist also as external C45 PHY's, but on the
+-internal PHY's no access to MMD registers is possible. This can be
+-used to differentiate between the internal and external version.
 -
--  include/linux/stddef.h:11:9: error: cannot use keyword 'false' as enumeration constant
--     11 |         false   = 0,
--        |         ^~~~~
--  include/linux/stddef.h:11:9: note: 'false' is a keyword with '-std=c23' onwards
--  include/linux/types.h:35:33: error: 'bool' cannot be defined via 'typedef'
--     35 | typedef _Bool                   bool;
--        |                                 ^~~~
--  include/linux/types.h:35:33: note: 'bool' is a keyword with '-std=c23' onwards
+-As a side effect the drivers for two now external-only drivers don't
+-require read_mmd/write_mmd hooks any longer.
 -
--Add -std as specified in KBUILD_CFLAGS to the decompressor and purgatory
--CFLAGS to eliminate these errors and make the C standard version of these
--areas match the rest of the kernel.
--
--Signed-off-by: Khem Raj <raj.khem@gmail.com>
--Cc: stable@vger.kernel.org
--Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+-Link: https://patch.msgid.link/c57081a6-811f-4571-ab35-34f4ca6de9af@gmail.com
+-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ----
-- arch/mips/vdso/Makefile | 1 +
+- drivers/net/phy/realtek.c | 53 +++++++++++++++++++++++++++++++--------
+- 1 file changed, 43 insertions(+), 10 deletions(-)
+-
+---- a/drivers/net/phy/realtek.c
+-+++ b/drivers/net/phy/realtek.c
+-@@ -95,6 +95,7 @@
+- 
+- #define RTL_GENERIC_PHYID			0x001cc800
+- #define RTL_8211FVD_PHYID			0x001cc878
+-+#define RTL_8221B				0x001cc840
+- #define RTL_8221B_VB_CG				0x001cc849
+- #define RTL_8221B_VN_CG				0x001cc84a
+- #define RTL_8251B				0x001cc862
+-@@ -1077,6 +1078,23 @@ static bool rtlgen_supports_2_5gbps(stru
+- 	return val >= 0 && val & MDIO_PMA_SPEED_2_5G;
+- }
+- 
+-+/* On internal PHY's MMD reads over C22 always return 0.
+-+ * Check a MMD register which is known to be non-zero.
+-+ */
+-+static bool rtlgen_supports_mmd(struct phy_device *phydev)
+-+{
+-+	int val;
+-+
+-+	phy_lock_mdio_bus(phydev);
+-+	__phy_write(phydev, MII_MMD_CTRL, MDIO_MMD_PCS);
+-+	__phy_write(phydev, MII_MMD_DATA, MDIO_PCS_EEE_ABLE);
+-+	__phy_write(phydev, MII_MMD_CTRL, MDIO_MMD_PCS | MII_MMD_CTRL_NOINCR);
+-+	val = __phy_read(phydev, MII_MMD_DATA);
+-+	phy_unlock_mdio_bus(phydev);
+-+
+-+	return val > 0;
+-+}
+-+
+- static int rtlgen_match_phy_device(struct phy_device *phydev)
+- {
+- 	return phydev->phy_id == RTL_GENERIC_PHYID &&
+-@@ -1086,7 +1104,8 @@ static int rtlgen_match_phy_device(struc
+- static int rtl8226_match_phy_device(struct phy_device *phydev)
+- {
+- 	return phydev->phy_id == RTL_GENERIC_PHYID &&
+--	       rtlgen_supports_2_5gbps(phydev);
+-+	       rtlgen_supports_2_5gbps(phydev) &&
+-+	       rtlgen_supports_mmd(phydev);
+- }
+- 
+- static int rtlgen_is_c45_match(struct phy_device *phydev, unsigned int id,
+-@@ -1098,6 +1117,11 @@ static int rtlgen_is_c45_match(struct ph
+- 		return !is_c45 && (id == phydev->phy_id);
+- }
+- 
+-+static int rtl8221b_match_phy_device(struct phy_device *phydev)
+-+{
+-+	return phydev->phy_id == RTL_8221B && rtlgen_supports_mmd(phydev);
+-+}
+-+
+- static int rtl8221b_vb_cg_c22_match_phy_device(struct phy_device *phydev)
+- {
+- 	return rtlgen_is_c45_match(phydev, RTL_8221B_VB_CG, false);
+-@@ -1118,9 +1142,21 @@ static int rtl8221b_vn_cg_c45_match_phy_
+- 	return rtlgen_is_c45_match(phydev, RTL_8221B_VN_CG, true);
+- }
+- 
+--static int rtl8251b_c22_match_phy_device(struct phy_device *phydev)
+-+static int rtl_internal_nbaset_match_phy_device(struct phy_device *phydev)
+- {
+--	return rtlgen_is_c45_match(phydev, RTL_8251B, false);
+-+	if (phydev->is_c45)
+-+		return false;
+-+
+-+	switch (phydev->phy_id) {
+-+	case RTL_GENERIC_PHYID:
+-+	case RTL_8221B:
+-+	case RTL_8251B:
+-+		break;
+-+	default:
+-+		return false;
+-+	}
+-+
+-+	return rtlgen_supports_2_5gbps(phydev) && !rtlgen_supports_mmd(phydev);
+- }
+- 
+- static int rtl8251b_c45_match_phy_device(struct phy_device *phydev)
+-@@ -1382,10 +1418,8 @@ static struct phy_driver realtek_drvs[]
+- 		.resume		= rtlgen_resume,
+- 		.read_page	= rtl821x_read_page,
+- 		.write_page	= rtl821x_write_page,
+--		.read_mmd	= rtl822x_read_mmd,
+--		.write_mmd	= rtl822x_write_mmd,
+- 	}, {
+--		PHY_ID_MATCH_EXACT(0x001cc840),
+-+		.match_phy_device = rtl8221b_match_phy_device,
+- 		.name		= "RTL8226B_RTL8221B 2.5Gbps PHY",
+- 		.get_features	= rtl822x_get_features,
+- 		.config_aneg	= rtl822x_config_aneg,
+-@@ -1396,8 +1430,6 @@ static struct phy_driver realtek_drvs[]
+- 		.resume		= rtlgen_resume,
+- 		.read_page	= rtl821x_read_page,
+- 		.write_page	= rtl821x_write_page,
+--		.read_mmd	= rtl822x_read_mmd,
+--		.write_mmd	= rtl822x_write_mmd,
+- 	}, {
+- 		PHY_ID_MATCH_EXACT(0x001cc838),
+- 		.name           = "RTL8226-CG 2.5Gbps PHY",
+-@@ -1475,8 +1507,9 @@ static struct phy_driver realtek_drvs[]
+- 		.read_page      = rtl821x_read_page,
+- 		.write_page     = rtl821x_write_page,
+- 	}, {
+--		.match_phy_device = rtl8251b_c22_match_phy_device,
+--		.name           = "RTL8126A-internal 5Gbps PHY",
+-+		.match_phy_device = rtl_internal_nbaset_match_phy_device,
+-+		.name           = "Realtek Internal NBASE-T PHY",
+-+		.flags		= PHY_IS_INTERNAL,
+- 		.get_features   = rtl822x_get_features,
+- 		.config_aneg    = rtl822x_config_aneg,
+- 		.read_status    = rtl822x_read_status,
+diff --git a/target/linux/generic/backport-6.12/781-05-v6.13-net-phy-realtek-add-RTL8125D-internal-PHY.patch b/target/linux/generic/backport-6.12/781-05-v6.13-net-phy-realtek-add-RTL8125D-internal-PHY.patch
+deleted file mode 100644
+index 4b9b9e8d48..0000000000
+--- a/target/linux/generic/backport-6.12/781-05-v6.13-net-phy-realtek-add-RTL8125D-internal-PHY.patch
++++ /dev/null
+@@ -1,29 +0,0 @@
+-From 8989bad541133c43550bff2b80edbe37b8fb9659 Mon Sep 17 00:00:00 2001
+-From: Heiner Kallweit <hkallweit1@gmail.com>
+-Date: Thu, 17 Oct 2024 18:01:13 +0200
+-Subject: [PATCH] net: phy: realtek: add RTL8125D-internal PHY
+-
+-The first boards show up with Realtek's RTL8125D. This MAC/PHY chip
+-comes with an integrated 2.5Gbps PHY with ID 0x001cc841. It's not
+-clear yet whether there's an external version of this PHY and how
+-Realtek calls it, therefore use the numeric id for now.
+-
+-Link: https://lore.kernel.org/netdev/2ada65e1-5dfa-456c-9334-2bc51272e9da@gmail.com/T/
+-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+-Message-ID: <7d2924de-053b-44d2-a479-870dc3878170@gmail.com>
+-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+----
+- drivers/net/phy/realtek.c | 1 +
 - 1 file changed, 1 insertion(+)
 -
--(limited to 'arch/mips/vdso')
--
----- a/arch/mips/vdso/Makefile
--+++ b/arch/mips/vdso/Makefile
--@@ -27,6 +27,7 @@ endif
-- # offsets.
-- cflags-vdso := $(ccflags-vdso) \
-- 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
--+	$(filter -std=%,$(KBUILD_CFLAGS)) \
-- 	-O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
-- 	-mrelax-pic-calls $(call cc-option, -mexplicit-relocs) \
-- 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
-diff --git a/target/linux/generic/backport-6.12/410-01-v6.14-mtd-rawnand-qcom-cleanup-qcom_nandc-driver.patch b/target/linux/generic/backport-6.12/410-01-v6.14-mtd-rawnand-qcom-cleanup-qcom_nandc-driver.patch
-index 8c5457a507..95b66071ad 100644
---- a/target/linux/generic/backport-6.12/410-01-v6.14-mtd-rawnand-qcom-cleanup-qcom_nandc-driver.patch
-+++ b/target/linux/generic/backport-6.12/410-01-v6.14-mtd-rawnand-qcom-cleanup-qcom_nandc-driver.patch
-@@ -902,7 +902,7 @@ Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
- +		write_reg_dma(nandc, &nandc->regs->cmd1, NAND_DEV_CMD1, 1, NAND_BAM_NEXT_SGL);
-  	}
-  
-- 	nandc->buf_count = len;
-+ 	nandc->buf_count = 512;
- @@ -2926,9 +2877,10 @@ static int qcom_param_page_type_exec(str
-  		      nandc->buf_count, 0);
-  
-diff --git a/target/linux/generic/backport-6.12/410-02-v6.14-mtd-rawnand-qcom-Add-qcom-prefix-to-common-api.patch b/target/linux/generic/backport-6.12/410-02-v6.14-mtd-rawnand-qcom-Add-qcom-prefix-to-common-api.patch
-index 078a56cf16..f634e0442a 100644
---- a/target/linux/generic/backport-6.12/410-02-v6.14-mtd-rawnand-qcom-Add-qcom-prefix-to-common-api.patch
-+++ b/target/linux/generic/backport-6.12/410-02-v6.14-mtd-rawnand-qcom-Add-qcom-prefix-to-common-api.patch
-@@ -844,7 +844,7 @@ Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
- +		qcom_write_reg_dma(nandc, &nandc->regs->cmd1, NAND_DEV_CMD1, 1, NAND_BAM_NEXT_SGL);
-  	}
-  
-- 	nandc->buf_count = len;
-+ 	nandc->buf_count = 512;
- @@ -2873,17 +2873,17 @@ static int qcom_param_page_type_exec(str
-  
-  	config_nand_single_cw_page_read(chip, false, 0);
-diff --git a/target/linux/generic/hack-6.12/610-net-page_pool-try-to-free-deferred-skbs-while-waitin.patch b/target/linux/generic/hack-6.12/610-net-page_pool-try-to-free-deferred-skbs-while-waitin.patch
-index 697f2a64db..5db35ac9a5 100644
---- a/target/linux/generic/hack-6.12/610-net-page_pool-try-to-free-deferred-skbs-while-waitin.patch
-+++ b/target/linux/generic/hack-6.12/610-net-page_pool-try-to-free-deferred-skbs-while-waitin.patch
-@@ -16,7 +16,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
- 
- --- a/net/core/page_pool.c
- +++ b/net/core/page_pool.c
--@@ -1120,7 +1120,7 @@ static void page_pool_release_retry(stru
-+@@ -1124,7 +1124,7 @@ static void page_pool_release_retry(stru
-  	struct delayed_work *dwq = to_delayed_work(wq);
-  	struct page_pool *pool = container_of(dwq, typeof(*pool), release_dw);
-  	void *netdev;
-@@ -25,7 +25,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
-  
-  	inflight = page_pool_release(pool);
-  	/* In rare cases, a driver bug may cause inflight to go negative.
--@@ -1132,6 +1132,17 @@ static void page_pool_release_retry(stru
-+@@ -1136,6 +1136,17 @@ static void page_pool_release_retry(stru
-  	if (inflight <= 0)
-  		return;
-  
-diff --git a/target/linux/generic/hack-6.12/800-GPIO-add-named-gpio-exports.patch b/target/linux/generic/hack-6.12/800-GPIO-add-named-gpio-exports.patch
-index 3bfc612c13..bf75cedafd 100644
---- a/target/linux/generic/hack-6.12/800-GPIO-add-named-gpio-exports.patch
-+++ b/target/linux/generic/hack-6.12/800-GPIO-add-named-gpio-exports.patch
-@@ -15,7 +15,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
-  
-  #include "gpiolib.h"
-  #include "gpiolib-of.h"
--@@ -1189,3 +1191,73 @@ void of_gpiochip_remove(struct gpio_chip
-+@@ -1198,3 +1200,73 @@ void of_gpiochip_remove(struct gpio_chip
-  {
-  	of_node_put(dev_of_node(&chip->gpiodev->dev));
-  }
-diff --git a/target/linux/generic/hack-6.12/902-debloat_proc.patch b/target/linux/generic/hack-6.12/902-debloat_proc.patch
-index a135684460..2bc77873fd 100644
---- a/target/linux/generic/hack-6.12/902-debloat_proc.patch
-+++ b/target/linux/generic/hack-6.12/902-debloat_proc.patch
-@@ -396,7 +396,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
-  }
- --- a/net/ipv4/route.c
- +++ b/net/ipv4/route.c
--@@ -378,6 +378,9 @@ static struct pernet_operations ip_rt_pr
-+@@ -382,6 +382,9 @@ static struct pernet_operations ip_rt_pr
-  
-  static int __init ip_rt_proc_init(void)
-  {
+---- a/drivers/net/phy/realtek.c
+-+++ b/drivers/net/phy/realtek.c
+-@@ -1151,6 +1151,7 @@ static int rtl_internal_nbaset_match_phy
+- 	case RTL_GENERIC_PHYID:
+- 	case RTL_8221B:
+- 	case RTL_8251B:
+-+	case 0x001cc841:
+- 		break;
+- 	default:
+- 		return false;
 diff --git a/target/linux/generic/kernel-6.12 b/target/linux/generic/kernel-6.12
-index dbe7bc8574..5af1d444ca 100644
+index 91260b8a1c..502b7f56d3 100644
 --- a/target/linux/generic/kernel-6.12
 +++ b/target/linux/generic/kernel-6.12
 @@ -1,2 +1,2 @@
--LINUX_VERSION-6.12 = .34
--LINUX_KERNEL_HASH-6.12.34 = a7f3fe381f67eca4172e9b63efb61a14bd7f9e1278e03603d0ff5a93f270c24d
-+LINUX_VERSION-6.12 = .35
-+LINUX_KERNEL_HASH-6.12.35 = 05f4e0b01dde578c3328eb539d305cccec7b84e939f6dd5f21fdaf5f313da748
-diff --git a/target/linux/generic/pending-6.12/532-jffs2_eofdetect.patch b/target/linux/generic/pending-6.12/532-jffs2_eofdetect.patch
-index 744fbd0e21..88bb14a02a 100644
---- a/target/linux/generic/pending-6.12/532-jffs2_eofdetect.patch
-+++ b/target/linux/generic/pending-6.12/532-jffs2_eofdetect.patch
-@@ -45,7 +45,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+-LINUX_VERSION-6.12 = .35
+-LINUX_KERNEL_HASH-6.12.35 = 05f4e0b01dde578c3328eb539d305cccec7b84e939f6dd5f21fdaf5f313da748
++LINUX_VERSION-6.12 = .36
++LINUX_KERNEL_HASH-6.12.36 = 1137933cae2cd3df2266c5043a6276adf1d59184aa62472d32c6c7e3d43fea4c
+diff --git a/target/linux/generic/pending-6.12/681-net-remove-NETIF_F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch b/target/linux/generic/pending-6.12/681-net-remove-NETIF_F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch
+index 9788ded24c..34e7a44beb 100644
+--- a/target/linux/generic/pending-6.12/681-net-remove-NETIF_F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch
++++ b/target/linux/generic/pending-6.12/681-net-remove-NETIF_F_GSO_FRAGLIST-from-NETIF_F_GSO_SOF.patch
+@@ -107,7 +107,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  	if (sk_can_gso(sk)) {
+ --- a/net/mac80211/ieee80211_i.h
+ +++ b/net/mac80211/ieee80211_i.h
+-@@ -2012,7 +2012,7 @@ void ieee80211_color_collision_detection
++@@ -2021,7 +2021,7 @@ void ieee80211_color_collision_detection
+  /* interface handling */
+  #define MAC80211_SUPPORTED_FEATURES_TX	(NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM | \
+  					 NETIF_F_HW_CSUM | NETIF_F_SG | \
+diff --git a/target/linux/imx/patches-6.12/506-6.16-PCI-imx6-Skip-link-up-workaround-for-newer-platforms.patch b/target/linux/imx/patches-6.12/506-6.16-PCI-imx6-Skip-link-up-workaround-for-newer-platforms.patch
+index 675da3e2d9..11275a2ffd 100644
+--- a/target/linux/imx/patches-6.12/506-6.16-PCI-imx6-Skip-link-up-workaround-for-newer-platforms.patch
++++ b/target/linux/imx/patches-6.12/506-6.16-PCI-imx6-Skip-link-up-workaround-for-newer-platforms.patch
+@@ -23,7 +23,7 @@ Link: https://patch.msgid.link/20250416081314.3929794-2-hongxing.zhu@nxp.com
+ 
+ --- a/drivers/pci/controller/dwc/pci-imx6.c
+ +++ b/drivers/pci/controller/dwc/pci-imx6.c
+-@@ -74,7 +74,7 @@ enum imx_pcie_variants {
++@@ -76,7 +76,7 @@ enum imx_pcie_variants {
+  };
   
-  		if (ret < 0)
-  			goto out;
--@@ -567,6 +573,17 @@ full_scan:
-+@@ -569,6 +575,17 @@ full_scan:
-  			return err;
+  #define IMX_PCIE_FLAG_IMX_PHY			BIT(0)
+@@ -32,7 +32,7 @@ Link: https://patch.msgid.link/20250416081314.3929794-2-hongxing.zhu@nxp.com
+  #define IMX_PCIE_FLAG_SUPPORTS_SUSPEND		BIT(2)
+  #define IMX_PCIE_FLAG_HAS_PHYDRV		BIT(3)
+  #define IMX_PCIE_FLAG_HAS_APP_RESET		BIT(4)
+-@@ -847,6 +847,12 @@ static int imx_pcie_start_link(struct dw
++@@ -862,6 +862,12 @@ static int imx_pcie_start_link(struct dw
+  	u32 tmp;
+  	int ret;
+  
+@@ -45,7 +45,7 @@ Link: https://patch.msgid.link/20250416081314.3929794-2-hongxing.zhu@nxp.com
+  	/*
+  	 * Force Gen1 operation when starting the link.  In case the link is
+  	 * started in Gen2 mode, there is a possibility the devices on the
+-@@ -883,22 +889,10 @@ static int imx_pcie_start_link(struct dw
++@@ -898,22 +904,10 @@ static int imx_pcie_start_link(struct dw
+  		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp);
+  		dw_pcie_dbi_ro_wr_dis(pci);
+  
+@@ -72,7 +72,7 @@ Link: https://patch.msgid.link/20250416081314.3929794-2-hongxing.zhu@nxp.com
+  		}
+  
+  		/* Make sure link training is finished as well! */
+-@@ -1520,7 +1514,7 @@ static const struct imx_pcie_drvdata drv
++@@ -1535,7 +1529,7 @@ static const struct imx_pcie_drvdata drv
+  	[IMX6Q] = {
+  		.variant = IMX6Q,
+  		.flags = IMX_PCIE_FLAG_IMX_PHY |
+@@ -81,7 +81,7 @@ Link: https://patch.msgid.link/20250416081314.3929794-2-hongxing.zhu@nxp.com
+  			 IMX_PCIE_FLAG_BROKEN_SUSPEND |
+  			 IMX_PCIE_FLAG_SUPPORTS_SUSPEND,
+  		.dbi_length = 0x200,
+-@@ -1538,7 +1532,7 @@ static const struct imx_pcie_drvdata drv
++@@ -1553,7 +1547,7 @@ static const struct imx_pcie_drvdata drv
+  	[IMX6SX] = {
+  		.variant = IMX6SX,
+  		.flags = IMX_PCIE_FLAG_IMX_PHY |
+@@ -90,7 +90,7 @@ Link: https://patch.msgid.link/20250416081314.3929794-2-hongxing.zhu@nxp.com
+  			 IMX_PCIE_FLAG_SUPPORTS_SUSPEND,
+  		.gpr = "fsl,imx6q-iomuxc-gpr",
+  		.clk_names = imx6sx_clks,
+-@@ -1554,7 +1548,7 @@ static const struct imx_pcie_drvdata drv
++@@ -1569,7 +1563,7 @@ static const struct imx_pcie_drvdata drv
+  	[IMX6QP] = {
+  		.variant = IMX6QP,
+  		.flags = IMX_PCIE_FLAG_IMX_PHY |
+diff --git a/target/linux/imx/patches-6.12/506-pending-PCI-imx6-Remove-apps_reset-toggle-in-_core_reset-function.patch b/target/linux/imx/patches-6.12/506-pending-PCI-imx6-Remove-apps_reset-toggle-in-_core_reset-function.patch
+index 711bf67774..234a028c4f 100644
+--- a/target/linux/imx/patches-6.12/506-pending-PCI-imx6-Remove-apps_reset-toggle-in-_core_reset-function.patch
++++ b/target/linux/imx/patches-6.12/506-pending-PCI-imx6-Remove-apps_reset-toggle-in-_core_reset-function.patch
+@@ -24,7 +24,7 @@ Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+ 
+ --- a/drivers/pci/controller/dwc/pci-imx6.c
+ +++ b/drivers/pci/controller/dwc/pci-imx6.c
+-@@ -763,7 +763,6 @@ static int imx7d_pcie_core_reset(struct
++@@ -778,7 +778,6 @@ static int imx7d_pcie_core_reset(struct
+  static void imx_pcie_assert_core_reset(struct imx_pcie *imx_pcie)
+  {
+  	reset_control_assert(imx_pcie->pciephy_reset);
+@@ -32,7 +32,7 @@ Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+  
+  	if (imx_pcie->drvdata->core_reset)
+  		imx_pcie->drvdata->core_reset(imx_pcie, true);
+-@@ -775,7 +774,6 @@ static void imx_pcie_assert_core_reset(s
++@@ -790,7 +789,6 @@ static void imx_pcie_assert_core_reset(s
+  static int imx_pcie_deassert_core_reset(struct imx_pcie *imx_pcie)
+  {
+  	reset_control_deassert(imx_pcie->pciephy_reset);
+@@ -40,7 +40,7 @@ Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+  
+  	if (imx_pcie->drvdata->core_reset)
+  		imx_pcie->drvdata->core_reset(imx_pcie, false);
+-@@ -976,6 +974,9 @@ static int imx_pcie_host_init(struct dw_
++@@ -991,6 +989,9 @@ static int imx_pcie_host_init(struct dw_
+  		}
   	}
   
-diff --git a/target/linux/mvebu/patches-6.12/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.12/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-index 2483dedfae..2d7b6b5176 100644
---- a/target/linux/mvebu/patches-6.12/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-+++ b/target/linux/mvebu/patches-6.12/0003-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-@@ -18,7 +18,7 @@ Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
- 
- --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
- +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--@@ -432,9 +432,7 @@ static int armada_37xx_gpio_direction_ou
-+@@ -433,9 +433,7 @@ static int armada_37xx_gpio_direction_ou
-  	reg = OUTPUT_EN;
-  	armada_37xx_update_reg(&reg, &en_offset);
+diff --git a/target/linux/mediatek/patches-6.12/330-snand-mtk-bmt-support.patch b/target/linux/mediatek/patches-6.12/330-snand-mtk-bmt-support.patch
+index 270e447a81..7713981f00 100644
+--- a/target/linux/mediatek/patches-6.12/330-snand-mtk-bmt-support.patch
++++ b/target/linux/mediatek/patches-6.12/330-snand-mtk-bmt-support.patch
+@@ -8,7 +8,7 @@
   
-diff --git a/target/linux/mvebu/patches-6.12/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.12/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-deleted file mode 100644
-index 4fe9f1b7b8..0000000000
---- a/target/linux/mvebu/patches-6.12/0004-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-+++ /dev/null
-@@ -1,36 +0,0 @@
--From 57273ff8bb16f3842c2597b5bbcd49e7fa12edf7 Mon Sep 17 00:00:00 2001
--From: Gabor Juhos <j4g8y7@gmail.com>
--Date: Wed, 14 May 2025 21:18:35 +0200
--Subject: [PATCH 4/7] pinctrl: armada-37xx: propagate error from
-- armada_37xx_gpio_get()
--
--The regmap_read() function can fail, so propagate its error up to
--the stack instead of silently ignoring that.
--
--Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
--Reviewed-by: Andrew Lunn <andrew@lunn.ch>
--Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
--Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-4-07e9ac1ab737@gmail.com
--Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-----
-- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 5 ++++-
-- 1 file changed, 4 insertions(+), 1 deletion(-)
--
----- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--@@ -440,11 +440,14 @@ static int armada_37xx_gpio_get(struct g
-- 	struct armada_37xx_pinctrl *info = gpiochip_get_data(chip);
-- 	unsigned int reg = INPUT_VAL;
-- 	unsigned int val, mask;
--+	int ret;
-- 
-- 	armada_37xx_update_reg(&reg, &offset);
-- 	mask = BIT(offset);
-- 
---	regmap_read(info->regmap, reg, &val);
--+	ret = regmap_read(info->regmap, reg, &val);
--+	if (ret)
--+		return ret;
-- 
-- 	return (val & mask) != 0;
-- }
-diff --git a/target/linux/mvebu/patches-6.12/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.12/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-deleted file mode 100644
-index 2395a0665f..0000000000
---- a/target/linux/mvebu/patches-6.12/0005-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-+++ /dev/null
-@@ -1,42 +0,0 @@
--From bfa0ff804ffa8b1246ade8be08de98c9eb19d16f Mon Sep 17 00:00:00 2001
--From: Gabor Juhos <j4g8y7@gmail.com>
--Date: Wed, 14 May 2025 21:18:36 +0200
--Subject: [PATCH 5/7] pinctrl: armada-37xx: propagate error from
-- armada_37xx_pmx_gpio_set_direction()
--
--The armada_37xx_gpio_direction_{in,out}put() functions can fail, so
--propagate their error values back to the stack instead of silently
--ignoring those.
--
--Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
--Reviewed-by: Andrew Lunn <andrew@lunn.ch>
--Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
--Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-5-07e9ac1ab737@gmail.com
--Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-----
-- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 7 ++++---
-- 1 file changed, 4 insertions(+), 3 deletions(-)
--
----- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--@@ -472,16 +472,17 @@ static int armada_37xx_pmx_gpio_set_dire
-- {
-- 	struct armada_37xx_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
-- 	struct gpio_chip *chip = range->gc;
--+	int ret;
-- 
-- 	dev_dbg(info->dev, "gpio_direction for pin %u as %s-%d to %s\n",
-- 		offset, range->name, offset, input ? "input" : "output");
-- 
-- 	if (input)
---		armada_37xx_gpio_direction_input(chip, offset);
--+		ret = armada_37xx_gpio_direction_input(chip, offset);
-- 	else
---		armada_37xx_gpio_direction_output(chip, offset, 0);
--+		ret = armada_37xx_gpio_direction_output(chip, offset, 0);
-- 
---	return 0;
--+	return ret;
-- }
-- 
-- static int armada_37xx_gpio_request_enable(struct pinctrl_dev *pctldev,
-diff --git a/target/linux/mvebu/patches-6.12/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.12/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-deleted file mode 100644
-index 9aac2e58e1..0000000000
---- a/target/linux/mvebu/patches-6.12/0006-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-+++ /dev/null
-@@ -1,35 +0,0 @@
--From 6481c0a83367b0672951ccc876fbae7ee37b594b Mon Sep 17 00:00:00 2001
--From: Gabor Juhos <j4g8y7@gmail.com>
--Date: Wed, 14 May 2025 21:18:37 +0200
--Subject: [PATCH 6/7] pinctrl: armada-37xx: propagate error from
-- armada_37xx_gpio_get_direction()
--
--The regmap_read() function can fail, so propagate its error up to
--the stack instead of silently ignoring that.
--
--Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
--Reviewed-by: Andrew Lunn <andrew@lunn.ch>
--Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
--Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-6-07e9ac1ab737@gmail.com
--Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-----
-- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 5 ++++-
-- 1 file changed, 4 insertions(+), 1 deletion(-)
--
----- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--@@ -402,10 +402,13 @@ static int armada_37xx_gpio_get_directio
-- 	struct armada_37xx_pinctrl *info = gpiochip_get_data(chip);
-- 	unsigned int reg = OUTPUT_EN;
-- 	unsigned int val, mask;
--+	int ret;
-- 
-- 	armada_37xx_update_reg(&reg, &offset);
-- 	mask = BIT(offset);
---	regmap_read(info->regmap, reg, &val);
--+	ret = regmap_read(info->regmap, reg, &val);
--+	if (ret)
--+		return ret;
-- 
-- 	if (val & mask)
-- 		return GPIO_LINE_DIRECTION_OUT;
-diff --git a/target/linux/mvebu/patches-6.12/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch b/target/linux/mvebu/patches-6.12/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-deleted file mode 100644
-index 6c14e50b4a..0000000000
---- a/target/linux/mvebu/patches-6.12/0007-v6.16-pinctrl-armada-37xx-propagate-error-from-armada_37xx.patch
-+++ /dev/null
-@@ -1,31 +0,0 @@
--From 4229c28323db141eda69cb99427be75d3edba071 Mon Sep 17 00:00:00 2001
--From: Gabor Juhos <j4g8y7@gmail.com>
--Date: Wed, 14 May 2025 21:18:38 +0200
--Subject: [PATCH 7/7] pinctrl: armada-37xx: propagate error from
-- armada_37xx_pmx_set_by_name()
--
--The regmap_update_bits() function can fail, so propagate its error
--up to the stack instead of silently ignoring that.
--
--Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
--Reviewed-by: Andrew Lunn <andrew@lunn.ch>
--Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
--Link: https://lore.kernel.org/20250514-pinctrl-a37xx-fixes-v2-7-07e9ac1ab737@gmail.com
--Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-----
-- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 4 +---
-- 1 file changed, 1 insertion(+), 3 deletions(-)
--
----- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
--@@ -358,9 +358,7 @@ static int armada_37xx_pmx_set_by_name(s
-- 
-- 	val = grp->val[func];
-- 
---	regmap_update_bits(info->regmap, reg, mask, val);
---
---	return 0;
--+	return regmap_update_bits(info->regmap, reg, mask, val);
-- }
-- 
-- static int armada_37xx_pmx_set(struct pinctrl_dev *pctldev,
-diff --git a/target/linux/ramips/patches-6.12/810-uvc-add-iPassion-iP2970-support.patch b/target/linux/ramips/patches-6.12/810-uvc-add-iPassion-iP2970-support.patch
-index 75fd136829..0ab9517d88 100644
---- a/target/linux/ramips/patches-6.12/810-uvc-add-iPassion-iP2970-support.patch
-+++ b/target/linux/ramips/patches-6.12/810-uvc-add-iPassion-iP2970-support.patch
-@@ -13,7 +13,7 @@ Signed-off-by: John Crispin <blogic@openwrt.org>
+  static int spinand_read_reg_op(struct spinand_device *spinand, u8 reg, u8 *val)
+  {
+-@@ -1525,6 +1526,7 @@ static int spinand_probe(struct spi_mem
++@@ -1527,6 +1528,7 @@ static int spinand_probe(struct spi_mem
+  	if (ret)
+  		return ret;
+  
+@@ -16,7 +16,7 @@
+  	ret = mtd_device_register(mtd, NULL, 0);
+  	if (ret)
+  		goto err_spinand_cleanup;
+-@@ -1532,6 +1534,7 @@ static int spinand_probe(struct spi_mem
++@@ -1534,6 +1536,7 @@ static int spinand_probe(struct spi_mem
+  	return 0;
+  
+  err_spinand_cleanup:
+@@ -24,7 +24,7 @@
+  	spinand_cleanup(spinand);
+  
+  	return ret;
+-@@ -1550,6 +1553,7 @@ static int spinand_remove(struct spi_mem
++@@ -1552,6 +1555,7 @@ static int spinand_remove(struct spi_mem
+  	if (ret)
+  		return ret;
+  
+diff --git a/target/linux/mediatek/patches-6.12/433-drivers-spi-mem-Add-spi-calibration-hook.patch b/target/linux/mediatek/patches-6.12/433-drivers-spi-mem-Add-spi-calibration-hook.patch
+index e8377f5c4c..37496f4486 100644
+--- a/target/linux/mediatek/patches-6.12/433-drivers-spi-mem-Add-spi-calibration-hook.patch
++++ b/target/linux/mediatek/patches-6.12/433-drivers-spi-mem-Add-spi-calibration-hook.patch
+@@ -11,7 +11,7 @@ Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
  
- --- a/drivers/media/usb/uvc/uvc_driver.c
- +++ b/drivers/media/usb/uvc/uvc_driver.c
--@@ -3174,6 +3174,18 @@ static const struct usb_device_id uvc_id
-+@@ -3185,6 +3185,18 @@ static const struct usb_device_id uvc_id
-  	  .bInterfaceSubClass	= 1,
-  	  .bInterfaceProtocol	= 0,
-  	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+ --- a/drivers/spi/spi-mem.c
+ +++ b/drivers/spi/spi-mem.c
+-@@ -466,6 +466,14 @@ int spi_mem_exec_op(struct spi_mem *mem,
++@@ -483,6 +483,14 @@ int spi_mem_exec_op(struct spi_mem *mem,
+  }
+  EXPORT_SYMBOL_GPL(spi_mem_exec_op);
+  
+@@ -28,7 +28,7 @@ Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
+   *			upper layer if necessary
+ --- a/include/linux/spi/spi-mem.h
+ +++ b/include/linux/spi/spi-mem.h
+-@@ -372,6 +372,10 @@ bool spi_mem_supports_op(struct spi_mem
++@@ -384,6 +384,10 @@ bool spi_mem_supports_op(struct spi_mem
+  int spi_mem_exec_op(struct spi_mem *mem,
+  		    const struct spi_mem_op *op);
+  
+diff --git a/target/linux/mediatek/patches-6.12/435-drivers-mtd-spinand-Add-calibration-support-for-spin.patch b/target/linux/mediatek/patches-6.12/435-drivers-mtd-spinand-Add-calibration-support-for-spin.patch
+index eda2d8366a..a94d98a76e 100644
+--- a/target/linux/mediatek/patches-6.12/435-drivers-mtd-spinand-Add-calibration-support-for-spin.patch
++++ b/target/linux/mediatek/patches-6.12/435-drivers-mtd-spinand-Add-calibration-support-for-spin.patch
+@@ -68,7 +68,7 @@ Signed-off-by: SkyLake.Huang <skylake.huang@mediatek.com>
+  static int spinand_id_detect(struct spinand_device *spinand)
+  {
+  	u8 *id = spinand->id.data;
+-@@ -1403,6 +1453,10 @@ static int spinand_init(struct spinand_d
++@@ -1405,6 +1455,10 @@ static int spinand_init(struct spinand_d
+  	if (!spinand->scratchbuf)
+  		return -ENOMEM;
+  
+diff --git a/target/linux/mediatek/patches-6.12/960-asus-hack-u-boot-ignore-mtdparts.patch b/target/linux/mediatek/patches-6.12/960-asus-hack-u-boot-ignore-mtdparts.patch
+index 40e5fd0589..50c35dd913 100644
+--- a/target/linux/mediatek/patches-6.12/960-asus-hack-u-boot-ignore-mtdparts.patch
++++ b/target/linux/mediatek/patches-6.12/960-asus-hack-u-boot-ignore-mtdparts.patch
+@@ -29,7 +29,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+ 
+ --- a/drivers/mtd/nand/spi/core.c
+ +++ b/drivers/mtd/nand/spi/core.c
+-@@ -1619,6 +1619,7 @@ static int spinand_remove(struct spi_mem
++@@ -1621,6 +1621,7 @@ static int spinand_remove(struct spi_mem
+  
+  static const struct spi_device_id spinand_ids[] = {
+  	{ .name = "spi-nand" },
+@@ -37,7 +37,7 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+  	{ /* sentinel */ },
+  };
+  MODULE_DEVICE_TABLE(spi, spinand_ids);
+-@@ -1626,6 +1627,7 @@ MODULE_DEVICE_TABLE(spi, spinand_ids);
++@@ -1628,6 +1629,7 @@ MODULE_DEVICE_TABLE(spi, spinand_ids);
+  #ifdef CONFIG_OF
+  static const struct of_device_id spinand_of_ids[] = {
+  	{ .compatible = "spi-nand" },
+diff --git a/target/linux/pistachio/patches-6.12/401-mtd-nor-support-mtd-name-from-device-tree.patch b/target/linux/pistachio/patches-6.12/401-mtd-nor-support-mtd-name-from-device-tree.patch
+index ff686e03a7..1f83d73282 100644
+--- a/target/linux/pistachio/patches-6.12/401-mtd-nor-support-mtd-name-from-device-tree.patch
++++ b/target/linux/pistachio/patches-6.12/401-mtd-nor-support-mtd-name-from-device-tree.patch
+@@ -10,7 +10,7 @@ Signed-off-by: Abhimanyu Vishwakarma <Abhimanyu.Vishwakarma@imgtec.com>
+ 
+ --- a/drivers/spi/spi-mem.c
+ +++ b/drivers/spi/spi-mem.c
+-@@ -893,7 +893,9 @@ static int spi_mem_probe(struct spi_devi
++@@ -927,7 +927,9 @@ static int spi_mem_probe(struct spi_devi
+  {
+  	struct spi_mem_driver *memdrv = to_spi_mem_drv(spi->dev.driver);
+  	struct spi_controller *ctlr = spi->controller;
+@@ -20,7 +20,7 @@ Signed-off-by: Abhimanyu Vishwakarma <Abhimanyu.Vishwakarma@imgtec.com>
+  
+  	mem = devm_kzalloc(&spi->dev, sizeof(*mem), GFP_KERNEL);
+  	if (!mem)
+-@@ -901,10 +903,15 @@ static int spi_mem_probe(struct spi_devi
++@@ -935,10 +937,15 @@ static int spi_mem_probe(struct spi_devi
+  
+  	mem->spi = spi;
+  
 diff --git a/target/linux/starfive/patches-6.12/1011-net-stmmac-use-GFP_DMA32.patch b/target/linux/starfive/patches-6.12/1011-net-stmmac-use-GFP_DMA32.patch
-index 9aa09b3c95..b40a7e9e58 100644
+index b40a7e9e58..8f9a082266 100644
 --- a/target/linux/starfive/patches-6.12/1011-net-stmmac-use-GFP_DMA32.patch
 +++ b/target/linux/starfive/patches-6.12/1011-net-stmmac-use-GFP_DMA32.patch
 @@ -19,7 +19,7 @@ Signed-off-by: Matteo Croce <mcroce@microsoft.com>
   
   	if (priv->dma_cap.host_dma_width <= 32)
   		gfp |= GFP_DMA32;
--@@ -4795,7 +4795,7 @@ static inline void stmmac_rx_refill(stru
-+@@ -4792,7 +4792,7 @@ static inline void stmmac_rx_refill(stru
+-@@ -4792,7 +4792,7 @@ static inline void stmmac_rx_refill(stru
++@@ -4789,7 +4789,7 @@ static inline void stmmac_rx_refill(stru
   	struct stmmac_rx_queue *rx_q = &priv->dma_conf.rx_queue[queue];
   	int dirty = stmmac_rx_dirty(priv, queue);
   	unsigned int entry = rx_q->dirty_rx;
 -- 
-2.46.0
+2.48.1
 
